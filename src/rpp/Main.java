@@ -5,28 +5,32 @@ import java.io.*;
 /**
  * [TODO] DESCRIPCION DETALLADA DE LA CLASE
  * 
- * @author Castor Miguel Pérez Melian
- * @author Alberto Cabrera Pérez
+ * @author Castor Miguel Perez Melian
+ * @author Alberto Cabrera Perez
  * @author Javier Luis Moreno Villena
- * @author Alejandro Tejera Pérez
+ * @author Alejandro Tejera Perez
  * @version 1.0
  * @since 1.0
  */
 public class Main {
 
 	/**
-	 * Método readFile: Se le pasa por parámetro una ruta absoluta de fichero
+	 * Metodo readFile: Se le pasa por parametro una ruta absoluta de fichero
 	 * con formato para leer el Rectangular Packing Problem y extrae la
-	 * información necesaria que define los rectángulos a utilizar en dicho
-	 * problema y a partir de dicha información devuelve un array de objetos
-	 * Rectángulo de tamaño "n" (ver a continuación) y con "n" rectángulos de
-	 * las dimensiones especificadas por "bX" y "hX". El formato de fichero será
-	 * tal que así:
+	 * informacion necesaria que define los rectangulos a utilizar en dicho
+	 * problema y a partir de dicha informacion devuelve un array de objetos
+	 * Rectangulo de tamano "n" (ver a continuacion) y con "n" rectangulos de
+	 * las dimensiones especificadas por "bX" y "hX". El formato de fichero sera
+	 * tal que asi:
 	 * 
-	 * n b1 h1 b2 h2 b3 h3 ...
+	 * n
+	 * b1 h1
+	 * b2 h2
+	 * b3 h3
+	 * ...
 	 * 
-	 * Siendo "n" el número de rectángulos del problema, "bX" la base del
-	 * rectángulo X y "hX" la altura del rectángulo X.
+	 * Siendo "n" el numero de rectangulos del problema, "bX" la base del
+	 * rectangulo X y "hX" la altura del rectangulo X.
 	 * 
 	 * @param fileName
 	 *            Nombre del fichero a leer
@@ -59,7 +63,7 @@ public class Main {
 
 		} catch (NegativeArraySizeException e) {
 			System.out.println(e.toString()
-					+ " (El array tiene tamaño negativo, cambie la n del fichero).");
+					+ " (El array tiene tamano negativo, cambie la n del fichero).");
 			System.exit(1);
 		} catch (IOException e) {
 			System.out.println(e.toString());
@@ -78,10 +82,10 @@ public class Main {
 	}
 
 	/**
-	 * Método main Método para pruebas y utilización general.
+	 * Metodo main Metodo para pruebas y utilizacion general.
 	 * 
 	 * @param args
-	 *            Argumentos de la línea de comands
+	 *            Argumentos de la linea de comands
 	 */
 	public static void main(String[] args) {
 		Rectangle[] recs = readFile("../../test.dat");
