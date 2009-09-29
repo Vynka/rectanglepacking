@@ -23,11 +23,7 @@ public class Main {
 	 * las dimensiones especificadas por "bX" y "hX". El formato de fichero será
 	 * tal que así:
 	 * 
-	 * n
-	 * b1 h1
-	 * b2 h2
-	 * b3 h3
-	 * ...
+	 * n b1 h1 b2 h2 b3 h3 ...
 	 * 
 	 * Siendo "n" el número de rectángulos del problema, "bX" la base del
 	 * rectángulo X y "hX" la altura del rectángulo X.
@@ -61,16 +57,19 @@ public class Main {
 			}
 			return rectangles;
 
+		} catch (NegativeArraySizeException e) {
+			System.out.println(e.toString()
+					+ " (El array tiene tamaño negativo, cambie la n del fichero).");
+			System.exit(1);
 		} catch (IOException e) {
-			System.out
-					.println("El fichero no se encuentra disponible para su utilización.");
+			System.out.println(e.toString());
 			System.exit(1);
 		} finally {
 			try {
 				myStream.close();
 				myReader.close();
 			} catch (IOException e) {
-				System.out.println("Error al cerrar el fichero.");
+				System.out.println(e.toString());
 				System.exit(1);
 			}
 		}
