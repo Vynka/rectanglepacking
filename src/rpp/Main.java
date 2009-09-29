@@ -88,7 +88,7 @@ public class Main {
 	 *            Argumentos de la linea de comands
 	 */
 	public static void main(String[] args) {
-		Rectangle[] recs = readFile("../../test.dat");
+		Rectangle[] recs = readFile("test.dat");
 		for (int i = 0; i < recs.length; i++) {
 			System.out.println(recs[i].toString());
 		}
