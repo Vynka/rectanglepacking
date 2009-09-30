@@ -3,7 +3,11 @@ package rpp;
 import java.io.*;
 
 /**
- * [TODO] DESCRIPCION DETALLADA DE LA CLASE
+ * Clase que tiene como objetivo la definición y resolución del problema conocido
+ * como "Rectangle Packing Problem". El objetivo de dicho problema es empaquetar
+ * un numero dado de rectángulos de dimensiones arbitrarias dentro de un
+ * rectangulo, minimizando el area del envoltorio.
+ * Para mas informacion: http://en.wikipedia.org/wiki/Packing_problem
  * 
  * @author Castor Miguel Perez Melian
  * @author Alberto Cabrera Perez
