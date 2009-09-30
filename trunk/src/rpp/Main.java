@@ -9,7 +9,7 @@ import java.io.*;
  * @author Alberto Cabrera Perez
  * @author Javier Luis Moreno Villena
  * @author Alejandro Tejera Perez
- * @version 1.0
+ * @version 1.0a
  * @since 1.0
  */
 public class Main {
@@ -41,14 +41,12 @@ public class Main {
 		InputStreamReader myReader = null;
 		StreamTokenizer myTokenizer = null;
 		try {
-			Rectangle[] rectangles;
-			int n;
 			myStream = new FileInputStream(fileName);
 			myReader = new InputStreamReader(myStream);
 			myTokenizer = new StreamTokenizer(myReader);
 			myTokenizer.nextToken();
-			n = (int) myTokenizer.nval;
-			rectangles = new Rectangle[n];
+			int n = (int) myTokenizer.nval;
+			Rectangle [] rectangles = new Rectangle[n];
 			for (int i = 0; i < n; i++) {
 				Rectangle r = new Rectangle();
 				myTokenizer.nextToken();
