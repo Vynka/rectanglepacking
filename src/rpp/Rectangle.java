@@ -7,7 +7,7 @@ package rpp;
  * @author Alberto Cabrera Perez
  * @author Javier Luis Moreno Villena
  * @author Alejandro Tejera Perez
- * @version 1.0
+ * @version 1.0a
  * @since 1.0
  */
 public class Rectangle {
@@ -19,6 +19,14 @@ public class Rectangle {
 	 * Atributo h: Medida en unidades de la altura del rectangulo.
 	 */
 	private int h;
+	
+	/**
+	 * Constructor por defecto: Construye un rectangulo de 0 x 0.
+	 */
+	public Rectangle() {
+		this.b = 0;
+		this.h = 0;
+	}
 
 	/**
 	 * Constructor: Recibe como parametros la base y la altura y construye un
@@ -35,14 +43,6 @@ public class Rectangle {
 	}
 
 	/**
-	 * Constructor por defecto: Construye un rectangulo de 0 x 0.
-	 */
-	public Rectangle() {
-		this.b = 0;
-		this.h = 0;
-	}
-
-	/**
 	 * Setter b: Establece la medida de la base del rectangulo.
 	 * 
 	 * @param b
@@ -50,6 +50,15 @@ public class Rectangle {
 	 */
 	public void setBase(int b) {
 		this.b = b;
+	}
+	
+	/**
+	 * Getter b: Devuelve la base del rectangulo.
+	 * 
+	 * @return Medida en unidades de la base del rectangulo.
+	 */
+	public int getBase() {
+		return this.b;
 	}
 
 	/**
@@ -60,15 +69,6 @@ public class Rectangle {
 	 */
 	public void setHeight(int h) {
 		this.h = h;
-	}
-
-	/**
-	 * Getter b: Devuelve la base del rectangulo.
-	 * 
-	 * @return Medida en unidades de la base del rectangulo.
-	 */
-	public int getBase() {
-		return this.b;
 	}
 
 	/**
