@@ -1,7 +1,7 @@
 package rpp;
 
 /**
- * [TODO] DESCRIPCION DETALLADA DE LA CLASE
+ * Describe un rectangulo definido por su base (b) y su altura (h).
  * 
  * @author Castor Miguel Perez Melian
  * @author Alberto Cabrera Perez
