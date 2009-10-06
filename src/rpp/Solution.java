@@ -115,7 +115,7 @@ public class Solution {
 		return orden[i];
 	}
 	/**
-	 * @return el array de orden de posicion de los rectangulos.
+	 * @return el array de posiciones de los rectangulos.
 	 */
 	public int[] getPos() {
 		return pos;
@@ -127,7 +127,7 @@ public class Solution {
 		return pos[i];
 	}
 	/**
-	 * @param pos array de orden del 
+	 * @param pos array de  los rectangulos
 	 */
 	public void setPos(int[] pos) {
 		this.pos = pos;
