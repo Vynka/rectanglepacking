@@ -80,5 +80,12 @@ public class Point {
 	public void setY(int y) {
 		this.y = y;
 	}
+	
+	/**
+	 * Metodo toString: devuelve la cadena representativa del punto.
+	 */
+	public String toString() {
+		return new String("(" + getX() + ", " + getY() + ")");
+	}
 
 }
