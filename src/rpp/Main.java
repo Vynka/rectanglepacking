@@ -1,7 +1,5 @@
 package rpp;
 
-import java.io.*;
-
 /**
  * Clase que tiene como objetivo la definición y resolución del problema conocido
  * como "Rectangle Packing Problem". El objetivo de dicho problema es empaquetar
@@ -22,7 +20,7 @@ public class Main {
 	 * Metodo main Metodo para pruebas y utilizacion general.
 	 * 
 	 * @param args
-	 *            Argumentos de la linea de comands
+	 *            Argumentos de la linea de comandos
 	 */
 	public static void main(String[] args) {
 		Problem r = new Problem("test.dat");
