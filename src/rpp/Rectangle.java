@@ -11,14 +11,21 @@ package rpp;
  * @since 1.0
  */
 public class Rectangle {
+	
 	/**
 	 * Atributo b: Medida en unidades de la base del rectangulo.
 	 */
 	private int b;
+	
 	/**
 	 * Atributo h: Medida en unidades de la altura del rectangulo.
 	 */
 	private int h;
+	
+	/**
+	 * Atributo p: Punto en el que se coloca el rectangulo.
+	 */
+	private Point p;
 	
 	/**
 	 * Constructor por defecto: Construye un rectangulo de 0 x 0.
@@ -87,5 +94,13 @@ public class Rectangle {
 	 */
 	public String toString() {
 		return new String("(" + this.b + ", " + this.h + ")");
+	}
+	
+	/**
+	 * Establece el punto del rectangulo (para poder acceder al p del Rectangle).
+	 * @param p Punto a establecer.
+	 */
+	public void move(Point p) {
+		this.p = p;
 	}
 }
