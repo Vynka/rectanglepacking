@@ -64,18 +64,17 @@ public class Main {
 			return rectangles;
 
 		} catch (NegativeArraySizeException e) {
-			System.out.println(e.toString()
-					+ " (El array tiene tamano negativo, cambie la n del fichero).");
+			System.out.println(e + " (El array tiene tamano negativo, cambie la n del fichero).");
 			System.exit(1);
 		} catch (IOException e) {
-			System.out.println(e.toString());
+			System.out.println(e);
 			System.exit(1);
 		} finally {
 			try {
 				myStream.close();
 				myReader.close();
 			} catch (IOException e) {
-				System.out.println(e.toString());
+				System.out.println(e);
 				System.exit(1);
 			}
 		}
