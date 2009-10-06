@@ -1,19 +1,19 @@
 package rpp;
 
+import java.util.ArrayList;
+
 /**
- * Representa una solucion del problema 'RPP' con el fin de poder ser 
- * manipulada posteriormente.
- * Esta compuesta por las dimensiones del rectangulo solucion y una serie
- * de vectores que indican el modo de posicionar los rectangulos.
+ * Representa una solucion del problema 'RPP' con el fin de poder ser manipulada
+ * posteriormente. Esta compuesta por las dimensiones del rectangulo solucion y
+ * una serie de vectores que indican el modo de posicionar los rectangulos.
  * 
- * TODO Modo de comunicar la clase solucion con la heuristica de colocacion.
- *      Una posibilidad, que esta clase contenga a la propia 
- *      clase 'HeuristicaDeColocacion'. 
- * TODO Contemplar la posibilidad de tener el area de los rectangulos hallada
- *      previamente. (Una posible clase que contenga al vector de rectangulos
- *      con su constructor y el area que ocupan conjuntamente (caso optimo del
- *      problema)).
- * TODO Ver como relacionar el vector de rectangulos con la clase.  
+ * TODO Modo de comunicar la clase solucion con la heuristica de colocacion. Una
+ * posibilidad, que esta clase contenga a la propia clase
+ * 'HeuristicaDeColocacion'. TODO Contemplar la posibilidad de tener el area de
+ * los rectangulos hallada previamente. (Una posible clase que contenga al
+ * vector de rectangulos con su constructor y el area que ocupan conjuntamente
+ * (caso optimo del problema)). TODO Ver como relacionar el vector de
+ * rectangulos con la clase.
  * 
  * @author Castor Miguel Perez Melian
  * @author Alberto Cabrera Perez
@@ -24,121 +24,173 @@ package rpp;
  */
 
 public class Solution {
+
 	/**
-	 * Constante INFinito para inicializar la funcion objetivo.
-	 * TODO ¿Es mejor considerar INF un valor negativo que careceria de sentido?
-	 *      EJ: -1.
+	 * Constante INFinito para inicializar la funcion objetivo. TODO ¿Es mejor
+	 * considerar INF un valor negativo que careceria de sentido? EJ: -1.
 	 */
 	final int INF = 999999999;
+
 	/**
 	 * Atributo b: base del rectangulo solucion.
 	 */
 	private int b;
-	/** 
+
+	/**
 	 * Atributo h: altura del rectangulo solucion.
 	 */
 	private int h;
+
 	/**
-	 * Atributo area: area del rectangulo solucion. 
+	 * Atributo area: area del rectangulo solucion.
 	 */
 	private int area;
+
 	/**
-	 * Atributo fObj: valor de la funcion objetivo del problema.
-	 * f(x) = area - sum(rectangle[i].h * rectangle[i].b);
-	 *    con 0 <= i < n y rectangle un vector de rectangulos que componen
-	 *    el problema.
+	 * Atributo fObj: valor de la funcion objetivo del problema. f(x) = area -
+	 * sum(rectangle[i].h * rectangle[i].b); con 0 <= i < n y rectangle un
+	 * vector de rectangulos que componen el problema.
 	 */
 	private int fObj;
+
 	/**
-	 * Atributo orden: array que indica la colocacion de los rectangulos
-	 * usando el indice i para indicar cuando fue puesto el rectangulo
-	 * orden[i].
+	 * Atributo orden: array que indica la colocacion de los rectangulos usando
+	 * el indice i para indicar cuando fue puesto el rectangulo orden[i].
 	 */
-	int [] orden;
+	private int[] orden;
+
 	/**
 	 * Atributo pos: array que indica la colocacion de los rectangulos
 	 * atribuyendo a cada rectangulo i la posicion pos[i].
 	 */
-	int [] pos;
+	private int[] pos;
+
+	/**
+	 * Lista de puntos factibles en los que colocar un rectangulo.
+	 */
+	private ArrayList<Point> points;
+
 	/**
 	 * @return la base del rectangulo.
 	 */
 	public int getB() {
 		return b;
 	}
+
 	/**
-	 * @param b la altura del rectangulo.
+	 * @param b
+	 *            la altura del rectangulo.
 	 */
 	public void setB(int b) {
 		this.b = b;
 	}
+
 	/**
 	 * @return la altura.
 	 */
 	public int getH() {
 		return h;
 	}
+
 	/**
-	 * @param h altura a establecer.
+	 * @param h
+	 *            altura a establecer.
 	 */
 	public void setH(int h) {
 		this.h = h;
 	}
+
 	/**
 	 * @return el area del rectangulo obtenido.
 	 */
 	public int getArea() {
 		return area;
 	}
+
 	/**
-	 * @return el valor de la funcion objetivo. 
+	 * @return el valor de la funcion objetivo.
 	 */
 	public int getFObj() {
 		return fObj;
 	}
+
 	/**
 	 * @return el array de indices
 	 */
 	public int[] getOrden() {
 		return orden;
 	}
+
 	/**
-	 * @param orden el array de indices a establecer.
+	 * @param orden
+	 *            el array de indices a establecer.
 	 */
 	public void setOrden(int[] orden) {
 		this.orden = orden;
 	}
+
 	/**
 	 * @return el valor de la posicion i en el array de indices.
 	 */
 	public int getOrden(int i) {
 		return orden[i];
 	}
+
 	/**
 	 * @return el array de posiciones de los rectangulos.
 	 */
 	public int[] getPos() {
 		return pos;
 	}
+
 	/**
 	 * @return el valor de la posicion i en el array de orden de posicion.
 	 */
 	public int getPos(int i) {
 		return pos[i];
 	}
+
 	/**
-	 * @param pos array de  los rectangulos
+	 * @param pos
+	 *            array de los rectangulos
 	 */
 	public void setPos(int[] pos) {
 		this.pos = pos;
 	}
+
 	/**
-	 * Por defecto pone todo a 0 o null (aunque no hace falta) a excepcion
-	 * de la funcion objetivo que vale INF.
-	 * Dado que el problema consiste en minimizar, asi se evita un posible
-	 * error de que la mejor solucion valga 0.
+	 * Añade un punto a la lista de puntos factibles.
+	 * 
+	 * @param p
+	 *            Punto a añadir.
+	 */
+	public void addPoint(Point p) {
+		points.add(p);
+	}
+
+	/**
+	 * TODO Decidir criterio para elegir qué punto es mejor.
+	 * 
+	 * @return Punto donde colocar el rectangulo.
+	 */
+	public Point getPoint(Point p) {
+		Point toRet = new Point();
+
+		if (points.contains(p)) {
+			toRet = points.remove(points.indexOf(p));
+		}
+
+		return toRet;
+	}
+
+	/**
+	 * Por defecto pone todo a 0 o null (aunque no hace falta) a excepcion de la
+	 * funcion objetivo que vale INF. Dado que el problema consiste en
+	 * minimizar, asi se evita un posible error de que la mejor solucion valga
+	 * 0.
 	 */
 	public Solution() {
+		points.clear();
 		this.b = 0;
 		this.h = 0;
 		this.area = 0;
@@ -146,16 +198,23 @@ public class Solution {
 		this.orden = null;
 		this.pos = null;
 	}
+
 	/**
 	 * Construye la solucion directamente con los valores obtenidos.
-	 * @param b base del rectangulo solucion.
-	 * @param h altura del rectangulo solucion.
-	 * @param areaRec area de los rectangulos.
-	 * @param orden vector con el orden de insercion de los rectangulos.
-	 * @param permType numero que define la representacion en el array.
+	 * 
+	 * @param b
+	 *            base del rectangulo solucion.
+	 * @param h
+	 *            altura del rectangulo solucion.
+	 * @param areaRec
+	 *            area de los rectangulos.
+	 * @param orden
+	 *            vector con el orden de insercion de los rectangulos.
+	 * @param permType
+	 *            numero que define la representacion en el array.
 	 */
-	public Solution(int b, int h, 
-			        int areaRec, int [] array, int permType) {
+	public Solution(int b, int h, int areaRec, int[] array, int permType) {
+		points.clear();
 		this.b = b;
 		this.h = h;
 		this.area = b * h;
@@ -166,7 +225,7 @@ public class Solution {
 			for (int i = 0; i < orden.length; i++) {
 				this.pos[orden[i]] = i;
 			}
-		// permType = 2 -> el array introducido es de Pos.
+			// permType = 2 -> el array introducido es de Pos.
 		} else if (permType == 2) {
 			this.pos = array;
 			for (int i = 0; i < pos.length; i++) {
@@ -174,20 +233,25 @@ public class Solution {
 			}
 		}
 	}
+
 	/**
 	 * TODO Funcion/es para hallar una solucion vecina.
-	 * @param b nueva base del rectangulo contenedor.
-	 * @param h nueva altura del rectangulo contenedor.
-	 * @param i indice del primer rectangulo a intercambiar.
-	 * @param j indice del segundo rectangulo a intercambiar. 
+	 * 
+	 * @param b
+	 *            nueva base del rectangulo contenedor.
+	 * @param h
+	 *            nueva altura del rectangulo contenedor.
+	 * @param i
+	 *            indice del primer rectangulo a intercambiar.
+	 * @param j
+	 *            indice del segundo rectangulo a intercambiar.
 	 */
-	public Solution solucionVecina(int b, int h,int i, int j) {
+	public Solution solucionVecina(int b, int h, int i, int j) {
 		Solution newOne = null;
 		/*
-		 * EJEMPLO
-		 * Intercambia el rectangulo i por el rectangulo j en el vector
-		 * de posiciones. Se actualiza la funcion objetivo (fObj) actual y 
-		 * el otro vector de posicionamiento.
+		 * EJEMPLO Intercambia el rectangulo i por el rectangulo j en el vector
+		 * de posiciones. Se actualiza la funcion objetivo (fObj) actual y el
+		 * otro vector de posicionamiento.
 		 */
 		return newOne;
 	}
