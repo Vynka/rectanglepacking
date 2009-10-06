@@ -23,6 +23,11 @@ public class Rectangle {
 	private int h;
 	
 	/**
+	 * Atributo a: Representa el area del rectangulo.
+	 */
+	private int a;
+	
+	/**
 	 * Atributo p: Punto en el que se coloca el rectangulo.
 	 */
 	private Point p;
@@ -33,6 +38,7 @@ public class Rectangle {
 	public Rectangle() {
 		this.b = 0;
 		this.h = 0;
+		this.a = 0;
 	}
 
 	/**
@@ -47,6 +53,7 @@ public class Rectangle {
 	public Rectangle(int b, int h) {
 		this.b = b;
 		this.h = h;
+		this.a = b * h;
 	}
 
 	/**
@@ -86,12 +93,22 @@ public class Rectangle {
 	public int getHeight() {
 		return this.h;
 	}
+	
+	/**
+	 * Getter a: Devuelve el area del rectangulo.
+	 * @return Area del rectangulo en unidades.
+	 */
+	public int getArea() {
+		return this.a;
+	}
 
 	/**
-	 * @return el punto
+	 * Metodo getPosition: devuelve el punto en el que se encuentra localizado
+	 * el rectangulo.
+	 * @return El punto en el que se localiza el rectangulo (esquina inferior izquierda).
 	 */
 	public Point getPosition() {
-		return p;
+		return this.p;
 	}
 
 	/**

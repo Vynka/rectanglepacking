@@ -1,7 +1,5 @@
 package rpp;
 
-import java.util.ArrayList;
-
 /**
  * Representa una solucion del problema 'RPP' con el fin de poder ser manipulada
  * posteriormente. Esta compuesta por las dimensiones del rectangulo solucion y
@@ -64,11 +62,6 @@ public class Solution {
 	 * atribuyendo a cada rectangulo i la posicion pos[i].
 	 */
 	private int[] pos;
-
-	/**
-	 * Lista de puntos factibles en los que colocar un rectangulo.
-	 */
-	private ArrayList<Point> points;
 
 	/**
 	 * @return la base del rectangulo.
@@ -159,38 +152,12 @@ public class Solution {
 	}
 
 	/**
-	 * Añade un punto a la lista de puntos factibles.
-	 * 
-	 * @param p
-	 *            Punto a añadir.
-	 */
-	public void addPoint(Point p) {
-		points.add(p);
-	}
-
-	/**
-	 * TODO Decidir criterio para elegir qué punto es mejor.
-	 * 
-	 * @return Punto donde colocar el rectangulo.
-	 */
-	public Point getPoint(Point p) {
-		Point toRet = new Point();
-
-		if (points.contains(p)) {
-			toRet = points.remove(points.indexOf(p));
-		}
-
-		return toRet;
-	}
-
-	/**
 	 * Por defecto pone todo a 0 o null (aunque no hace falta) a excepcion de la
 	 * funcion objetivo que vale INF. Dado que el problema consiste en
 	 * minimizar, asi se evita un posible error de que la mejor solucion valga
 	 * 0.
 	 */
 	public Solution() {
-		points.clear();
 		this.b = 0;
 		this.h = 0;
 		this.area = 0;
@@ -214,7 +181,6 @@ public class Solution {
 	 *            numero que define la representacion en el array.
 	 */
 	public Solution(int b, int h, int areaRec, int[] array, int permType) {
-		points.clear();
 		this.b = b;
 		this.h = h;
 		this.area = b * h;
