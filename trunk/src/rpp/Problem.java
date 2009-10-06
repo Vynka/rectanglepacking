@@ -30,6 +30,7 @@ public class Problem {
 	
 	public Problem(String fileName) {
 		this.rectangles = readFile(fileName);
+		points.clear();
 	}
 	
 	/**
