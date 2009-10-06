@@ -88,6 +88,13 @@ public class Rectangle {
 	}
 
 	/**
+	 * @return el punto
+	 */
+	public Point getPosition() {
+		return p;
+	}
+
+	/**
 	 * Metodo toString: Devuelve un String representativo de un rectangulo.
 	 * 
 	 * @return String representativo del rectangulo "(base, altura)".
