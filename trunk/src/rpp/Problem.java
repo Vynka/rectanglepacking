@@ -17,45 +17,65 @@ import java.util.ArrayList;
  * @since 1.0
  */
 public class Problem {
-	
+
 	/**
 	 * Atributo rectangles: rectangulos a empaquetar en el problema.
 	 */
 	private Rectangle[] rectangles;
-	
+
 	/**
 	 * Lista de puntos factibles en los que colocar un rectangulo.
 	 */
-	private ArrayList<Point> points;
+	private ArrayList<Point> points = new ArrayList<Point>(0);
+
+	/**
+	 * Solucion del problema, determinada por la clase Heuristica(?????).
+	 */
+	Solution solution;
 	
+	/**
+	 * Area total que ocupan los rectangulos (area IDEAL que deberia ocupar el envoltorio).
+	 */
+	private int areaRec = 0;
+
+	/**
+	 * Constructor de la clase Problem. Recibe un nombre de fichero para construir
+	 * la lista de rectangulos y asi plantear el problema.
+	 * 
+	 * @param fileName
+	 *          Nombre del fichero.
+	 * @see readFile
+	 */
 	public Problem(String fileName) {
 		this.rectangles = readFile(fileName);
 		points.clear();
+		for (int i = 0; i < rectangles.length; i++) {
+			this.areaRec += rectangles[i].getArea();
+		}
 	}
-	
+
 	/**
-	 * Metodo readFile: Se le pasa por parametro una ruta absoluta de fichero
-	 * con formato para leer el Rectangular Packing Problem y extrae la
-	 * informacion necesaria que define los rectangulos a utilizar en dicho
-	 * problema y a partir de dicha informacion devuelve un array de objetos
-	 * Rectangulo de tamano "n" (ver a continuacion) y con "n" rectangulos de
-	 * las dimensiones especificadas por "bX" y "hX". El formato de fichero sera
-	 * tal que asi:
+	 * Metodo readFile: Se le pasa por parametro una ruta absoluta de fichero con
+	 * formato para leer el Rectangular Packing Problem y extrae la informacion
+	 * necesaria que define los rectangulos a utilizar en dicho problema y a
+	 * partir de dicha informacion devuelve un array de objetos Rectangulo de
+	 * tamano "n" (ver a continuacion) y con "n" rectangulos de las dimensiones
+	 * especificadas por "bX" y "hX". El formato de fichero sera tal que asi:
 	 * 
 	 * n
 	 * b1 h1
 	 * b2 h2
-	 * b3 h3
 	 * ...
+	 * bn hn
 	 * 
 	 * Siendo "n" el numero de rectangulos del problema, "bX" la base del
 	 * rectangulo X y "hX" la altura del rectangulo X.
 	 * 
 	 * @param fileName
-	 *            Nombre del fichero a leer
+	 *          Nombre del fichero a leer
 	 * @return Array de objetos Rectangulo
 	 */
-	public static Rectangle[] readFile(String fileName) {
+	public Rectangle[] readFile(String fileName) {
 		FileInputStream myStream = null;
 		InputStreamReader myReader = null;
 		StreamTokenizer myTokenizer = null;
@@ -65,7 +85,7 @@ public class Problem {
 			myTokenizer = new StreamTokenizer(myReader);
 			myTokenizer.nextToken();
 			int n = (int) myTokenizer.nval;
-			Rectangle [] rectangles = new Rectangle[n];
+			this.rectangles = new Rectangle[n];
 			for (int i = 0; i < n; i++) {
 				Rectangle r = new Rectangle();
 				myTokenizer.nextToken();
@@ -79,7 +99,8 @@ public class Problem {
 			return rectangles;
 
 		} catch (NegativeArraySizeException e) {
-			System.out.println(e + " (El array tiene tamano negativo, cambie la n del fichero).");
+			System.out.println(e
+					+ " (El array tiene tamano negativo, cambie la n del fichero).");
 			System.exit(1);
 		} catch (IOException e) {
 			System.out.println(e);
@@ -96,12 +117,12 @@ public class Problem {
 
 		return new Rectangle[0];
 	}
-	
+
 	/**
 	 * Anade un punto a la lista de puntos factibles.
 	 * 
 	 * @param p
-	 *            Punto a anadir.
+	 *          Punto a anadir.
 	 */
 	public void addPoint(Point p) {
 		points.add(p);
@@ -119,6 +140,29 @@ public class Problem {
 			toRet = points.remove(points.indexOf(p));
 		}
 
+		return toRet;
+	}
+	
+	/**
+	 * Devuelve el area idea de los rectangulos (todos).
+	 * @return Area total que ocupan los rectangulos del problema.
+	 */
+	public int getAreaRec() {
+		return this.areaRec;
+	}
+	
+	/**
+	 * Devuelve la cadena representativa del problema, mostrando por pantalla el listado de
+	 * rectangulos que componen el problema, con sus dimensiones y area, asi como el area total
+	 * (ideal) de los rectangulos.
+	 * @return Cadena representativa del problema.
+	 */
+	public String toString() {
+		String toRet = new String("Rectangulos del problema:\n");
+		for (int i = 0; i < rectangles.length; i++) {
+			toRet += (i + 1) + ". " + rectangles[i] + "\n";
+		}
+		toRet += "Area total (ideal del envoltorio) = " + this.areaRec;
 		return toRet;
 	}
 }
