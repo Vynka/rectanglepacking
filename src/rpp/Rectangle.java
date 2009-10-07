@@ -11,27 +11,27 @@ package rpp;
  * @since 1.0
  */
 public class Rectangle {
-	
+
 	/**
 	 * Atributo b: Medida en unidades de la base del rectangulo.
 	 */
 	private int b;
-	
+
 	/**
 	 * Atributo h: Medida en unidades de la altura del rectangulo.
 	 */
 	private int h;
-	
+
 	/**
 	 * Atributo a: Representa el area del rectangulo.
 	 */
 	private int a;
-	
+
 	/**
 	 * Atributo p: Punto en el que se coloca el rectangulo.
 	 */
 	private Point p;
-	
+
 	/**
 	 * Constructor por defecto: Construye un rectangulo de 0 x 0.
 	 */
@@ -46,9 +46,9 @@ public class Rectangle {
 	 * rectangulo de dichas dimensiones.
 	 * 
 	 * @param b
-	 *            Medida en unidades de la base del rectangulo.
+	 *          Medida en unidades de la base del rectangulo.
 	 * @param h
-	 *            Medida en unidades de la altura del rectangulo.
+	 *          Medida en unidades de la altura del rectangulo.
 	 */
 	public Rectangle(int b, int h) {
 		this.b = b;
@@ -60,12 +60,13 @@ public class Rectangle {
 	 * Setter b: Establece la medida de la base del rectangulo.
 	 * 
 	 * @param b
-	 *            Medida en unidades de la base del rectangulo.
+	 *          Medida en unidades de la base del rectangulo.
 	 */
 	public void setBase(int b) {
 		this.b = b;
+		this.a = this.b * this.h;
 	}
-	
+
 	/**
 	 * Getter b: Devuelve la base del rectangulo.
 	 * 
@@ -79,10 +80,11 @@ public class Rectangle {
 	 * Setter h: Establece la medida de la altura del rectangulo.
 	 * 
 	 * @param h
-	 *            Medida en unidades de la altura del rectangulo.
+	 *          Medida en unidades de la altura del rectangulo.
 	 */
 	public void setHeight(int h) {
 		this.h = h;
+		this.a = this.b * this.h;
 	}
 
 	/**
@@ -93,22 +95,14 @@ public class Rectangle {
 	public int getHeight() {
 		return this.h;
 	}
-	
+
 	/**
 	 * Getter a: Devuelve el area del rectangulo.
+	 * 
 	 * @return Area del rectangulo en unidades.
 	 */
 	public int getArea() {
 		return this.a;
-	}
-
-	/**
-	 * Metodo getPosition: devuelve el punto en el que se encuentra localizado
-	 * el rectangulo.
-	 * @return El punto en el que se localiza el rectangulo (esquina inferior izquierda).
-	 */
-	public Point getPosition() {
-		return this.p;
 	}
 
 	/**
@@ -117,14 +111,27 @@ public class Rectangle {
 	 * @return String representativo del rectangulo "(base, altura)".
 	 */
 	public String toString() {
-		return new String("(" + this.b + ", " + this.h + ")");
+		return new String("[" + this.getBase() + " x " + this.getHeight() + "], Area = " + this.getArea());
 	}
-	
+
 	/**
 	 * Establece el punto del rectangulo (para poder acceder al p del Rectangle).
-	 * @param p Punto a establecer.
+	 * 
+	 * @param p
+	 *          Punto a establecer.
 	 */
-	public void move(Point p) {
+	public void setPosition(Point p) {
 		this.p = p;
+	}
+
+	/**
+	 * Metodo getPosition: devuelve el punto en el que se encuentra localizado el
+	 * rectangulo.
+	 * 
+	 * @return El punto en el que se localiza el rectangulo (esquina inferior
+	 *         izquierda).
+	 */
+	public Point getPosition() {
+		return this.p;
 	}
 }

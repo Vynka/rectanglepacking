@@ -24,5 +24,6 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		Problem r = new Problem("test.dat");
+		System.out.println(r);
 	}
 }
