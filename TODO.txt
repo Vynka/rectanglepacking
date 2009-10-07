@@ -1,0 +1,40 @@
+*****************************************************************
+* ARCHIVO TODO PARA TENER SEGUIMIENTO DE LOS CAMBIOS POR HACER. *
+*****************************************************************
+* Estilo (por ejemplo xD):                                      *
+* - TODO en sí. [Quien ha puesto la nota]                       *
+* Si se resuelve el TODO poner en la segunda seccion una nota   *
+* de lo resuelto y el nombre de quien la resolvio.              *
+* Asi si tenemos que contactar a alguien por algun problema     *
+* sera mas llevadero.                                           *
+*****************************************************************
+
+- Decidir criterio para elegir que punto para localizar un rectangulo es mejor. [Anta]
+
+- Modo de comunicar la clase solucion con la heuristica de colocacion. Una 
+  posibilidad, que esta clase contenga a la propia clase 'HeuristicaDeColocacion'. [Haside]
+    
+- Ver como relacionar el vector de rectangulos con la clase. [Haside]
+
+- ¿Eliminar el vector pos de la clase Problem? [Anta]
+
+- Funcion/es para hallar una solucion vecina. [Haside]
+
+- Descripcion de la clase Heuristica. [Anta]
+
+- ¿Hacer la clase Heuristica interna en Problem? [Anta]
+
+****************************************
+* TODO YA RESUELTOS (MOVER AQUI ABAJO) *
+****************************************
+
+- Contemplar la posibilidad de tener el area de
+  los rectangulos hallada previamente. (Una posible clase que contenga al
+  vector de rectangulos con su constructor y el area que ocupan conjuntamente
+  (caso optimo del problema)). [Haside]
+    * DONE Clase Problem (ver areaRec). [Anta]
+    
+- ¿No deberia esta lista estar almacenada en la clase Solution? [Ale]
+    * La lista no va en la solucion porque son los puntos donde puede ir el SIGUIENTE rectangulo.
+      En todo caso iria o ahi o en la clase Heuristica. [Haside]
+    

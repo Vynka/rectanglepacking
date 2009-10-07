@@ -7,15 +7,12 @@ package rpp;
  * 
  * TODO Modo de comunicar la clase solucion con la heuristica de colocacion. Una
  * posibilidad, que esta clase contenga a la propia clase
- * 'HeuristicaDeColocacion'.
- * TODO Contemplar la posibilidad de tener el area de
+ * 'HeuristicaDeColocacion'. TODO Contemplar la posibilidad de tener el area de
  * los rectangulos hallada previamente. (Una posible clase que contenga al
  * vector de rectangulos con su constructor y el area que ocupan conjuntamente
  * (caso optimo del problema)). -> HECHO EN LA CLASE PROBLEM (ver areaRec).
- * (Quitar TODO). [Anta]
- * TODO Ver como relacionar el vector de rectangulos con
- * la clase.
- * TODO ¿Eliminar el vector pos? [Anta]
+ * (Quitar TODO). [Anta] TODO Ver como relacionar el vector de rectangulos con
+ * la clase. TODO ¿Eliminar el vector pos? [Anta]
  * 
  * @author Castor Miguel Perez Melian
  * @author Alberto Cabrera Perez
@@ -177,8 +174,6 @@ public class Solution {
 	 *          altura del rectangulo solucion.
 	 * @param areaRec
 	 *          area de los rectangulos.
-	 * @param orden
-	 *          vector con el orden de insercion de los rectangulos.
 	 * @param permType
 	 *          numero que define la representacion en el array.
 	 */
