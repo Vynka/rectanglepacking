@@ -14,7 +14,6 @@ import java.util.ArrayList;
  * Esta lista de puntos especifica las coordenadas donde ir colocando las esquinas
  * inferiores izquierdas de los rectangulos en el orden en el que estan
  * almacenados (o dependiendo del tipo de almacenamiento)
- * TODO ¿¿¿ No deberia esta lista estar almacenada en la clase Solution ???
  * 
  * @author Castor Miguel Perez Melian
  * @author Alberto Cabrera Perez
@@ -51,7 +50,6 @@ public class Problem {
 	 * 
 	 * @param fileName
 	 *          Nombre del fichero.
-	 * @see readFile
 	 */
 	public Problem(String fileName) {
 		this.rectangles = readFile(fileName);
