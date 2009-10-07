@@ -1,9 +1,6 @@
 package rpp;
 
 /**
- * TODO Descripción de la clase.
- * TODO ¿Hacer la clase Heuristica interna en Problem?
- * 
  * @author Castor Miguel Perez Melian
  * @author Alberto Cabrera Perez
  * @author Javier Luis Moreno Villena

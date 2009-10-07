@@ -83,6 +83,7 @@ public class Point {
 	
 	/**
 	 * Metodo toString: devuelve la cadena representativa del punto.
+	 * @return Cadena representativa del punto.
 	 */
 	public String toString() {
 		return new String("(" + getX() + ", " + getY() + ")");

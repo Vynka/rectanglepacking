@@ -133,9 +133,7 @@ public class Problem {
 		points.add(p);
 	}
 
-	/**
-	 * TODO Decidir criterio para elegir que punto es mejor.
-	 * 
+	/** 
 	 * @return Punto donde colocar el rectangulo.
 	 */
 	public Point getPoint(Point p) {
