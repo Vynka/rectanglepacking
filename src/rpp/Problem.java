@@ -7,7 +7,14 @@ import java.io.StreamTokenizer;
 import java.util.ArrayList;
 
 /**
- * TODO Descripcion detallada de la clase.
+ * Clase que tiene como funcion almacenar la informacion necesaria para resolver el
+ * problema. Almacena los rectangulos leidos del fichero, la solucion (ver clase),
+ * el valor de la suma de las areas de los rectangulos y la lista de puntos con la
+ * que construir la solucion.
+ * Esta lista de puntos especifica las coordenadas donde ir colocando las esquinas
+ * inferiores izquierdas de los rectangulos en el orden en el que estan
+ * almacenados (o dependiendo del tipo de almacenamiento)
+ * TODO ¿¿¿ No deberia esta lista estar almacenada en la clase Solution ???
  * 
  * @author Castor Miguel Perez Melian
  * @author Alberto Cabrera Perez
