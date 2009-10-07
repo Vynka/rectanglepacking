@@ -49,15 +49,9 @@ public class Solution {
 	private int[] orden;
 
 	/**
-	 * Atributo pos: array que indica la colocacion de los rectangulos atribuyendo
-	 * a cada rectangulo i la posicion pos[i].
-	 */
-	private int[] pos;
-
-	/**
 	 * @return la base del rectangulo.
 	 */
-	public int getB() {
+	public int getBase() {
 		return b;
 	}
 
@@ -65,14 +59,14 @@ public class Solution {
 	 * @param b
 	 *          la altura del rectangulo.
 	 */
-	public void setB(int b) {
+	public void setBase(int b) {
 		this.b = b;
 	}
 
 	/**
 	 * @return la altura del rectangulo.
 	 */
-	public int getH() {
+	public int getHeight() {
 		return h;
 	}
 
@@ -80,7 +74,7 @@ public class Solution {
 	 * @param h
 	 *          altura a establecer.
 	 */
-	public void setH(int h) {
+	public void setHeight(int h) {
 		this.h = h;
 	}
 
@@ -121,28 +115,6 @@ public class Solution {
 	}
 
 	/**
-	 * @return el array de posiciones de los rectangulos.
-	 */
-	public int[] getPos() {
-		return pos;
-	}
-
-	/**
-	 * @return el valor de la posicion i en el array de orden de posicion.
-	 */
-	public int getPos(int i) {
-		return pos[i];
-	}
-
-	/**
-	 * @param pos
-	 *          array de los rectangulos
-	 */
-	public void setPos(int[] pos) {
-		this.pos = pos;
-	}
-
-	/**
 	 * Por defecto pone todo a 0 o null (aunque no hace falta) a excepcion de la
 	 * funcion objetivo que vale INF. Dado que el problema consiste en minimizar,
 	 * asi se evita un posible error de que la mejor solucion valga 0.
@@ -153,7 +125,6 @@ public class Solution {
 		this.area = 0;
 		this.fObj = INF;
 		this.orden = null;
-		// this.pos = null;
 	}
 
 	/**
@@ -165,27 +136,15 @@ public class Solution {
 	 *          altura del rectangulo solucion.
 	 * @param areaRec
 	 *          area de los rectangulos.
-	 * @param permType
-	 *          numero que define la representacion en el array.
+	 * @param orden
+	 *          permutacion de los rectangulos
 	 */
-	public Solution(int b, int h, int areaRec, int[] array, int permType) {
+	public Solution(int b, int h, int areaRec, int [] orden) {
 		this.b = b;
 		this.h = h;
 		this.area = b * h;
 		this.fObj = this.area - areaRec;
-		// permType = 1 -> el array introducido es de Orden.
-		if (permType == 1) {
-			this.orden = array;
-			for (int i = 0; i < orden.length; i++) {
-				this.pos[orden[i]] = i;
-			}
-			// permType = 2 -> el array introducido es de Pos.
-		} else if (permType == 2) {
-			this.pos = array;
-			for (int i = 0; i < pos.length; i++) {
-				this.orden[pos[i]] = i;
-			}
-		}
+		this.orden = orden;
 	}
 
 	/**

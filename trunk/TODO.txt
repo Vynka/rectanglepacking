@@ -1,32 +1,46 @@
 *****************************************************************
+
 * ARCHIVO TODO PARA TENER SEGUIMIENTO DE LOS CAMBIOS POR HACER. *
 *****************************************************************
 * Estilo (por ejemplo xD):                                      *
 * - TODO en sí. [Quien ha puesto la nota]                       *
+* ? Sugerencia. [Quien ha puesto la nota]
 * Si se resuelve el TODO poner en la segunda seccion una nota   *
 * de lo resuelto y el nombre de quien la resolvio.              *
 * Asi si tenemos que contactar a alguien por algun problema     *
 * sera mas llevadero.                                           *
 *****************************************************************
 
+? Aprender a usar el menu Task List del Eclipse para asi tener mejor clasificadas las tareas 
+  a realizar y realizadas, pasando TODO.txt a ser una copia de seguridad de las mismas. [Haside]
+  
+? Buscar algun modo de comunicarnos online mediante notas. [Haside]
+
 - Decidir criterio para elegir que punto para localizar un rectangulo es mejor. [Anta]
 
 - Modo de comunicar la clase solucion con la heuristica de colocacion. Una 
-  posibilidad, que esta clase contenga a la propia clase 'HeuristicaDeColocacion'. [Haside]
+  posibilidad, que esta clase contenga a la propia clase 'HeuristicaDeColocacion'
+  Discutir como elaborar la clase Heuristica para saber donde meter el ArrayList<Point> [Haside].  
+  
+? Hacer la clase Heuristica interna en Problem [Anta]
+    - Yo creo que es mejor al contrario, en todo caso Problem interno a Heuristica,
+      aunque realmente un Problema y una Heuristica no van dados de la mano asi que
+      el planteamiento actual estaria bien. [Haside]
     
 - Ver como relacionar el vector de rectangulos con la clase. [Haside]
-
-- ¿Eliminar el vector pos de la clase Problem? [Anta]
 
 - Funcion/es para hallar una solucion vecina. [Haside]
 
 - Descripcion de la clase Heuristica. [Anta]
 
-- ¿Hacer la clase Heuristica interna en Problem? [Anta]
 
 ****************************************
 * TODO YA RESUELTOS (MOVER AQUI ABAJO) *
 ****************************************
+
+? Eliminar el vector pos de la clase Solution [Anta]
+  * DONE Estaba puesto provisional. Si lo volvemos a necesitar lo ponemos. Asi intentamos mantener
+    el codigo lo mas limpio posible. [Haside]
 
 - Contemplar la posibilidad de tener el area de
   los rectangulos hallada previamente. (Una posible clase que contenga al
@@ -36,5 +50,5 @@
     
 - ¿No deberia esta lista estar almacenada en la clase Solution? [Ale]
     * La lista no va en la solucion porque son los puntos donde puede ir el SIGUIENTE rectangulo.
-      En todo caso iria o ahi o en la clase Heuristica. [Haside]
+      En todo caso iria o ahi (en Problem) o en la clase Heuristica. [Haside]
     
