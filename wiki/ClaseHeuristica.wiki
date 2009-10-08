@@ -1,0 +1,21 @@
+Descripción ligera (y momentáneamente unilateral) de la clase Heuristica. [Vynka]
+
+= Introduccion =
+
+Se denomina heurística a la capacidad de un sistema para realizar de forma inmediata innovaciones positivas para sus fines. La capacidad heurística es un rasgo característico de los humanos, desde cuyo punto de vista puede describirse como el arte y la ciencia del descubrimiento y de la invención o de resolver problemas mediante la creatividad y el pensamiento lateral o pensamiento divergente. Wikipedia dixit.
+
+= Detalles =
+
+Por esta clase deberían pasar los principales componentes del problema en general, ya que es la clase que se encarga de solucionarlo. Así pues debería estar formado por:
+
+P - el problema concreto a resolver, especificado en la clase Problem.
+
+S - laS solucioneS que se presentarán, de la forma especificada en Solution
+
+Y para su tratamiento y resolución se utilizarán los diferente métodos que se vean en la asignatura.
+
+
+
+
+= Nota al pie =
+[ No puedo seguir pensando con claridad, si alguien tiene la voluntad de especificar/corregir lo que quiera, adelante. Vynka]
