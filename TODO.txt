@@ -15,7 +15,8 @@
   a realizar y realizadas, pasando TODO.txt a ser una copia de seguridad de las mismas. [Haside]
   
 ? Buscar algun modo de comunicarnos online mediante notas. [Haside]
-    - Messenger? Gmail(Gtalk)? [Vynka]
+    - Solución provisional: http://rectanglepacking-ull.top-board.com A la espera de mejores
+      propuestas [Vynka]
 
 - Decidir criterio para elegir que punto para localizar un rectangulo es mejor. [Anta]
     ? Menor área inutilizada? Es decir, la que genere el hueco más pequeño, o que no
