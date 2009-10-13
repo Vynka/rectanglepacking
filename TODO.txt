@@ -13,6 +13,7 @@
 
 ? Aprender a usar el menu Task List del Eclipse para asi tener mejor clasificadas las tareas 
   a realizar y realizadas, pasando TODO.txt a ser una copia de seguridad de las mismas. [Haside]
+    - Me parece bien. [Ale]
   
 ? Buscar algun modo de comunicarnos online mediante notas. [Haside]
     - Solución provisional: http://rectanglepacking-ull.top-board.com A la espera de mejores
@@ -21,12 +22,15 @@
 - Decidir criterio para elegir que punto para localizar un rectangulo es mejor. [Anta]
     ? Menor área inutilizada? Es decir, la que genere el hueco más pequeño, o que no
       genere ninguno. [Vynka]
+    ? Menor numero de puntos ocultados segun la posicion que se escoja, si es igual comprobar la 
+      menor area desperdiciada. [Ale]
 
 - Modo de comunicar la clase solucion con la heuristica de colocacion. Una 
   posibilidad, que esta clase contenga a la propia clase 'HeuristicaDeColocacion'
   Discutir como elaborar la clase Heuristica para saber donde meter el ArrayList<Point> [Haside].  
     ? (@ArrayList<Point>) En solution, sería quien tendría que mantener el control sobre esa lista.
       [Vynka]
+    ? Pasarle un objeto solucion en el que deberia basarse para encontrar las soluciones vecinas. [Ale]
   
 ? Hacer la clase Heuristica interna en Problem [Anta]
     - Yo creo que es mejor al contrario, en todo caso Problem interno a Heuristica,
@@ -34,12 +38,16 @@
       el planteamiento actual estaria bien. [Haside]
     - Agree, aunque yo más bien veo la Heurística como un filtro que convierte el problema
       en la solución que vamos a devolver. [Vynka]
+    - Yo creo que es mejor mantenerlas separadas tb ^^ [Ale]
 
 - Ver como relacionar el vector de rectangulos con la clase. [Haside]
 
 - Funcion/es para hallar una solucion vecina. [Haside]
+    ? Intercambio de dos elementos, uno de ellos el ultimo de la permutación. [Ale]
 
 - Descripcion de la clase Heuristica. [Anta]
+
+- Arreglar UML. [Ale]
 
 
 ****************************************
@@ -58,4 +66,5 @@
     
 - Â¿No deberia esta lista estar almacenada en la clase Solution? [Ale]
     * La lista no va en la solucion porque son los puntos donde puede ir el SIGUIENTE rectangulo.
-      En todo caso iria o ahi (en Problem) o en la clase Heuristica. [Haside
+      En todo caso iria o ahi (en Problem) o en la clase Heuristica. [Haside]
+
