@@ -35,7 +35,7 @@ public class Problem {
 	private ArrayList<Point> points = new ArrayList<Point>(0);
 
 	/**
-	 * Solucion del problema, determinada por la clase Heuristica(?????).
+	 * Solucion del problema, determinada por la clase Heuristica.
 	 */
 	Solution solution;
 	

@@ -146,24 +146,4 @@ public class Solution {
 		this.fObj = this.area - areaRec;
 		this.orden = orden;
 	}
-
-	/**
-	 * @param b
-	 *          nueva base del rectangulo contenedor.
-	 * @param h
-	 *          nueva altura del rectangulo contenedor.
-	 * @param i
-	 *          indice del primer rectangulo a intercambiar.
-	 * @param j
-	 *          indice del segundo rectangulo a intercambiar.
-	 */
-	public Solution solucionVecina(int b, int h, int i, int j) {
-		Solution newOne = null;
-		/*
-		 * EJEMPLO Intercambia el rectangulo i por el rectangulo j en el vector de
-		 * posiciones. Se actualiza la funcion objetivo (fObj) actual y el otro
-		 * vector de posicionamiento.
-		 */
-		return newOne;
-	}
 }
