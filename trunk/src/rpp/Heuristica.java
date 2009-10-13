@@ -8,6 +8,7 @@ package rpp;
  * @version 1.0a
  * @since 1.0
  */
+
 public class Heuristica {
 	
 	public Heuristica() {
