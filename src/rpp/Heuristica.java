@@ -12,7 +12,6 @@ import java.util.ArrayList;
  */
 
 public class Heuristica {
-	
 	/**
 	 * Lista de puntos factibles en los que colocar un rectangulo
 	 * Como punto inicial esta el (0, 0)
@@ -22,43 +21,28 @@ public class Heuristica {
 	/**
 	 * Solucion del problema
 	 */
-	private Solution solution = null;
+	private Solution solution;
 	
 	/**
-	 * Constructor de la clase Heuristica. Recibe un objeto
-	 * solucion desde los que obtener las soluciones vecinas.
-	 * 
-	 * @param s
-	 *          Solucion "inicial"
+	 * Rectangulos del problema.
 	 */
-	public Heuristica(Solution s) {
+	Rectangle [] rectangles;
+	
+	/**
+	 * Constructor de la clase Heuristica.
+	 * 
+	 * @param rectangles
+	 *         Rectangulos del problema inicial.
+	 */
+	public Heuristica(Rectangle [] rectangles) {
 	  Point origen = new Point(0, 0);
 	  this.points.add(origen);
-	  this.solution = s;
-	}
+	  this.rectangles = rectangles;
+	}	
 	
 	/**
-	 * 
-	 * @return
-	 */
-	public Solution getSolution() {
-	  
-	}
-	
-	/**
-	 * 
-	 * @param last
-	 *          Solucion a partir de la cual obtener una nueva
-	 * @return
-	 */
-	public Solution getSolution(Solution last) {
-	  
-	}
-	
-	/**
-	 * 
 	 * @param i
-	 *          indice del nuevo punto a devolver
+	 *         indice del nuevo punto a devolver
 	 * 
 	 * @return siguiente punto de la lista de puntos factibles
 	 */
@@ -68,12 +52,12 @@ public class Heuristica {
 	
 	/**
 	 * @param i
-	 *          indice del nuevo rectangulo
+	 *         indice del nuevo rectangulo
 	 * @return siguiente rectangulo a colocar
 	 */
 	private Rectangle getNewRectangle(int i) {
 	  //Mirar TODO para saber que es "rectangulos" (linea 45)
-	  return rectangulos[solution.getOrden(i)];
+	  return rectangles[solution.getOrden(i)];
 	}
 	
 	/**
@@ -91,5 +75,26 @@ public class Heuristica {
 	 */
 	private void managePoints() {
 	  
+	}
+	
+	/**
+	 * Metodo Heuristico de Busqueda por entorno numero 1. Busqueda Local.
+	 */
+	public Solution busquedaLocal() {
+		return solution;
+	}
+	
+	/**
+	 * Metodo Heuristico de Busqueda por entorno numero 2. Aleatoria pura.
+	 */
+	public Solution busquedaAP() {
+		return solution;
+	}
+	
+	/**
+	 * Metodo Heuristico de Busqueda por entorno numero 3. Recorrido al azar.
+	 */
+	public Solution busquedaAlAzar(){
+		return solution;
 	}
 }

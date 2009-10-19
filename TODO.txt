@@ -2,51 +2,32 @@
 
 * ARCHIVO TODO PARA TENER SEGUIMIENTO DE LOS CAMBIOS POR HACER. *
 *****************************************************************
-* Estilo (por ejemplo xD):                                      *
+* Estilo:                                      					*
 * - TODO en sÃ­. [Quien ha puesto la nota]                       *
-* ? Sugerencia. [Quien ha puesto la nota]
+* ? Sugerencia. [Quien ha puesto la nota]                       *
 * Si se resuelve el TODO poner en la segunda seccion una nota   *
 * de lo resuelto y el nombre de quien la resolvio.              *
 * Asi si tenemos que contactar a alguien por algun problema     *
 * sera mas llevadero.                                           *
+* No pongan tildes. La codificacion difiere segun SO y 			*
+* genera caracteres ilegibles									*
 *****************************************************************
+
+- Ampliar la Wiki [Haside]
 
 ? Aprender a usar el menu Task List del Eclipse para asi tener mejor clasificadas las tareas 
   a realizar y realizadas, pasando TODO.txt a ser una copia de seguridad de las mismas. [Haside]
     - Me parece bien. [Ale]
-  
-? Buscar algun modo de comunicarnos online mediante notas. [Haside]
-    - Solución provisional: http://rectanglepacking-ull.top-board.com A la espera de mejores
-      propuestas [Vynka]
 
 - Decidir criterio para elegir que punto para localizar un rectangulo es mejor. [Anta]
-    ? Menor área inutilizada? Es decir, la que genere el hueco más pequeño, o que no
+    ? Menor area inutilizada? Es decir, la que genere el hueco mas pequeÃ±o, o que no
       genere ninguno. [Vynka]
     ? Menor numero de puntos ocultados segun la posicion que se escoja, si es igual comprobar la 
       menor area desperdiciada. [Ale]
+    ? Menor area desperdiciada. Si es igual, pues en el primero que encuentre. [Haside]
 
-- Modo de comunicar la clase solucion con la heuristica de colocacion. Una 
-  posibilidad, que esta clase contenga a la propia clase 'HeuristicaDeColocacion'
-  Discutir como elaborar la clase Heuristica para saber donde meter el ArrayList<Point> [Haside].  
-    ? (@ArrayList<Point>) En solution, sería quien tendría que mantener el control sobre esa lista.
-      [Vynka]
-    ? Pasarle un objeto solucion en el que deberia basarse para encontrar las soluciones vecinas. [Ale]
-  
-? Hacer la clase Heuristica interna en Problem [Anta]
-    - Yo creo que es mejor al contrario, en todo caso Problem interno a Heuristica,
-      aunque realmente un Problema y una Heuristica no van dados de la mano asi que
-      el planteamiento actual estaria bien. [Haside]
-    - Agree, aunque yo más bien veo la Heurística como un filtro que convierte el problema
-      en la solución que vamos a devolver. [Vynka]
-    - Yo creo que es mejor mantenerlas separadas tb ^^ [Ale]
-
-- Ver como relacionar el vector de rectangulos con la clase. [Haside]
-    ? Pasar una referencia a la clase Heuristica del vector de rectangulos de Problem y 
-      almacenarlo como un atributo ("rectangulos") más para tenerlos accesibles. Seria muy complejo pedir
-      los rectangulos de uno en uno cuando hiciesen falta. [Ale]
-
-- Funcion/es para hallar una solucion vecina. [Haside]
-    ? Intercambio de dos elementos, uno de ellos el ultimo de la permutación. [Ale]
+- Funcion/es para hallar una solucion vecina, es decir, Heuristicas de bÃºsqueda. [Haside]
+    ? Intercambio de dos elementos, uno de ellos el ultimo de la permutacion. [Ale]
 
 - Descripcion de la clase Heuristica. [Anta]
 
@@ -56,6 +37,41 @@
 ****************************************
 * TODO YA RESUELTOS (MOVER AQUI ABAJO) *
 ****************************************
+
+- Ver como relacionar el vector de rectangulos con la clase. [Haside]
+    ? Pasar una referencia a la clase Heuristica del vector de rectangulos de Problem y 
+      almacenarlo como un atributo ("rectangulos") mas para tenerlos accesibles. Seria muy complejo pedir
+      los rectangulos de uno en uno cuando hiciesen falta. [Ale]
+    * DONE Ok, asÃ­ mismo se queda. [Haside]
+
+
+? Hacer la clase Heuristica interna en Problem [Anta]
+    - Yo creo que es mejor al contrario, en todo caso Problem interno a Heuristica,
+      aunque realmente un Problema y una Heuristica no van dados de la mano asi que
+      el planteamiento actual estaria bien. [Haside]
+    - Agree, aunque yo mas bien veo la Heuristica como un filtro que convierte el problema
+      en la solucion que vamos a devolver. [Vynka]
+    - Yo creo que es mejor mantenerlas separadas tb ^^ [Ale]
+	* END Mayoria de separadas. Si eso se discute en otro momento. [Haside]
+
+
+? Buscar algun modo de comunicarnos online mediante notas. [Haside]
+    - Solucion provisional: http://rectanglepacking-ull.top-board.com A la espera de mejores
+      propuestas [Vynka]
+    * END Se deja asi, ya que te molestaste en hacerlo lo usamos, no merece la pena perder
+           mas tiempo en ello. [Haside]
+
+- Modo de comunicar la clase solucion con la heuristica de colocacion. Una 
+  posibilidad, que esta clase contenga a la propia clase 'HeuristicaDeColocacion'
+  Discutir como elaborar la clase Heuristica para saber donde meter el ArrayList<Point> [Haside].  
+    ? (@ArrayList<Point>) En solution, seria quien tendria que mantener el control sobre esa lista.
+      [Vynka]
+    ? Pasarle un objeto solucion en el que deberia basarse para encontrar las soluciones vecinas. [Ale]
+	
+    * DONE Si nadie decide ni elige pues lo hago yo. Referencia de los rectangulos y 
+           Puntos en la clase heuristica. La clase heuristica devuelve ya la Solucion final use el metodo que use.
+           El problema no harÃ¡ nada salvo guardar la soluciÃ³n y mostrarla. [Haside]
+       
 
 ? Eliminar el vector pos de la clase Solution [Anta]
   * DONE Estaba puesto provisional. Si lo volvemos a necesitar lo ponemos. Asi intentamos mantener
@@ -68,6 +84,7 @@
     * DONE Clase Problem (ver areaRec). [Anta]
     
 - Â¿No deberia esta lista estar almacenada en la clase Solution? [Ale]
-    * La lista no va en la solucion porque son los puntos donde puede ir el SIGUIENTE rectangulo.
+    * END La lista no va en la solucion porque son los puntos donde puede ir el SIGUIENTE rectangulo.
       En todo caso iria o ahi (en Problem) o en la clase Heuristica. [Haside]
+      
 
