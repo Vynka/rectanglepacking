@@ -29,14 +29,15 @@
 - Funcion/es para hallar una solucion vecina, es decir, Heuristicas de búsqueda. [Haside]
     ? Intercambio de dos elementos, uno de ellos el ultimo de la permutacion. [Ale]
 
-- Descripcion de la clase Heuristica. [Anta]
-
 - Arreglar UML. [Ale]
 
 
 ****************************************
 * TODO YA RESUELTOS (MOVER AQUI ABAJO) *
 ****************************************
+
+- Descripcion de la clase Heuristica. [Anta]
+  * DONE [Haside]
 
 - Ver como relacionar el vector de rectangulos con la clase. [Haside]
     ? Pasar una referencia a la clase Heuristica del vector de rectangulos de Problem y 
