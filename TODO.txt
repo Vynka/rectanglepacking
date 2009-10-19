@@ -41,6 +41,9 @@
     - Yo creo que es mejor mantenerlas separadas tb ^^ [Ale]
 
 - Ver como relacionar el vector de rectangulos con la clase. [Haside]
+    ? Pasar una referencia a la clase Heuristica del vector de rectangulos de Problem y 
+      almacenarlo como un atributo ("rectangulos") más para tenerlos accesibles. Seria muy complejo pedir
+      los rectangulos de uno en uno cuando hiciesen falta. [Ale]
 
 - Funcion/es para hallar una solucion vecina. [Haside]
     ? Intercambio de dos elementos, uno de ellos el ultimo de la permutación. [Ale]

@@ -17,7 +17,7 @@ public class Heuristica {
 	 * Lista de puntos factibles en los que colocar un rectangulo
 	 * Como punto inicial esta el (0, 0)
 	 */
-	private ArrayList<Point> points = new ArrayList(1);
+	private ArrayList<Point> points = new ArrayList<Point>(1);
 	
 	/**
 	 * Solucion del problema
@@ -63,7 +63,7 @@ public class Heuristica {
 	 * @return siguiente punto de la lista de puntos factibles
 	 */
 	private Point getNewPoint(int i) {
-	  
+	  return points.get(i);
 	}
 	
 	/**
@@ -72,7 +72,8 @@ public class Heuristica {
 	 * @return siguiente rectangulo a colocar
 	 */
 	private Rectangle getNewRectangle(int i) {
-	  
+	  //Mirar TODO para saber que es "rectangulos" (linea 45)
+	  return rectangulos[solution.getOrden(i)];
 	}
 	
 	/**
