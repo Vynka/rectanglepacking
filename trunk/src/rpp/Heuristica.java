@@ -39,6 +39,7 @@ public class Heuristica {
 	 */
 	public Heuristica(Rectangle [] rectangles) {
 	  Point origen = new Point(0, 0);
+	  this.points.clear();
 	  this.points.add(origen);
 	  this.rectangles = rectangles;
 	}	
@@ -52,6 +53,16 @@ public class Heuristica {
 	private Point getNewPoint(int i) {
 	  return points.get(i);
 	}
+	
+	/**
+	 * Anade un punto a la lista de puntos factibles.
+	 * 
+	 * @param p
+	 *          Punto a anadir.
+	 */
+	private void addPoint(Point p) {
+		points.add(p);
+	}	
 	
 	/**
 	 * @param i
@@ -78,6 +89,17 @@ public class Heuristica {
 	 */
 	private void managePoints() {
 	  
+	}
+	
+	/**
+	 * Funcion que tiene como objetivo la colocacion de los rectangulos para hallar el valor
+	 * que tiene la funcion objetivo dada una solucion representada con una permutacion de 
+	 * rectangulos.
+	 * @param s
+	 *          Solucion a evaluar.
+	 */
+	private void evalue(Solution s) {
+		
 	}
 	
 	/**

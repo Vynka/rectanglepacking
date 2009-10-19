@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StreamTokenizer;
-import java.util.ArrayList;
 
 /**
  * Clase que tiene como funcion almacenar la informacion necesaria para resolver el
@@ -30,11 +29,6 @@ public class Problem {
 	private Rectangle[] rectangles;
 
 	/**
-	 * Lista de puntos factibles en los que colocar un rectangulo.
-	 */
-	private ArrayList<Point> points = new ArrayList<Point>(0);
-
-	/**
 	 * Solucion del problema, determinada por la clase Heuristica.
 	 */
 	Solution solution;
@@ -53,7 +47,6 @@ public class Problem {
 	 */
 	public Problem(String fileName) {
 		this.rectangles = readFile(fileName);
-		points.clear();
 		for (int i = 0; i < rectangles.length; i++) {
 			this.areaRec += rectangles[i].getArea();
 		}
@@ -123,28 +116,6 @@ public class Problem {
 		return new Rectangle[0];
 	}
 
-	/**
-	 * Anade un punto a la lista de puntos factibles.
-	 * 
-	 * @param p
-	 *          Punto a anadir.
-	 */
-	public void addPoint(Point p) {
-		points.add(p);
-	}
-
-	/** 
-	 * @return Punto donde colocar el rectangulo.
-	 */
-	public Point getPoint(Point p) {
-		Point toRet = new Point();
-
-		if (points.contains(p)) {
-			toRet = points.remove(points.indexOf(p));
-		}
-
-		return toRet;
-	}
 	
 	/**
 	 * Devuelve el area idea de los rectangulos (todos).
