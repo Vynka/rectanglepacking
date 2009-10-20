@@ -135,4 +135,11 @@ public class Rectangle {
 	public Point getPosition() {
 		return this.p;
 	}
+	
+	/**
+	 * Devuelve el punto central del rectangulo para facilitar la representacion del mismo.
+	 */
+	public Point getCenter() {
+		return new Point(p.getX() + b/2, p.getY() + h/2);
+	}
 }
