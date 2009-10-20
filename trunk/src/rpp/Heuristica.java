@@ -70,22 +70,29 @@ public class Heuristica {
 	
 	/**
 	 * Busca un punto de la lista de puntos que minimize el criterio de colocacion de
-	 * rectangulos, es decir, que al colocar el rectangulo seleccionado sea (menor area,
-	 * menor numero de puntos ocultos,... por decidir)
+	 * rectangulos, es decir, que al colocar el rectangulo seleccionado sea menor area
+	 * desperdiciada.
+	 * El critero para comparar es la relacion de unidades que aumenta el rectangulo de
+	 * la funcion objetivo. Al ser un rectangulo es igual cual sea la direccion de crecimiento,
+	 * por lo que se toma la suma de las dos unidades como medida de comparación.
+	 * El rectangulo ira colocado en aquel punto que haga que las dimensiones del rectangulo
+	 * de la solucion crezcan lo menos posible.
 	 */
 	private void allocateRectangle(Rectangle rectangle) {
-	  /*   En proceso.
-	   *   OJO: PSEUDOCODIGO
-	  ArrayList<int> foo = new ArrayList<int>(points.size());
+	  int menor = Integer.MAX_VALUE;
+	  int fin = 0;
 	  for (int i = 0; i < points.size(); i++) {
-	    int aux = 0;
-	    if ((points[i].getY() + rectangle.getHeight()) > (problem.getSolution().getHeight()))
-	      aux += rectangle.getHeight();
-      if ((points[i].getX() + rectangle.getBase()) > (problem.getSolution().getBase()))
-        aux += rectangle.getBase();
-	    foo.push(aux);
+	    int nuevo = Integer.MAX_VALUE;
+	    if ((this.points.get(i).getY() + rectangle.getHeight()) > (this.problem.getSolution().getHeight()))
+	      nuevo += rectangle.getHeight();
+      if ((this.points.get(i).getX() + rectangle.getBase()) > (this.problem.getSolution().getBase()))
+        nuevo += rectangle.getBase();
+      if (nuevo < menor) {
+        fin = i;
+        menor = nuevo;
+      }
 	  }
-	  */
+	  rectangle.setPosition(this.points.get(fin));
 	}
 	
 	/**
