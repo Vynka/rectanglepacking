@@ -22,14 +22,9 @@ public class Heuristica {
 	private ArrayList<Point> points = new ArrayList<Point>(1);
 	
 	/**
-	 * Solucion del problema
+	 * Problema a resolver
 	 */
-	private Solution solution;
-	
-	/**
-	 * Rectangulos del problema.
-	 */
-	Rectangle [] rectangles;
+	private Problem problem;
 	
 	/**
 	 * Constructor de la clase Heuristica.
@@ -37,11 +32,11 @@ public class Heuristica {
 	 * @param rectangles
 	 *         Rectangulos del problema inicial.
 	 */
-	public Heuristica(Rectangle [] rectangles) {
+	public Heuristica(Problem p) {
 	  Point origen = new Point(0, 0);
 	  this.points.clear();
 	  this.points.add(origen);
-	  this.rectangles = rectangles;
+	  this.problem = p;
 	}	
 	
 	/**
@@ -70,8 +65,7 @@ public class Heuristica {
 	 * @return siguiente rectangulo a colocar
 	 */
 	private Rectangle getNewRectangle(int i) {
-	  //Mirar TODO para saber que es "rectangulos" (linea 45)
-	  return rectangles[solution.getOrden(i)];
+	  return problem.getRectangle(solution.getOrden(i));
 	}
 	
 	/**
@@ -79,8 +73,19 @@ public class Heuristica {
 	 * rectangulos, es decir, que al colocar el rectangulo seleccionado sea (menor area,
 	 * menor numero de puntos ocultos,... por decidir)
 	 */
-	private void allocateRectangle() {
-	  
+	private void allocateRectangle(Rectangle rectangle) {
+	  /*   En proceso.
+	   *   OJO: PSEUDOCODIGO
+	  ArrayList<int> foo = new ArrayList<int>(points.size());
+	  for (int i = 0; i < points.size(); i++) {
+	    int aux = 0;
+	    if ((points[i].getY() + rectangle.getHeight()) > (problem.getSolution().getHeight()))
+	      aux += rectangle.getHeight();
+      if ((points[i].getX() + rectangle.getBase()) > (problem.getSolution().getBase()))
+        aux += rectangle.getBase();
+	    foo.push(aux);
+	  }
+	  */
 	}
 	
 	/**

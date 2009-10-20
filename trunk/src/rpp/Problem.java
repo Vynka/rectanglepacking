@@ -127,6 +127,20 @@ public class Problem {
 	}
 	
 	/**
+	 * @return rectangulo de la posicion i-ésima
+	 */
+	public Rectangle getRectangle(int i) {
+	  return this.rectangles[i];
+	}
+	
+	/**
+	 * @return Solucion actual del problema
+	 */
+	public Solution getSolution() {
+	  return this.solution;
+	}
+	
+	/**
 	 * Devuelve la cadena representativa del problema, mostrando por pantalla el listado de
 	 * rectangulos que componen el problema, con sus dimensiones y area, asi como el area total
 	 * (ideal) de los rectangulos.

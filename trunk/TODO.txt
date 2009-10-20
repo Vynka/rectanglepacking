@@ -32,7 +32,7 @@
 ? Propongo almacenar en la clase Heuristica un atributo de clase "problem", igual que se hace
   con solution. Quedaria todo mas empaquetado y ordenado en lugar de copiar dos veces la misma
   información. El constructor de la clase Heuristica se encargaria de llamar a los constructores
-  del problema y de la solucion. Recalco el "porpongo" XD alomejor no es buena idea.
+  del problema y de la solucion. Recalco el "porpongo" XD alomejor no es buena idea. [Ale]
 
 
 ****************************************
