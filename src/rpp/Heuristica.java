@@ -6,10 +6,10 @@ import java.util.ArrayList;
  * Clase que contiene diversos metodos heuristicos (GRASP, busqueda de entornos,
  * enjambres, multiarranque...) para la resolucion del problema rectangle packing problem.
  * 
- * @author Castor Miguel Perez Melian
  * @author Alberto Cabrera Perez
  * @author Javier Luis Moreno Villena
  * @author Alejandro Tejera Perez
+ * @author Isaac Galán Estárico
  * @version 1.0a
  * @since 1.0
  */
