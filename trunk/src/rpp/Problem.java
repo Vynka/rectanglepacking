@@ -18,6 +18,7 @@ import java.io.StreamTokenizer;
  * @author Alberto Cabrera Perez
  * @author Javier Luis Moreno Villena
  * @author Alejandro Tejera Perez
+ * @author Isaac Galán Estárico
  * @version 1.0a
  * @since 1.0
  */
