@@ -243,7 +243,7 @@ public class Solution {
 	public void randomInit(int size) {
 		clearSolution();
 		ArrayList<Integer> toMix = new ArrayList<Integer>(0);
-		Random generator = new Random(System.nanoTime() * System.currentTimeMillis() / 2);
+		Random generator = new Random(System.nanoTime());
 		for (int i = 0; i < size; i++) {
 			toMix.add(new Integer(i));
 		}		
