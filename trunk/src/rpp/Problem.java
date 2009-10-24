@@ -48,10 +48,12 @@ public class Problem {
 	 */
 	public Problem(String fileName) {
 		this.rectangles = readFile(fileName);
+		int a[] = new int[rectangles.length];
 		for (int i = 0; i < rectangles.length; i++) {
 			this.areaRec += rectangles[i].getArea();
+			a[i] = i;
 		}
-		solution = new Solution();
+		solution = new Solution(0, 0, areaRec, a);
 	}
 
 	/**

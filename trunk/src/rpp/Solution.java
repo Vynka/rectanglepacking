@@ -50,6 +50,39 @@ public class Solution {
 	private int[] orden;
 
 	/**
+	 * Por defecto pone todo a 0 o null (aunque no hace falta) a excepcion de la
+	 * funcion objetivo que vale INF. Dado que el problema consiste en minimizar,
+	 * asi se evita un posible error de que la mejor solucion valga 0.
+	 */
+	public Solution() {
+		this.b = 0;
+		this.h = 0;
+		this.area = 0;
+		this.fObj = INF;
+		this.orden = null;
+	}
+
+	/**
+	 * Construye la solucion directamente con los valores obtenidos.
+	 * 
+	 * @param b
+	 *          base del rectangulo solucion.
+	 * @param h
+	 *          altura del rectangulo solucion.
+	 * @param areaRec
+	 *          area de los rectangulos.
+	 * @param orden
+	 *          permutacion de los rectangulos
+	 */
+	public Solution(int b, int h, int areaRec, int [] orden) {
+		this.b = b;
+		this.h = h;
+		this.area = b * h;
+		this.fObj = this.area - areaRec;
+		this.orden = orden;
+	}
+	
+	/**
 	 * @return la base del rectangulo.
 	 */
 	public int getBase() {
@@ -61,8 +94,10 @@ public class Solution {
 	 *          la altura del rectangulo.
 	 */
 	public void setBase(int b) {
+		int oldarea = this.area;
 		this.b = b;
 		this.area = this.b * this.h;
+		fObj += this.area - oldarea;
 	}
 
 	/**
@@ -77,8 +112,10 @@ public class Solution {
 	 *          altura a establecer.
 	 */
 	public void setHeight(int h) {
+		int oldarea = this.area;
 		this.h = h;
 		this.area = this.h * this.b;
+		fObj += this.area - oldarea;
 	}
 
 	/**
@@ -116,37 +153,8 @@ public class Solution {
 	public int getOrden(int i) {
 		return orden[i];
 	}
-
-	/**
-	 * Por defecto pone todo a 0 o null (aunque no hace falta) a excepcion de la
-	 * funcion objetivo que vale INF. Dado que el problema consiste en minimizar,
-	 * asi se evita un posible error de que la mejor solucion valga 0.
-	 */
-	public Solution() {
-		this.b = 0;
-		this.h = 0;
-		this.area = 0;
-		this.fObj = INF;
-		this.orden = null;
-	}
-
-	/**
-	 * Construye la solucion directamente con los valores obtenidos.
-	 * 
-	 * @param b
-	 *          base del rectangulo solucion.
-	 * @param h
-	 *          altura del rectangulo solucion.
-	 * @param areaRec
-	 *          area de los rectangulos.
-	 * @param orden
-	 *          permutacion de los rectangulos
-	 */
-	public Solution(int b, int h, int areaRec, int [] orden) {
-		this.b = b;
-		this.h = h;
-		this.area = b * h;
-		this.fObj = this.area - areaRec;
-		this.orden = orden;
+	
+	public String toString() {
+		return new String ("Funcion obj " + fObj +" con base " + b + " y altura " + h);
 	}
 }
