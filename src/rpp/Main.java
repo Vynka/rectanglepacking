@@ -26,5 +26,8 @@ public class Main {
 	public static void main(String[] args) {
 		Problem r = new Problem("test.dat");
 		System.out.println(r);
+		Heuristica h = new Heuristica(r);
+		h.evalue(r.getSolution());
+		System.out.println(r.getSolution());
 	}
 }
