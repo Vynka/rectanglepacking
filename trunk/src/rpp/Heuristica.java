@@ -33,10 +33,9 @@ public class Heuristica {
 	 *         Rectangulos del problema inicial.
 	 */
 	public Heuristica(Problem p) {
-	  Point origen = new Point(0, 0);
-	  this.points.clear();
-	  this.points.add(origen);
+	  initPoints();
 	  this.problem = p;
+	  evalue(p.getSolution());
 	}			
 	
 	/**
@@ -49,8 +48,24 @@ public class Heuristica {
 	/**
 	 * Metodo Heuristico de Busqueda por entorno numero 2. Aleatoria pura.
 	 */
-	public void pureRandomSearch() {
-
+	public void pureRandomSearch(int n) {
+		Solution best = problem.getSolution().clone();
+		Solution actual = best.clone();
+		do {
+			actual = new Solution (problem.getAreaRec(), Solution.RANDOM, problem.getRectangleSize());
+			evalue(actual);
+			
+			for (int i = 0; i < actual.getOrden().length; i++) {
+				System.out.print(actual.getOrden(i) + " ");
+			}
+			System.out.println("  " + actual.getObjF());
+			
+			if (best.getObjF() > actual.getObjF()) {
+		        best = actual;
+			}
+			n--;
+		} while (n > 0);
+		problem.setSolution(best);
 	}
 	
 	/**
@@ -222,6 +237,12 @@ public class Heuristica {
 		points.remove(r.getPosition());
 	}
 	
+	private void initPoints() {
+		Point origen = new Point(0, 0);
+		this.points.clear();
+		this.points.add(origen);
+	}
+	
 	/**
 	 * Funcion que tiene como objetivo la colocacion de los rectangulos para hallar el valor
 	 * que tiene la funcion objetivo dada una solucion representada con una permutacion de 
@@ -229,20 +250,24 @@ public class Heuristica {
 	 * @param s
 	 *          Solucion a evaluar.
 	 */
-	public void evalue(Solution s) {
+	private void evalue(Solution s) {
+		initPoints(); // Inicializa los puntos (establece como unico punto el origen)
 		Rectangle r;
 		for (int i = 0; i < problem.getRectangleSize(); i++) {
-			System.out.println("---------- " + (i + 1) + " -----------------");
+			//System.out.println("---------- " + (i + 1) + " -----------------");
 			r = getNewRectangle(i);
 			allocateRectangle(r,s);
 			// En la ultima iteracion es innecesario calcular los puntos
 			if (i != (problem.getRectangleSize() - 1))
 				managePoints(r);
+			/*
 			System.out.println("" + s);
 			for (int j = 0; j < points.size(); j++) {
 				System.out.print(points.get(j));
 			}
 			System.out.println();
+			*/
 		}
+		s.setObjF();
 	}
 }

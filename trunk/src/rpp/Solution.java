@@ -13,7 +13,7 @@ import java.util.Collections;
  * @author Alberto Cabrera Perez
  * @author Javier Luis Moreno Villena
  * @author Alejandro Tejera Perez
- * @author Isaac Galán Estárico
+ * @author Isaac Galan Estarico
  * @version 1.0a
  * @since 1.0
  */
@@ -47,6 +47,11 @@ public class Solution {
 	 * Atributo area: area del rectangulo solucion.
 	 */
 	private int area;
+	
+	/**
+	 * Area Ideal
+	 */
+	private int recArea;
 
 	/**
 	 * Atributo ObjF: valor de la funcion objetivo del problema. f(x) = area -
@@ -70,6 +75,7 @@ public class Solution {
 		this.b = 0;
 		this.h = 0;
 		this.area = 0;
+		this.recArea = 0;
 		this.ObjF = INF;
 		this.orden = null;
 	}
@@ -90,6 +96,7 @@ public class Solution {
 		this.b = b;
 		this.h = h;
 		this.area = b * h;
+		this.recArea = recArea;
 		this.ObjF = this.area - recArea;
 		this.orden = orden;
 	}
@@ -106,19 +113,20 @@ public class Solution {
 		this.b = 0;
 		this.h = 0;
 		this.area = 0;
+		this.recArea = recArea;
 		this.ObjF = -recArea;
 		switch (initType) {
 		case RANDOM:
-			this.orden = randomInit(size);
+			randomInit(size);
 			break;
 		case DETERMINISTIC1:
-			this.orden = deterministicInit1(size);
+			deterministicInit1(size);
 			break;
 		case MIXED1:
-			this.orden = mixedInit1(size);
+			mixedInit1(size);
 			break;
 		case MIXED2:
-			this.orden = mixedInit2(size);
+			mixedInit2(size);
 			break;
 		}
 	}
@@ -135,10 +143,8 @@ public class Solution {
 	 *          la altura del rectangulo.
 	 */
 	public void setBase(int b) {
-		int oldarea = this.area;
 		this.b = b;
 		this.area = this.b * this.h;
-		ObjF += this.area - oldarea;
 	}
 
 	/**
@@ -153,10 +159,8 @@ public class Solution {
 	 *          altura a establecer.
 	 */
 	public void setHeight(int h) {
-		int oldarea = this.area;
 		this.h = h;
 		this.area = this.h * this.b;
-		ObjF += this.area - oldarea;
 	}
 
 	/**
@@ -167,10 +171,25 @@ public class Solution {
 	}
 
 	/**
+	 * @param recArea
+	 * 			area del rectangulo ideal
+	 */
+	public void setRecArea(int recArea) {
+		this.recArea = recArea;
+	}
+	
+	/**
 	 * @return el valor de la funcion objetivo.
 	 */
 	public int getObjF() {
-		return ObjF;
+		return this.ObjF;
+	}
+	
+	/**
+	 * Establece el valor de la funciono objetivo
+	 */
+	public void setObjF() {
+		this.ObjF = this.area - this.recArea; 
 	}
 
 	/**
@@ -202,40 +221,68 @@ public class Solution {
 		return new String ("Funcion obj " + ObjF +" con base " + b + " y altura " + h);
 	}
 	
-	public int[] randomInit(int size) {
+	/**
+	 * @return Copia de la solucion actual
+	 */
+	public Solution clone() {
+		Solution s = new Solution();
+		s.setBase(this.b);
+		s.setHeight(this.h);
+		s.setOrden(orden.clone());
+		s.setRecArea(this.recArea);
+		s.setObjF();
+		return s;
+	}
+	
+	/**
+	 * 
+	 * @param size
+	 * @return
+	 */
+	
+	public void randomInit(int size) {
+		clearSolution();
 		ArrayList<Integer> toMix = new ArrayList<Integer>(0);
-		Random generator = new Random(System.currentTimeMillis());
+		Random generator = new Random(System.nanoTime() * System.currentTimeMillis() / 2);
 		for (int i = 0; i < size; i++) {
 			toMix.add(new Integer(i));
 		}		
 		Collections.shuffle(toMix, generator);
 		Object[] toNormalInt = toMix.toArray();
-		int[] toReturn = new int[toNormalInt.length];
+		orden = new int[toNormalInt.length];
 		for (int i = 0; i < toNormalInt.length; i++) {
-			toReturn[i] = ((Integer)toNormalInt[i]).intValue();
+			orden[i] = ((Integer)toNormalInt[i]).intValue();
 		}
-		return toReturn;
 	}
 
 
-    public int[] deterministicInit1(int size) {
-    	int[] toReturn = new int [size];
-		for (int i = 0; i < toReturn.length; i++) {
-			toReturn[i] = toReturn.length - i - 1;
+    public void deterministicInit1(int size) {
+		clearSolution();
+    	orden = new int [size];
+		for (int i = 0; i < orden.length; i++) {
+			orden[i] = orden.length - i - 1;
 		}
-		return toReturn;
+
     }
 
 
-    public int[] mixedInit1(int size) {
-    	int[] toReturn = new int [size];
-		return toReturn;
+    public void mixedInit1(int size) {
+		clearSolution();
+    	orden = new int [size];
     }
 
 
-    public int[] mixedInit2(int size) {
-    	int[] toReturn = new int [size];
-		return toReturn;
+    public void mixedInit2(int size) {
+		clearSolution();
+    	orden = new int [size];
+    }
+    
+    private void clearSolution() {
+		this.b = 0;
+		this.h = 0;
+		this.area = 0;
+		this.ObjF = -this.recArea;
+		this.orden = null;
     }
 	
 }
