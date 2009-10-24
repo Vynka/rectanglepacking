@@ -18,7 +18,7 @@ import java.io.StreamTokenizer;
  * @author Alberto Cabrera Perez
  * @author Javier Luis Moreno Villena
  * @author Alejandro Tejera Perez
- * @author Isaac Galán Estárico
+ * @author Isaac Galan Estarico
  * @version 1.0a
  * @since 1.0
  */
@@ -51,6 +51,7 @@ public class Problem {
 		for (int i = 0; i < rectangles.length; i++) {
 			this.areaRec += rectangles[i].getArea();
 		}
+		solution = new Solution();
 	}
 
 	/**
@@ -131,6 +132,13 @@ public class Problem {
 	 */
 	public Rectangle getRectangle(int i) {
 	  return this.rectangles[i];
+	}
+	
+	/**
+	 * @return rectangulo de la posicion i-ésima
+	 */
+	public int getRectangleSize() {
+	  return this.rectangles.length;
 	}
 	
 	/**
