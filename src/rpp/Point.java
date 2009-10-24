@@ -90,4 +90,14 @@ public class Point {
 		return new String("(" + getX() + ", " + getY() + ")");
 	}
 
+	/**
+	 * Equals devuelve true si la instancia del obnjeto es igual a otra
+	 * pasada por parametro.
+	 * @param p
+	 * 			punto con el que comparar
+	 * @return ¿Son iguales?
+	 */
+	boolean equals(Point p) {
+		return (this.x == p.getX()) && (this.y == getY());
+	}
 }

@@ -73,8 +73,10 @@ public class Heuristica {
 	 * 			solucion en la que va a ser asignado
 	 */
 	private void allocateRectangle(Rectangle r, Solution s) {
-	  int menorH = Integer.MAX_VALUE;
-	  int menorB = Integer.MAX_VALUE;
+	  // El mejor caso es que las menores dimensiones sean las ya obtenidas
+	  // anteriormente
+	  int menorH = s.getHeight();
+	  int menorB = s.getBase();
 	  int fin = 0;
 	  for (int i = 0; i < points.size(); i++) {
 		// Se toman los nuevos datos resultantes de colocar el rectángulo
@@ -98,11 +100,39 @@ public class Heuristica {
 	}
 	
 	/**
+	 * Obtiene las coordenadas donde iría el nuevo punto 
+	 * @param r
+	 * 			rectangulo colocado
+	 * @return Candidato a nuevo punto del eje y
+	 */
+	private Point obtainNewPointY(Rectangle r) {
+		Point p = new Point (0, r.getHeight() + r.getPosition().getY());
+		return p;
+	}
+	
+	/**
 	 * Reestructura la lista de puntos, eliminando el usados, asi como los ocultados, y
 	 * añadiendo los nuevos puntos creados con la eleccion tomada.
 	 */
-	private void managePoints(Point toErase) {
-	  
+	private void managePoints(Rectangle r) {
+		// Posible nuevo punto
+		Point p;
+		boolean nuevo = true;
+		// Se manipulan con respecto al eje Y
+		p = obtainNewPointY(r);
+		for (int i = 0; i < points.size(); i++) {
+			if ((points.get(i).getY() < p.getY()) &&
+				(points.get(i).getX() < p.getX())) {
+				points.remove(i);
+			} else if (points.get(i).getY() == p.getY()){
+				nuevo = false;
+			}
+		}
+		if (nuevo)
+			points.add(p);
+		
+		// Por último se elimina el punto utilizado de la lista
+		points.remove(r.getPosition());
 	}
 	
 	/**
@@ -119,7 +149,7 @@ public class Heuristica {
 			allocateRectangle(r,s);
 			// En la última iteración es innecesario calcular los puntos
 			if (i != (problem.getRectangleSize() - 1)) 
-				managePoints(r.getPosition());
+				managePoints(r);
 		}
 	}
 	
