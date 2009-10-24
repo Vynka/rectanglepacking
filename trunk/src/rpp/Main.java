@@ -27,7 +27,12 @@ public class Main {
 		Problem r = new Problem("test.dat");
 		System.out.println(r);
 		Heuristica h = new Heuristica(r);
+		r.getSolution().setOrden(r.getSolution().deterministicInit1(r.getRectangleSize()));
 		h.evalue(r.getSolution());
 		System.out.println(r.getSolution());
+		for (int i = 0; i < r.getRectangleSize(); i++) {
+			System.out.print(" " + r.getRectangle(i).getPosition());
+		}
+		System.out.println();
 	}
 }

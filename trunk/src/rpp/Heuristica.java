@@ -37,7 +37,28 @@ public class Heuristica {
 	  this.points.clear();
 	  this.points.add(origen);
 	  this.problem = p;
-	}		
+	}			
+	
+	/**
+	 * Metodo Heuristico de Busqueda por entorno numero 1. Busqueda Local.
+	 */
+	public void localSearch() {
+		
+	}
+	
+	/**
+	 * Metodo Heuristico de Busqueda por entorno numero 2. Aleatoria pura.
+	 */
+	public void pureRandomSearch() {
+
+	}
+	
+	/**
+	 * Metodo Heuristico de Busqueda por entorno numero 3. Recorrido al azar.
+	 */
+	public void randomSearch() {
+
+	}	
 	
 	/**
 	 * Anade un punto a la lista de puntos factibles.
@@ -75,8 +96,8 @@ public class Heuristica {
 	private void allocateRectangle(Rectangle r, Solution s) {
 	  // El mejor caso es que las menores dimensiones sean las ya obtenidas
 	  // anteriormente
-	  int minorH = Integer.MAX_VALUE / 2;
-	  int minorB = Integer.MAX_VALUE / 2;
+	  int minorH = 0;
+	  int minorB = 0;
 	  boolean modified = false;
 	  int next = 0;
 	  for (int i = 0; i < points.size(); i++) {
@@ -91,7 +112,7 @@ public class Heuristica {
 	    if ((points.get(i).getX() + r.getBase()) > (s.getBase()))
 	      newB = points.get(i).getX() + r.getBase();
 	    // Si son mejores que los actuales se guardan
-	    if ((newH + newB) < (minorH + minorB)) {
+	    if ((!modified) || (newH * newB) < (minorH * minorB)) {
           next = i;
           minorH = newH;
           minorB = newB;
@@ -100,8 +121,8 @@ public class Heuristica {
 	  }
 	  // Se actualiza la solucion
 	  if (modified) {
-		  s.setBase(menorB);
-		  s.setHeight(menorH);
+		  s.setBase(minorB);
+		  s.setHeight(minorH);
 	  }
 	  r.setPosition(this.points.get(next));
 	}
@@ -118,7 +139,7 @@ public class Heuristica {
 		int i = 0;
 		Point p = new Point (0, r.getHeight() + r.getPosition().getY());
 		for (int j = 0; j < points.size(); j++) {
-			if ((points.get(j).getY() > prevY) && (points.get(j).getY() < p.getY())) {
+			if ((points.get(j).getY() >= prevY) && (points.get(j).getY() < p.getY())) {
 				prevY = points.get(j).getY();
 				i = j;
 			}
@@ -139,12 +160,12 @@ public class Heuristica {
 		int i = 0;
 		Point p = new Point (r.getBase() + r.getPosition().getX(), 0);
 		for (int j = 0; j < points.size(); j++) {
-			if ((points.get(j).getX() > prevX) && (points.get(j).getX() < p.getX())) {
-				prevX = points.get(j).getY();
+			if ((points.get(j).getX() >= prevX) && (points.get(j).getX() < p.getX())) {
+				prevX = points.get(j).getX();
 				i = j;
 			}
 		}
-		p.setX(points.get(i).getX());
+		p.setY(points.get(i).getY());
 		return p;
 	}
 	
@@ -155,37 +176,48 @@ public class Heuristica {
 	 */
 	private void managePoints(Rectangle r) {
 		// Posible nuevo punto
-		Point p;
-		boolean nuevo = true;
+		Point py;
+		Point px;
+		boolean newy = true;
+		boolean newx = true;
+		int i;
 		// Se manipulan con respecto al eje Y
-		p = obtainNewPointY(r);
-		for (int i = 0; i < points.size(); i++) {
+		py = obtainNewPointY(r);
+		i = 0;
+		while (i < points.size()) {
 			// Se eliminan los puntos con coordenada Y menor que la actual
 			// si estos estan a la izquierda de la base del rectangulo nuevo
-			if ((points.get(i).getY() < p.getY()) &&
-				(points.get(i).getX() < p.getX())) {
+			if ((points.get(i).getY() < py.getY()) &&
+				(points.get(i).getX() < r.getPosition().getX())) {
 				points.remove(i);
-			} else if (points.get(i).getY() == p.getY()){
-				nuevo = false;
+			} else if (points.get(i).getY() == py.getY()){
+				newy = false;
+				i++;
+			} else {
+				i++;
 			}
 		}
-		if (nuevo)
-			addPoint(p);
 		// Se repite pero con respecto al eje X
-		nuevo = false;
-		p = obtainNewPointX(r);
-		for (int i = 0; i < points.size(); i++) {
+		px = obtainNewPointX(r);
+		i = 0;
+		while (i < points.size()) {
 			// Se eliminan los puntos con coordenada X menor que la actual
 			// si estos estan por debajo de la altura del rectangulo nuevo
-			if ((points.get(i).getX() < p.getX()) &&
-				(points.get(i).getY() < p.getY())) {
+			if ((points.get(i).getX() < px.getX()) &&
+				(points.get(i).getY() < r.getPosition().getY())) {
 				points.remove(i);
-			} else if (points.get(i).getX() == p.getX()){
-				nuevo = false;
+			} else if (points.get(i).getX() == px.getX()){
+				newx = false;
+				i++;
+			} else {
+				i++;
 			}
 		}
-		if (nuevo)
-			addPoint(p);
+		// Se añaden si son puntos utiles
+		if (newy)
+			addPoint(py);
+		if (newx)
+			addPoint(px);
 		// Por ultimo se elimina el punto utilizado de la lista
 		points.remove(r.getPosition());
 	}
@@ -200,33 +232,17 @@ public class Heuristica {
 	public void evalue(Solution s) {
 		Rectangle r;
 		for (int i = 0; i < problem.getRectangleSize(); i++) {
+			System.out.println("---------- " + (i + 1) + " -----------------");
 			r = getNewRectangle(i);
 			allocateRectangle(r,s);
 			// En la ultima iteracion es innecesario calcular los puntos
-			if (i != (problem.getRectangleSize() - 1)) {
+			if (i != (problem.getRectangleSize() - 1))
 				managePoints(r);
+			System.out.println("" + s);
+			for (int j = 0; j < points.size(); j++) {
+				System.out.print(points.get(j));
 			}
+			System.out.println();
 		}
-	}
-	
-	/**
-	 * Metodo Heuristico de Busqueda por entorno numero 1. Busqueda Local.
-	 */
-	public void localSearch() {
-		
-	}
-	
-	/**
-	 * Metodo Heuristico de Busqueda por entorno numero 2. Aleatoria pura.
-	 */
-	public void pureRandomSearch() {
-
-	}
-	
-	/**
-	 * Metodo Heuristico de Busqueda por entorno numero 3. Recorrido al azar.
-	 */
-	public void randomSearch() {
-
 	}
 }
