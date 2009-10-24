@@ -3,7 +3,7 @@
 * ARCHIVO TODO PARA TENER SEGUIMIENTO DE LOS CAMBIOS POR HACER. *
 *****************************************************************
 * Estilo:                                      					*
-* - TODO en sí. [Quien ha puesto la nota]                       *
+* - TODO en si. [Quien ha puesto la nota]                       *
 * ? Sugerencia. [Quien ha puesto la nota]                       *
 * Si se resuelve el TODO poner en la segunda seccion una nota   *
 * de lo resuelto y el nombre de quien la resolvio.              *
@@ -19,25 +19,32 @@
   a realizar y realizadas, pasando TODO.txt a ser una copia de seguridad de las mismas. [Haside]
     - Me parece bien. [Ale]
 
+- Funcion/es para hallar una solucion vecina, es decir, Heuristicas de busqueda. [Haside]
+    ? Intercambio de dos elementos, uno de ellos el ultimo de la permutacion. [Ale]
+    
+- Funciones de PRS, LS y RS. (Busquedas de entorno) [Haside]
+
+- Visualizacion del problema. (GUI) [Haside]
+
+
+****************************************
+* TODO YA RESUELTOS (MOVER AQUI ABAJO) *
+****************************************
+
+? Propongo almacenar en la clase Heuristica un atributo de clase "problem", igual que se hace
+  con solution. Quedaria todo mas empaquetado y ordenado en lugar de copiar dos veces la misma
+  informacion. El constructor de la clase Heuristica se encargaria de llamar a los constructores
+  del problema y de la solucion. Recalco el "propongo" XD alomejor no es buena idea. [Ale]
+    DONE Me esta pareciendo un co�azo porque tengo que hacer 32 get, set. Pero bueno asi se
+      	 queda. [Haside]
+
 - Decidir criterio para elegir que punto para localizar un rectangulo es mejor. [Anta]
     ? Menor area inutilizada? Es decir, la que genere el hueco mas pequeño, o que no
       genere ninguno. [Vynka]
     ? Menor numero de puntos ocultados segun la posicion que se escoja, si es igual comprobar la 
       menor area desperdiciada. [Ale]
     ? Menor area desperdiciada. Si es igual, pues en el primero que encuentre. [Haside]
-
-- Funcion/es para hallar una solucion vecina, es decir, Heuristicas de búsqueda. [Haside]
-    ? Intercambio de dos elementos, uno de ellos el ultimo de la permutacion. [Ale]
-
-? Propongo almacenar en la clase Heuristica un atributo de clase "problem", igual que se hace
-  con solution. Quedaria todo mas empaquetado y ordenado en lugar de copiar dos veces la misma
-  información. El constructor de la clase Heuristica se encargaria de llamar a los constructores
-  del problema y de la solucion. Recalco el "porpongo" XD alomejor no es buena idea. [Ale]
-
-
-****************************************
-* TODO YA RESUELTOS (MOVER AQUI ABAJO) *
-****************************************
+    * DONE ya lo hice (mas bien modifique el codigo de Ale y Vynka) [Haside]
 
 - Arreglar UML. [Ale]
   * DONE [Ale]
