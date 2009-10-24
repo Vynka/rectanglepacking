@@ -135,7 +135,7 @@ public class Problem {
 	}
 	
 	/**
-	 * @return rectangulo de la posicion i-ésima
+	 * @return rectangulo de la posicion i-esima
 	 */
 	public int getRectangleSize() {
 	  return this.rectangles.length;
@@ -146,6 +146,14 @@ public class Problem {
 	 */
 	public Solution getSolution() {
 	  return this.solution;
+	}
+	
+	/**
+	 * @param S
+	 * 			nueva del problema
+	 */
+	public void setSolution(Solution s) {
+	  this.solution = s;
 	}
 	
 	/**
