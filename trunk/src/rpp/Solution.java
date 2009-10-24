@@ -62,6 +62,7 @@ public class Solution {
 	 */
 	public void setBase(int b) {
 		this.b = b;
+		this.area = this.b * this.h;
 	}
 
 	/**
@@ -77,6 +78,7 @@ public class Solution {
 	 */
 	public void setHeight(int h) {
 		this.h = h;
+		this.area = this.h * this.b;
 	}
 
 	/**

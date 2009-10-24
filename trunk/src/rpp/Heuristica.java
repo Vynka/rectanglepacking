@@ -19,7 +19,7 @@ public class Heuristica {
 	 * Lista de puntos factibles en los que colocar un rectangulo
 	 * Como punto inicial esta el (0, 0)
 	 */
-	private ArrayList<Point> points = new ArrayList<Point>(1);
+	private ArrayList<Point> points = new ArrayList<Point>(0);
 	
 	/**
 	 * Problema a resolver
@@ -37,17 +37,7 @@ public class Heuristica {
 	  this.points.clear();
 	  this.points.add(origen);
 	  this.problem = p;
-	}	
-	
-	/**
-	 * @param i
-	 *         indice del nuevo punto a devolver
-	 * 
-	 * @return siguiente punto de la lista de puntos factibles
-	 */
-	private Point getNewPoint(int i) {
-	  return points.get(i);
-	}
+	}		
 	
 	/**
 	 * Anade un punto a la lista de puntos factibles.
@@ -61,11 +51,11 @@ public class Heuristica {
 	
 	/**
 	 * @param i
-	 *         indice del nuevo rectangulo
+	 *         indice del nuevo rectangulo de la solucion
 	 * @return siguiente rectangulo a colocar
 	 */
 	private Rectangle getNewRectangle(int i) {
-	  return problem.getRectangle(solution.getOrden(i));
+	  return problem.getRectangle(problem.getSolution().getOrden(i));
 	}
 	
 	/**
@@ -77,29 +67,41 @@ public class Heuristica {
 	 * por lo que se toma la suma de las dos unidades como medida de comparación.
 	 * El rectangulo ira colocado en aquel punto que haga que las dimensiones del rectangulo
 	 * de la solucion crezcan lo menos posible.
+	 * @param r
+	 * 			rectangulo a asignar
+	 * @param s
+	 * 			solucion en la que va a ser asignado
 	 */
-	private void allocateRectangle(Rectangle rectangle) {
-	  int menor = Integer.MAX_VALUE;
+	private void allocateRectangle(Rectangle r, Solution s) {
+	  int menorH = Integer.MAX_VALUE;
+	  int menorB = Integer.MAX_VALUE;
 	  int fin = 0;
 	  for (int i = 0; i < points.size(); i++) {
-	    int nuevo = Integer.MAX_VALUE;
-	    if ((this.points.get(i).getY() + rectangle.getHeight()) > (this.problem.getSolution().getHeight()))
-	      nuevo += rectangle.getHeight();
-      if ((this.points.get(i).getX() + rectangle.getBase()) > (this.problem.getSolution().getBase()))
-        nuevo += rectangle.getBase();
-      if (nuevo < menor) {
-        fin = i;
-        menor = nuevo;
-      }
+		// Se toman los nuevos datos resultantes de colocar el rectángulo
+	    int nuevoH = Integer.MAX_VALUE;
+	    int nuevoB = Integer.MAX_VALUE;
+	    if ((points.get(i).getY() + r.getHeight()) > (s.getHeight()))
+	      nuevoH = points.get(i).getY() + r.getHeight();
+	    if ((points.get(i).getX() + r.getBase()) > (s.getBase()))
+	      nuevoB = points.get(i).getX() + r.getBase();
+	    // Si son mejores que los actuales se guardan
+	    if ((nuevoH + nuevoB) < (menorH + menorB)) {
+          fin = i;
+          menorH = nuevoH;
+          menorB = nuevoB;
+        }
 	  }
-	  rectangle.setPosition(this.points.get(fin));
+	  // Se actualiza la solucion
+	  s.setBase(menorB);
+	  s.setHeight(menorH);
+	  r.setPosition(this.points.get(fin));
 	}
 	
 	/**
 	 * Reestructura la lista de puntos, eliminando el usados, asi como los ocultados, y
 	 * añadiendo los nuevos puntos creados con la eleccion tomada.
 	 */
-	private void managePoints() {
+	private void managePoints(Point toErase) {
 	  
 	}
 	
@@ -111,27 +113,34 @@ public class Heuristica {
 	 *          Solucion a evaluar.
 	 */
 	private void evalue(Solution s) {
-		
+		Rectangle r;
+		for (int i = 0; i < problem.getRectangleSize(); i++) {
+			r = getNewRectangle(i);
+			allocateRectangle(r,s);
+			// En la última iteración es innecesario calcular los puntos
+			if (i != (problem.getRectangleSize() - 1)) 
+				managePoints(r.getPosition());
+		}
 	}
 	
 	/**
 	 * Metodo Heuristico de Busqueda por entorno numero 1. Busqueda Local.
 	 */
-	public Solution busquedaLocal() {
-		return solution;
+	public void busquedaLocal() {
+		
 	}
 	
 	/**
 	 * Metodo Heuristico de Busqueda por entorno numero 2. Aleatoria pura.
 	 */
-	public Solution busquedaAP() {
-		return solution;
+	public void busquedaAP() {
+
 	}
 	
 	/**
 	 * Metodo Heuristico de Busqueda por entorno numero 3. Recorrido al azar.
 	 */
-	public Solution busquedaAlAzar(){
-		return solution;
+	public void busquedaAlAzar() {
+
 	}
 }
