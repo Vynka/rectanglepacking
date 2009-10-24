@@ -1,9 +1,9 @@
 package rpp;
 
 /**
- * Clase que tiene como objetivo la definición y resolución del problema conocido
+ * Clase que tiene como objetivo la definicion y resolucion del problema conocido
  * como "Rectangle Packing Problem". El objetivo de dicho problema es empaquetar
- * un numero dado de rectángulos de dimensiones arbitrarias dentro de un
+ * un numero dado de rectangulos de dimensiones arbitrarias dentro de un
  * rectangulo, minimizando el area del envoltorio.
  * Para mas informacion: http://en.wikipedia.org/wiki/Packing_problem
  * 
@@ -18,7 +18,7 @@ package rpp;
 public class Main {
 
 	/**
-	 * Metodo main Metodo para pruebas y utilizacion general.
+	 * Metodo main para pruebas y utilizacion general.
 	 * 
 	 * @param args
 	 *            Argumentos de la linea de comandos

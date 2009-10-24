@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * @author Alberto Cabrera Perez
  * @author Javier Luis Moreno Villena
  * @author Alejandro Tejera Perez
- * @author Isaac Galán Estárico
+ * @author Isaac Galan Estarico
  * @version 1.0a
  * @since 1.0
  */
@@ -64,7 +64,7 @@ public class Heuristica {
 	 * desperdiciada.
 	 * El critero para comparar es la relacion de unidades que aumenta el rectangulo de
 	 * la funcion objetivo. Al ser un rectangulo es igual cual sea la direccion de crecimiento,
-	 * por lo que se toma la suma de las dos unidades como medida de comparación.
+	 * por lo que se toma la suma de las dos unidades como medida de comparacion.
 	 * El rectangulo ira colocado en aquel punto que haga que las dimensiones del rectangulo
 	 * de la solucion crezcan lo menos posible.
 	 * @param r
@@ -75,26 +75,26 @@ public class Heuristica {
 	private void allocateRectangle(Rectangle r, Solution s) {
 	  // El mejor caso es que las menores dimensiones sean las ya obtenidas
 	  // anteriormente
-	  int menorH = Integer.MAX_VALUE / 2;
-	  int menorB = Integer.MAX_VALUE / 2;
+	  int minorH = Integer.MAX_VALUE / 2;
+	  int minorB = Integer.MAX_VALUE / 2;
 	  boolean modified = false;
-	  int fin = 0;
+	  int next = 0;
 	  for (int i = 0; i < points.size(); i++) {
 		// Se toman los nuevos datos resultantes de colocar el rectangulo
 		// Como minimo van a ser iguales que los actuales
-	    int nuevaH = s.getHeight();
-	    int nuevaB = s.getBase();
+	    int newH = s.getHeight();
+	    int newB = s.getBase();
 	    // Eje y
 	    if ((points.get(i).getY() + r.getHeight()) > (s.getHeight()))
-	      nuevaH = points.get(i).getY() + r.getHeight();
+	      newH = points.get(i).getY() + r.getHeight();
 	    // Eje X
 	    if ((points.get(i).getX() + r.getBase()) > (s.getBase()))
-	      nuevaB = points.get(i).getX() + r.getBase();
+	      newB = points.get(i).getX() + r.getBase();
 	    // Si son mejores que los actuales se guardan
-	    if ((nuevaH + nuevaB) < (menorH + menorB)) {
-          fin = i;
-          menorH = nuevaH;
-          menorB = nuevaB;
+	    if ((newH + newB) < (minorH + minorB)) {
+          next = i;
+          minorH = newH;
+          minorB = newB;
           modified = true;
         }
 	  }
@@ -103,7 +103,7 @@ public class Heuristica {
 		  s.setBase(menorB);
 		  s.setHeight(menorH);
 	  }
-	  r.setPosition(this.points.get(fin));
+	  r.setPosition(this.points.get(next));
 	}
 	
 	/**
@@ -150,8 +150,8 @@ public class Heuristica {
 	
 	
 	/**
-	 * Reestructura la lista de puntos, eliminando el usados, asi como los ocultados, y
-	 * añadiendo los nuevos puntos creados con la eleccion tomada.
+	 * Reestructura la lista de puntos, eliminando el usado, asi como los ocultados, y
+	 * anadiendo los nuevos puntos creados con la eleccion tomada.
 	 */
 	private void managePoints(Rectangle r) {
 		// Posible nuevo punto
@@ -212,21 +212,21 @@ public class Heuristica {
 	/**
 	 * Metodo Heuristico de Busqueda por entorno numero 1. Busqueda Local.
 	 */
-	public void busquedaLocal() {
+	public void localSearch() {
 		
 	}
 	
 	/**
 	 * Metodo Heuristico de Busqueda por entorno numero 2. Aleatoria pura.
 	 */
-	public void busquedaAP() {
+	public void pureRandomSearch() {
 
 	}
 	
 	/**
 	 * Metodo Heuristico de Busqueda por entorno numero 3. Recorrido al azar.
 	 */
-	public void busquedaAlAzar() {
+	public void randomSearch() {
 
 	}
 }
