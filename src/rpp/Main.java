@@ -28,7 +28,7 @@ public class Main {
 		System.out.println(r);
 		Heuristica h = new Heuristica(r);
 		System.out.println(r.getSolution());
-		h.pureRandomSearch(100);
+		h.pureRandomSearch(1000);
 		System.out.println(r.getSolution());
 	}
 }
