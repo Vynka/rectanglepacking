@@ -19,7 +19,7 @@ import java.io.StreamTokenizer;
  * @author Javier Luis Moreno Villena
  * @author Alejandro Tejera Perez
  * @author Isaac Galan Estarico
- * @version 1.0a
+ * @version 1.01.02
  * @since 1.0
  */
 public class Problem {

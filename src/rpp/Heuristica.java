@@ -1,6 +1,7 @@
 package rpp;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Clase que contiene diversos metodos heuristicos (GRASP, busqueda de entornos,
@@ -10,11 +11,22 @@ import java.util.ArrayList;
  * @author Javier Luis Moreno Villena
  * @author Alejandro Tejera Perez
  * @author Isaac Galan Estarico
- * @version 1.0a
+ * @version 1.01.02
  * @since 1.0
  */
 
 public class Heuristica {
+	/**
+	 * Posibles espacios de entorno para soluciones vecinas.
+	 */
+	static final int NEAREST_NEIGHBOUR = 0;
+	
+	/**
+	 * Criterios de parada
+	 */
+	static final int OUT_UNLESS_BETTER = 0;
+	static final int NUMBER_OF_TIMES = 1;
+	
 	/**
 	 * Lista de puntos factibles en los que colocar un rectangulo
 	 * Como punto inicial esta el (0, 0)
@@ -48,21 +60,27 @@ public class Heuristica {
 	/**
 	 * Metodo Heuristico de Busqueda por entorno numero 2. Aleatoria pura.
 	 */
-	public void pureRandomSearch(int n) {
+	public void pureRandomSearch(int n, int stop) {
+		int times = n;
 		Solution best = problem.getSolution().clone();
 		Solution actual = best.clone();
 		do {
 			actual = new Solution (problem.getAreaRec(), Solution.RANDOM, problem.getRectangleSize());
-			evalue(actual);
-			
-			for (int i = 0; i < actual.getOrden().length; i++) {
-				System.out.print(actual.getOrden(i) + " ");
+			evalue(actual);	
+
+			switch (stop) {
+			case OUT_UNLESS_BETTER:
+				if (best.getObjF() > actual.getObjF()) {
+					best = actual;
+					n = times;
+				}
+				break;
+			case NUMBER_OF_TIMES:
+				if (best.getObjF() > actual.getObjF())
+					best = actual;
+				break;
 			}
-			System.out.println("  " + actual.getObjF());
-			
-			if (best.getObjF() > actual.getObjF()) {
-		        best = actual;
-			}
+
 			n--;
 		} while (n > 0);
 		problem.setSolution(best);
@@ -71,8 +89,31 @@ public class Heuristica {
 	/**
 	 * Metodo Heuristico de Busqueda por entorno numero 3. Recorrido al azar.
 	 */
-	public void randomSearch() {
+	public void randomSearch(int n, int neighbourType, int stop) {
 
+		int times = n;
+		Solution best = problem.getSolution().clone();
+		Solution actual = best.clone();
+		do {
+			actual = neighbour(actual, neighbourType);
+			evalue(actual);		
+
+			switch (stop) {
+			case OUT_UNLESS_BETTER:
+				if (best.getObjF() > actual.getObjF()) {
+					best = actual;
+					n = times;
+				}
+				break;
+			case NUMBER_OF_TIMES:
+				if (best.getObjF() > actual.getObjF())
+					best = actual;
+				break;
+			}
+
+			n--;
+		} while (n > 0);
+		problem.setSolution(best);
 	}	
 	
 	/**
@@ -90,8 +131,8 @@ public class Heuristica {
 	 *         indice del nuevo rectangulo de la solucion
 	 * @return siguiente rectangulo a colocar
 	 */
-	private Rectangle getNewRectangle(int i) {
-	  return problem.getRectangle(problem.getSolution().getOrden(i));
+	private Rectangle getNewRectangle(int i, Solution s) {
+	  return problem.getRectangle(s.getOrder(i));
 	}
 	
 	/**
@@ -254,20 +295,55 @@ public class Heuristica {
 		initPoints(); // Inicializa los puntos (establece como unico punto el origen)
 		Rectangle r;
 		for (int i = 0; i < problem.getRectangleSize(); i++) {
-			//System.out.println("---------- " + (i + 1) + " -----------------");
-			r = getNewRectangle(i);
-			allocateRectangle(r,s);
-			// En la ultima iteracion es innecesario calcular los puntos
+			r = getNewRectangle(i, s);
+			allocateRectangle(r, s);
 			if (i != (problem.getRectangleSize() - 1))
 				managePoints(r);
-			/*
-			System.out.println("" + s);
-			for (int j = 0; j < points.size(); j++) {
-				System.out.print(points.get(j));
-			}
-			System.out.println();
-			*/
 		}
 		s.setObjF();
+	}
+	
+	/**
+	 * Intercambia el elemento i con el j en el array
+	 * @param array
+	 * 			array de elementos
+	 * @param i
+	 * 			una posicion del array
+	 * @param j
+	 * 			otra posicion del array
+	 */
+	private void swap(int[] array, int i, int j) {				
+		int aux = array[i];
+		array[i] = array[j];
+		array[j] = aux;
+ 	}
+	
+	/**
+	 * Halla una solucion vecina a partir de una dada.
+	 * @param s
+	 * 			solucion de la que se halla una vecina.
+	 * @param neighbourType
+	 * 			Constante que define la estructura de entorno
+	 * @return Solucion vecina de s siguiendo algun criterio
+	 */
+	private Solution neighbour(Solution s, int neighbourType) {
+		Random r = new Random(System.nanoTime());
+		int [] newOrder = s.getOrder().clone();
+		
+		switch (neighbourType) {
+			// NEAREST NEIGHBOUR son aquellas soluciones que se encuentran
+		    // a un intercambio de elementos
+			case NEAREST_NEIGHBOUR:
+			int i = (int)(r.nextFloat() * newOrder.length);
+			int j = (int)(r.nextFloat() * newOrder.length);
+			while (i == j) {
+				j = (int)(r.nextFloat() * newOrder.length);
+			}
+			swap(newOrder, i, j);
+			break;
+		}
+		
+		Solution toReturn = new Solution(0, 0, problem.getAreaRec(), newOrder);
+		return toReturn;
 	}
 }
