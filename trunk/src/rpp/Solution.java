@@ -14,7 +14,7 @@ import java.util.Collections;
  * @author Javier Luis Moreno Villena
  * @author Alejandro Tejera Perez
  * @author Isaac Galan Estarico
- * @version 1.0a
+ * @version 1.01.02
  * @since 1.0
  */
 
@@ -58,13 +58,13 @@ public class Solution {
 	 * sum(rectangle[i].h * rectangle[i].b); con 0 <= i < n y rectangle un vector
 	 * de rectangulos que componen el problema.
 	 */
-	private int ObjF;
+	private int objF;
 
 	/**
-	 * Atributo orden: array que indica la colocacion de los rectangulos usando el
-	 * indice i para indicar cuando fue puesto el rectangulo orden[i].
+	 * Atributo Order: array que indica la colocacion de los rectangulos usando el
+	 * indice i para indicar cuando fue puesto el rectangulo Order[i].
 	 */
-	private int[] orden;
+	private int[] order;
 
 	/**
 	 * Por defecto pone todo a 0 o null (aunque no hace falta) a excepcion de la
@@ -76,8 +76,8 @@ public class Solution {
 		this.h = 0;
 		this.area = 0;
 		this.recArea = 0;
-		this.ObjF = INF;
-		this.orden = null;
+		this.objF = INF;
+		this.order = null;
 	}
 
 	/**
@@ -89,16 +89,16 @@ public class Solution {
 	 *          altura del rectangulo solucion.
 	 * @param recArea
 	 *          area de los rectangulos.
-	 * @param orden
+	 * @param order
 	 *          permutacion de los rectangulos
 	 */
-	public Solution(int b, int h, int recArea, int [] orden) {
+	public Solution(int b, int h, int recArea, int [] order) {
 		this.b = b;
 		this.h = h;
 		this.area = b * h;
 		this.recArea = recArea;
-		this.ObjF = this.area - recArea;
-		this.orden = orden;
+		this.objF = this.area - recArea;
+		this.order = order;
 	}
 	
 	/**
@@ -114,7 +114,7 @@ public class Solution {
 		this.h = 0;
 		this.area = 0;
 		this.recArea = recArea;
-		this.ObjF = -recArea;
+		this.objF = -recArea;
 		switch (initType) {
 		case RANDOM:
 			randomInit(size);
@@ -182,43 +182,43 @@ public class Solution {
 	 * @return el valor de la funcion objetivo.
 	 */
 	public int getObjF() {
-		return this.ObjF;
+		return this.objF;
 	}
 	
 	/**
 	 * Establece el valor de la funciono objetivo
 	 */
 	public void setObjF() {
-		this.ObjF = this.area - this.recArea; 
+		this.objF = this.area - this.recArea; 
 	}
 
 	/**
 	 * @param orden
 	 *          el array de indices a establecer.
 	 */
-	public void setOrden(int[] orden) {
-		this.orden = orden;
+	public void setOrder(int[] order) {
+		this.order = order;
 	}
 
 	/**
 	 * @return el array de indices
 	 */
-	public int[] getOrden() {
-		return orden;
+	public int[] getOrder() {
+		return order;
 	}
 
 	/**
 	 * @return el valor de la posicion i en el array de indices.
 	 */
-	public int getOrden(int i) {
-		return orden[i];
+	public int getOrder(int i) {
+		return order[i];
 	}
 	
 	/**
 	 * Metodo estandar de impresion por pantalla
 	 */
 	public String toString() {
-		return new String ("Funcion obj " + ObjF +" con base " + b + " y altura " + h);
+		return new String ("Funcion obj " + objF +" con base " + b + " y altura " + h);
 	}
 	
 	/**
@@ -228,16 +228,16 @@ public class Solution {
 		Solution s = new Solution();
 		s.setBase(this.b);
 		s.setHeight(this.h);
-		s.setOrden(orden.clone());
+		s.setOrder(order.clone());
 		s.setRecArea(this.recArea);
 		s.setObjF();
 		return s;
 	}
 	
 	/**
-	 * 
+	 * Inicializa de manera aleatoria las soluciones. (Generacion aleatoria)
 	 * @param size
-	 * @return
+	 * 			numero de rectangulos (Tamano de la solucion)
 	 */
 	
 	public void randomInit(int size) {
@@ -249,40 +249,51 @@ public class Solution {
 		}		
 		Collections.shuffle(toMix, generator);
 		Object[] toNormalInt = toMix.toArray();
-		orden = new int[toNormalInt.length];
+		order = new int[toNormalInt.length];
 		for (int i = 0; i < toNormalInt.length; i++) {
-			orden[i] = ((Integer)toNormalInt[i]).intValue();
+			order[i] = ((Integer)toNormalInt[i]).intValue();
 		}
 	}
 
-
+	/**
+	 * Inicializa de una manera concreta una solucion. Para el mismo conjunto
+	 * N de rectangulos siempre devolvera la misma solucion inicial.
+	 * @param size
+	 * 			numero de rectangulos (Tamano de la solucion)
+	 */
     public void deterministicInit1(int size) {
 		clearSolution();
-    	orden = new int [size];
-		for (int i = 0; i < orden.length; i++) {
-			orden[i] = orden.length - i - 1;
+    	order = new int [size];
+		for (int i = 0; i < order.length; i++) {
+			order[i] = order.length - i - 1;
 		}
 
     }
 
-
+    /**
+     * Inicializa de manera mixta una solucion. Primero aplica un metodo deterministico
+     * y luego aplica a continuacion un metodo aleatorio generando asi una solucion inicial
+     * mixta
+     * @param size
+	 * 			numero de rectangulos (Tamano de la solucion
+     */
     public void mixedInit1(int size) {
 		clearSolution();
-    	orden = new int [size];
+    	order = new int [size];
     }
 
 
     public void mixedInit2(int size) {
 		clearSolution();
-    	orden = new int [size];
+    	order = new int [size];
     }
     
     private void clearSolution() {
 		this.b = 0;
 		this.h = 0;
 		this.area = 0;
-		this.ObjF = -this.recArea;
-		this.orden = null;
+		this.objF = -this.recArea;
+		this.order = null;
     }
 	
 }

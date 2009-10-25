@@ -11,6 +11,13 @@
 * sera mas llevadero.                                           *
 * No pongan tildes. La codificacion difiere segun SO y 			*
 * genera caracteres ilegibles									*
+*																*
+*  VERSION: XX.YY.ZZ											*
+*		XX =  Remodelacion completa. No creo que se cambie      *
+*		YY =  Numero de heuristicas difetentes.					* 
+*				(GRASP, Entorno...) 							*
+*		ZZ =  Subtipos de Heuristicas (Busqueda local, BAP...)	*
+*																*
 *****************************************************************
 
 - Ampliar la Wiki [Haside]
@@ -23,6 +30,7 @@
     ? Intercambio de dos elementos, uno de ellos el ultimo de la permutacion. [Ale]
     
 - Funciones de PRS, LS y RS. (Busquedas de entorno) [Haside]
+	* DONE PRS y RS.
 
 - Visualizacion del problema. (GUI) [Haside]
 
