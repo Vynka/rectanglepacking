@@ -28,6 +28,15 @@ public class Heuristica {
 	static final int NUMBER_OF_TIMES = 1;
 	
 	/**
+	 * Tipos de muestreo del entorno
+	 */
+	static final int GREEDY_SAMPLING = 0;
+	static final int ANXIOUS_SAMPLING = 1;
+	static final int RANDOM_SAMPLING = 2;
+	
+	
+	
+	/**
 	 * Lista de puntos factibles en los que colocar un rectangulo
 	 * Como punto inicial esta el (0, 0)
 	 */
@@ -53,8 +62,13 @@ public class Heuristica {
 	/**
 	 * Metodo Heuristico de Busqueda por entorno numero 1. Busqueda Local.
 	 */
-	public int localSearch() {
-		return (new Integer(5)).intValue();
+	public int localSearch(Solution start, int neighbourType, int environmentType) {
+	  /*
+	  Solution actual = start;
+	  Solution best = actual;
+	  */
+	  
+	  return (new Integer(5)).intValue();
 	}
 	
 	/**
@@ -117,6 +131,13 @@ public class Heuristica {
 		problem.setSolution(best);
 		return best.getObjF();
 	}	
+	
+	/**
+	 * Metodo heuristico de Busqueda por entorno numero 4. Busqueda multiarranque.
+	 */
+	public int multistartSearch(int startType) {
+	  return (new Integer(5)).intValue();
+	}
 	
 	/**
 	 * Anade un punto a la lista de puntos factibles.
