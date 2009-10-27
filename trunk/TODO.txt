@@ -20,6 +20,10 @@
 *																*
 *****************************************************************
 
+- TO [Eferroja]:
+    El problema es que el rectangulo tiene asignada la posicion (0,0) y el
+    panel tiene como posicion ~(0, 30). Cambia la posicion del rectangulo, o el translate.
+
 - Ampliar la Wiki [Haside]
     ? Utilizar la wiki de googlecode más seriamente [Vynka]
 
