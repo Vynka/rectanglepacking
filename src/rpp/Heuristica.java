@@ -53,14 +53,14 @@ public class Heuristica {
 	/**
 	 * Metodo Heuristico de Busqueda por entorno numero 1. Busqueda Local.
 	 */
-	public void localSearch() {
-		
+	public int localSearch() {
+		return (new Integer(5)).intValue();
 	}
 	
 	/**
 	 * Metodo Heuristico de Busqueda por entorno numero 2. Aleatoria pura.
 	 */
-	public void pureRandomSearch(int n, int stop) {
+	public int pureRandomSearch(int n, int stop) {
 		int times = n;
 		Solution best = problem.getSolution().clone();
 		Solution actual = best.clone();
@@ -84,12 +84,13 @@ public class Heuristica {
 			n--;
 		} while (n > 0);
 		problem.setSolution(best);
+		return best.getObjF();
 	}
 	
 	/**
 	 * Metodo Heuristico de Busqueda por entorno numero 3. Recorrido al azar.
 	 */
-	public void randomSearch(int n, int neighbourType, int stop) {
+	public int randomSearch(int n, int neighbourType, int stop) {
 
 		int times = n;
 		Solution best = problem.getSolution().clone();
@@ -114,6 +115,7 @@ public class Heuristica {
 			n--;
 		} while (n > 0);
 		problem.setSolution(best);
+		return best.getObjF();
 	}	
 	
 	/**
@@ -269,7 +271,7 @@ public class Heuristica {
 				i++;
 			}
 		}
-		// Se añaden si son puntos utiles
+		// Se aï¿½aden si son puntos utiles
 		if (newy)
 			addPoint(py);
 		if (newx)
