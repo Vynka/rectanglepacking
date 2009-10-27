@@ -24,13 +24,16 @@ public class Main {
 	 *            Argumentos de la linea de comandos
 	 */
 	public static void main(String[] args) {
-		Problem r = new Problem("test2.dat");
+		/*Problem r = new Problem("test2.dat");
 		System.out.println(r);
 		Heuristica h = new Heuristica(r);
 		System.out.println("La solucion inicial es -> " + r.getSolution());
 		h.pureRandomSearch(20, Heuristica.NUMBER_OF_TIMES);
 		System.out.println("La solucion del metodo PSR es (n = 20) -> " + r.getSolution());
 		h.randomSearch(20, Heuristica.NEAREST_NEIGHBOUR, Heuristica.NUMBER_OF_TIMES);
-		System.out.println("La solucion del metodo RS es (n = 20) -> " + r.getSolution());
+		System.out.println("La solucion del metodo RS es (n = 20) -> " + r.getSolution());*/
+		
+		MainFrame mf = new MainFrame();
+		mf.setVisible(true);
 	}
 }

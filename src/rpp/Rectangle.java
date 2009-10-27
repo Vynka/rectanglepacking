@@ -142,4 +142,12 @@ public class Rectangle {
 	public Point getCenter() {
 		return new Point(p.getX() + b/2, p.getY() + h/2);
 	}
+	
+	/**
+	 * Metodo getTopLeft: Devuelve el punto de la esquina superior izquierda para
+	 * facilitar la representacion.
+	 */
+	public Point getTopLeft() {
+		return new Point(p.getX(), p.getY() + h);
+	}
 }
