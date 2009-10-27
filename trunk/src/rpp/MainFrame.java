@@ -1,9 +1,10 @@
 package rpp;
 
 import javax.swing.JFrame;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
 import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 
 /**
  * Marco principal de la GUI, que servira como objeto de comunicacion entre la GUI y las clases para
@@ -17,23 +18,36 @@ import java.awt.BorderLayout;
  * @version 1.0
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class MainFrame extends JFrame {
 	/**
 	 * Atributo dp: Panel donde se representara la solucion. 
 	 */
 	private DrawPanel dp;
+	
+	/**
+	 * Barra de menu del programa.
+	 */
+	private OptionsMenu om;
 
 	/**
 	 * Constructor por defecto, en el que se aniaden los objetos de la GUI y se le ajustan los parametros.
 	 */
 	public MainFrame() {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setSize(800, 600);
+		this.setTitle("RPP Solver");
 		
-		JMenuBar mb = new JMenuBar();
-		this.setJMenuBar(mb);
-		JMenu mfile = new JMenu("File");
-		mb.add(mfile);
+		Toolkit kit = Toolkit.getDefaultToolkit();
+		Dimension screenDim = kit.getScreenSize();
+
+		// Se establece la posicion del marco
+		int width = (screenDim.width / 2);
+		int height = (screenDim.height / 2);
+		this.setSize(width, height);
+		this.setLocation(width / 2, height / 2);
+		
+		om = new OptionsMenu();
+		this.add(om, BorderLayout.NORTH);
 		
 		dp = new DrawPanel();
 		this.add(dp, BorderLayout.CENTER);
