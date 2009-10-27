@@ -21,10 +21,12 @@
 *****************************************************************
 
 - Ampliar la Wiki [Haside]
+    ? Utilizar la wiki de googlecode más seriamente [Vynka]
 
 ? Aprender a usar el menu Task List del Eclipse para asi tener mejor clasificadas las tareas 
   a realizar y realizadas, pasando TODO.txt a ser una copia de seguridad de las mismas. [Haside]
     - Me parece bien. [Ale]
+    - También se podría mirar la utilización de bugzilla. [Vynka]
 
 - Funcion/es para hallar una solucion vecina, es decir, Heuristicas de busqueda. [Haside]
     ? Intercambio de dos elementos, uno de ellos el ultimo de la permutacion. [Ale]
@@ -33,6 +35,14 @@
 	* DONE PRS y RS.
 
 - Visualizacion del problema. (GUI) [Haside]
+    * Proceso: 5% [Isaac]
+
+- Actualizar UML y documentación de clases [Vynka]
+
+? Se podría mirar la posibilidad de que la clase heurística implemente runnable,
+  para hacer más sencillo (y eficiente?) el multiarranque [Vynka]
+  
+! Registrarse en el p**o foro. [Vynka]
 
 
 ****************************************
@@ -43,7 +53,7 @@
   con solution. Quedaria todo mas empaquetado y ordenado en lugar de copiar dos veces la misma
   informacion. El constructor de la clase Heuristica se encargaria de llamar a los constructores
   del problema y de la solucion. Recalco el "propongo" XD alomejor no es buena idea. [Ale]
-    DONE Me esta pareciendo un co�azo porque tengo que hacer 32 get, set. Pero bueno asi se
+    DONE Me esta pareciendo un co�azo porque tengo que hacer 32 get, set. Pero bueno asi se
       	 queda. [Haside]
 
 - Decidir criterio para elegir que punto para localizar un rectangulo es mejor. [Anta]
