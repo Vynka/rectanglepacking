@@ -41,6 +41,9 @@
 
 - Documentar las funciones PRS, LS y RS [Ale]
 
+? Considerar la modularizacion, en varios metodos separados, del LS segun el muestreo
+  del entorno en: GLS, ALS... (greedy, anxious...) [Ale]
+
 - Visualizacion del problema. (GUI) [Haside]
     * Proceso: 5% [Isaac]
 
