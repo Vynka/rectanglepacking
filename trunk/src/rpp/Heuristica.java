@@ -34,6 +34,12 @@ public class Heuristica {
 	static final int ANXIOUS_SAMPLING = 1;
 	static final int RANDOM_SAMPLING = 2;
 	
+	/**
+	 * Tipos de estructuras de entorno (movimientos posibles)
+	 */
+	static final int ONE_SWAP_NEIGHBOUR = 0;
+	static final int SWAP_WITH_LAST = 1;
+	
 	
 	
 	/**
@@ -67,19 +73,36 @@ public class Heuristica {
 	  Solution best = actual;
 	  boolean betterFound = false;
 	  int size = problem.getRectangleSize();
-	  do {
-	    betterFound = false;
-	    for (int i = 0; i < size; i++) {
-	      for (int j = size; j > i; j--) {
-	        this.swap(actual.getOrder(), i, j);
-	        evalue(actual);
-	        if (best.getObjF() < actual.getObjF()) {
-	          best = actual;
-	          betterFound = true;
-	        }
-	      }
-	    }
-	  } while (!betterFound);
+	  switch (environmentType) {
+	    case GREEDY_SAMPLING:
+	      do {
+	        betterFound = false;
+    	    for (int i = 0; i < size; i++) {
+    	      switch (neighbourType) {
+    	        case ONE_SWAP_NEIGHBOUR:
+    	          for (int j = size; j > i; j--) {
+    	            this.swap(actual.getOrder(), i, j);
+    	            evalue(actual);
+    	            if (best.getObjF() < actual.getObjF()) {
+    	              best = actual;
+    	              betterFound = true;
+    	            }
+    	            this.swap(actual.getOrder(), i, j);
+    	          }
+    	        case SWAP_WITH_LAST:
+    	          this.swap(actual.getOrder(), size, i);
+    	          evalue(actual);
+    	          if (best.getObjF() < actual.getObjF()) {
+                  best = actual;
+                  betterFound = true;
+                }
+                this.swap(actual.getOrder(), size, i);
+    	      }
+    	    }
+    	  } while (!betterFound);
+	    case ANXIOUS_SAMPLING:
+	      
+	  }
 	  return best.getObjF();
 	}
 	
