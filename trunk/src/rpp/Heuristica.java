@@ -63,12 +63,24 @@ public class Heuristica {
 	 * Metodo Heuristico de Busqueda por entorno numero 1. Busqueda Local.
 	 */
 	public int localSearch(Solution start, int neighbourType, int environmentType) {
-	  /*
 	  Solution actual = start;
 	  Solution best = actual;
-	  */
-	  
-	  return (new Integer(5)).intValue();
+	  boolean betterFound = false;
+	  int size = problem.getRectangleSize();
+	  do {
+	    betterFound = false;
+	    for (int i = 0; i < size; i++) {
+	      for (int j = size; j > i; j--) {
+	        this.swap(actual.getOrder(), i, j);
+	        evalue(actual);
+	        if (best.getObjF() < actual.getObjF()) {
+	          best = actual;
+	          betterFound = true;
+	        }
+	      }
+	    }
+	  } while (!betterFound);
+	  return best.getObjF();
 	}
 	
 	/**
