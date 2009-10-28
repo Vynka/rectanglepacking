@@ -68,41 +68,74 @@ public class Heuristica {
 	/**
 	 * Metodo Heuristico de Busqueda por entorno numero 1. Busqueda Local.
 	 */
-	public int localSearch(Solution start, int neighbourType, int environmentType) {
-	  Solution actual = start;
-	  Solution best = actual;
-	  boolean betterFound = false;
+	public int localSearch(Solution start, int neighbourType, int searchType) {
+	  Solution actual = start.clone();
+	  Solution best = actual.clone();
+	  boolean betterFound = true;
 	  int size = problem.getRectangleSize();
-	  switch (environmentType) {
-	    case GREEDY_SAMPLING:
-	      do {
-	        betterFound = false;
-    	    for (int i = 0; i < size; i++) {
-    	      switch (neighbourType) {
-    	        case ONE_SWAP_NEIGHBOUR:
-    	          for (int j = size; j > i; j--) {
-    	            this.swap(actual.getOrder(), i, j);
-    	            evalue(actual);
-    	            if (best.getObjF() < actual.getObjF()) {
-    	              best = actual;
-    	              betterFound = true;
-    	            }
-    	            this.swap(actual.getOrder(), i, j);
-    	          }
-    	        case SWAP_WITH_LAST:
-    	          this.swap(actual.getOrder(), size, i);
-    	          evalue(actual);
-    	          if (best.getObjF() < actual.getObjF()) {
-                  best = actual;
+    do {
+      betterFound = false;
+      switch (searchType) {
+        case GREEDY_SAMPLING :      //Muestreo GREEDY, se comprueban TODAS las soluciones vecinas
+          switch (neighbourType) {
+            case ONE_SWAP_NEIGHBOUR:
+              for (int i = 0; i < size; i++) {
+                for (int j = i + 1; j < size; j++) {
+                  swap(actual.getOrder(), i, j);
+                  evalue(actual);
+                  if (best.getObjF() > actual.getObjF()) {
+                    best = actual.clone();
+                    betterFound = true;
+                  }
+                  swap(actual.getOrder(), i, j);
+                }
+              }
+              break;
+            case SWAP_WITH_LAST:
+              for (int i = 0; i < size; i++) {
+                swap(actual.getOrder(), i, size);
+                evalue(actual);
+                if (best.getObjF() > actual.getObjF()) {
+                  best = actual.clone();
                   betterFound = true;
                 }
-                this.swap(actual.getOrder(), size, i);
-    	      }
-    	    }
-    	  } while (!betterFound);
-	    case ANXIOUS_SAMPLING:
-	      
-	  }
+                swap(actual.getOrder(), i, size);
+              }
+              break;
+          }
+          break;
+                  
+        case ANXIOUS_SAMPLING :     //Muestreo ANXIOUS, se toma la primera solucion vecina que mejora
+          switch (neighbourType) {
+            case ONE_SWAP_NEIGHBOUR:
+              for(int i = 0; i < size & (!betterFound); i++) {
+                for (int j = size - 1; j > i & (!betterFound); j--) {
+                  swap(actual.getOrder(), i, j);
+                  evalue(actual);
+                  if (best.getObjF() > actual.getObjF()) {
+                    best = actual.clone();
+                    betterFound = true;
+                  }
+                  swap(actual.getOrder(), i, j);
+                }
+              }
+              break;
+            case SWAP_WITH_LAST:
+              for(int i = 0; i < size & (!betterFound); i++) {
+                swap(actual.getOrder(), i, size);
+                evalue(actual);
+                if (best.getObjF() > actual.getObjF()) {
+                  best = actual.clone();
+                  betterFound = true;
+                }
+                swap(actual.getOrder(), i, size);
+              }
+              break;
+          }
+          break;
+      }
+    } while (betterFound);
+    problem.setSolution(best);
 	  return best.getObjF();
 	}
 	
