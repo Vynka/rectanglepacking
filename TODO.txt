@@ -37,11 +37,14 @@
     
 - Funciones de PRS, LS y RS. (Busquedas de entorno) [Haside]
 	* DONE PRS y RS.
+	* LS en proceso [Ale]
+
+- Documentar las funciones PRS, LS y RS [Ale]
 
 - Visualizacion del problema. (GUI) [Haside]
     * Proceso: 5% [Isaac]
 
-- Actualizar UML y documentación de clases [Vynka]
+- Actualizar UML y javadoc [Vynka]
 
 ? Se podría mirar la posibilidad de que la clase heurística implemente runnable,
   para hacer más sencillo (y eficiente?) el multiarranque [Vynka]
