@@ -26,6 +26,7 @@
 
 - Ampliar la Wiki [Haside]
     ? Utilizar la wiki de googlecode más seriamente [Vynka]
+    - Por la del google code no nos van a dar nota. La que hay que actualizar es la del moodle.
 
 ? Aprender a usar el menu Task List del Eclipse para asi tener mejor clasificadas las tareas 
   a realizar y realizadas, pasando TODO.txt a ser una copia de seguridad de las mismas. [Haside]
@@ -34,10 +35,6 @@
 
 - Funcion/es para hallar una solucion vecina, es decir, Heuristicas de busqueda. [Haside]
     ? Intercambio de dos elementos, uno de ellos el ultimo de la permutacion. [Ale]
-    
-- Funciones de PRS, LS y RS. (Busquedas de entorno) [Haside]
-	* DONE PRS y RS.
-	* LS en proceso [Ale]
 
 - Documentar las funciones PRS, LS y RS [Ale]
 
@@ -48,9 +45,14 @@
     * Proceso: 5% [Isaac]
 
 - Actualizar UML y javadoc [Vynka]
+	- ESO NO SE PONE EN EL TODO, ESO COGES Y LO HACES QUE TAMPOCO ES TAN DIFICIL
+	> javadoc --help
+    > umbrello heuristicas.xmi
+	 
 
 ? Se podría mirar la posibilidad de que la clase heurística implemente runnable,
   para hacer más sencillo (y eficiente?) el multiarranque [Vynka]
+  - Complica m�s que hacer m�s simple. [Haside]
   
 ! Registrarse en el p**o foro. [Vynka]
 
@@ -58,6 +60,12 @@
 ****************************************
 * TODO YA RESUELTOS (MOVER AQUI ABAJO) *
 ****************************************
+
+- Funciones de PRS, LS y RS. (Busquedas de entorno) [Haside]
+	* DONE PRS y RS.
+	* LS en proceso [Ale]
+	DONE Ya esta terminado.
+
 
 ? Propongo almacenar en la clase Heuristica un atributo de clase "problem", igual que se hace
   con solution. Quedaria todo mas empaquetado y ordenado en lugar de copiar dos veces la misma

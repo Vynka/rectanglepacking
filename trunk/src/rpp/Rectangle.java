@@ -8,10 +8,10 @@ package rpp;
  * @author Javier Luis Moreno Villena
  * @author Alejandro Tejera Perez
  * @author Isaac Galan Estarico
- * @version 1.0a
+ * @version 1.01.03
  * @since 1.0
  */
-public class Rectangle {
+public class Rectangle implements Comparable<Rectangle> {
 
 	/**
 	 * Atributo b: Medida en unidades de la base del rectangulo.
@@ -149,5 +149,21 @@ public class Rectangle {
 	 */
 	public Point getTopLeft() {
 		return new Point(p.getX(), p.getY() + h);
+	}
+
+	/**
+	 * Establece como comparar dos rectangulos mediante su area
+	 * @param r
+	 *          Rectangulo con el que comparar.
+	 * @return -1, 0 o 1 dependiendo de si el area del primero es menor, igual o mayor que r. 
+	 */
+	public int compareTo(Rectangle r) {
+	  if (this.getArea() > r.getArea()) {
+		return 1;
+	  } else if (this.getArea() < r.getArea()) {
+		return -1;
+	  } else {
+	    return 0;
+	  }
 	}
 }
