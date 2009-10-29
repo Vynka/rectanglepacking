@@ -19,7 +19,9 @@ public class Heuristica {
 	/**
 	 * Posibles espacios de entorno para soluciones vecinas.
 	 */
-	static final int NEAREST_NEIGHBOUR = 0;
+	static final int RANDOM_SWAP = 0;
+	static final int ONE_SWAP = 1;
+  static final int SWAP_WITH_LAST = 2;
 	
 	/**
 	 * Criterios de parada
@@ -33,12 +35,6 @@ public class Heuristica {
 	static final int GREEDY_SAMPLING = 0;
 	static final int ANXIOUS_SAMPLING = 1;
 	static final int RANDOM_SAMPLING = 2;
-	
-	/**
-	 * Tipos de estructuras de entorno (movimientos posibles)
-	 */
-	static final int ONE_SWAP_NEIGHBOUR = 0;
-	static final int SWAP_WITH_LAST = 1;
 	
 	
 	
@@ -68,72 +64,25 @@ public class Heuristica {
 	/**
 	 * Metodo Heuristico de Busqueda por entorno numero 1. Busqueda Local.
 	 */
-	public int localSearch(Solution start, int neighbourType, int searchType) {
-	  Solution actual = start.clone();
+	public int localSearch(int neighbourType, int searchType, int initType) {
+    int size = problem.getRectangleSize();
+	  Solution actual = new Solution (problem.getAreaRec(), initType, size);
+	  evalue(actual);
 	  Solution best = actual.clone();
 	  boolean betterFound = true;
-	  int size = problem.getRectangleSize();
     do {
       betterFound = false;
-      switch (searchType) {
-        case GREEDY_SAMPLING :      //Muestreo GREEDY, se comprueban TODAS las soluciones vecinas
-          switch (neighbourType) {
-            case ONE_SWAP_NEIGHBOUR:
-              for (int i = 0; i < size; i++) {
-                for (int j = i + 1; j < size; j++) {
-                  swap(actual.getOrder(), i, j);
-                  evalue(actual);
-                  if (best.getObjF() > actual.getObjF()) {
-                    best = actual.clone();
-                    betterFound = true;
-                  }
-                  swap(actual.getOrder(), i, j);
-                }
-              }
-              break;
-            case SWAP_WITH_LAST:
-              for (int i = 0; i < size; i++) {
-                swap(actual.getOrder(), i, size);
-                evalue(actual);
-                if (best.getObjF() > actual.getObjF()) {
-                  best = actual.clone();
-                  betterFound = true;
-                }
-                swap(actual.getOrder(), i, size);
-              }
-              break;
+      for (int i = 0; i < size; i++) {
+        for (int j = i + 1; j < size; j++) {
+          Solution aux = neighbour(actual, neighbourType, i, j);
+          evalue(aux);
+          if (best.getObjF() > aux.getObjF()) {
+            best = aux.clone();
+            betterFound = true;
           }
-          break;
-                  
-        case ANXIOUS_SAMPLING :     //Muestreo ANXIOUS, se toma la primera solucion vecina que mejora
-          switch (neighbourType) {
-            case ONE_SWAP_NEIGHBOUR:
-              for(int i = 0; i < size & (!betterFound); i++) {
-                for (int j = size - 1; j > i & (!betterFound); j--) {
-                  swap(actual.getOrder(), i, j);
-                  evalue(actual);
-                  if (best.getObjF() > actual.getObjF()) {
-                    best = actual.clone();
-                    betterFound = true;
-                  }
-                  swap(actual.getOrder(), i, j);
-                }
-              }
-              break;
-            case SWAP_WITH_LAST:
-              for(int i = 0; i < size & (!betterFound); i++) {
-                swap(actual.getOrder(), i, size);
-                evalue(actual);
-                if (best.getObjF() > actual.getObjF()) {
-                  best = actual.clone();
-                  betterFound = true;
-                }
-                swap(actual.getOrder(), i, size);
-              }
-              break;
-          }
-          break;
+        }
       }
+      actual = best.clone();
     } while (betterFound);
     problem.setSolution(best);
 	  return best.getObjF();
@@ -178,7 +127,7 @@ public class Heuristica {
 		Solution best = problem.getSolution().clone();
 		Solution actual = best.clone();
 		do {
-			actual = neighbour(actual, neighbourType);
+			actual = neighbour(actual, neighbourType, 0, 0);
 			evalue(actual);		
 
 			switch (stop) {
@@ -204,7 +153,7 @@ public class Heuristica {
 	 * Metodo heuristico de Busqueda por entorno numero 4. Busqueda multiarranque.
 	 */
 	public int multistartSearch(int startType) {
-	  return (new Integer(5)).intValue();
+	  return 1;
 	}
 	
 	/**
@@ -417,21 +366,24 @@ public class Heuristica {
 	 * 			Constante que define la estructura de entorno
 	 * @return Solucion vecina de s siguiendo algun criterio
 	 */
-	private Solution neighbour(Solution s, int neighbourType) {
+	private Solution neighbour(Solution s, int neighbourType, int i, int j) {
 		Random r = new Random(System.nanoTime());
 		int [] newOrder = s.getOrder().clone();
 		
 		switch (neighbourType) {
 			// NEAREST NEIGHBOUR son aquellas soluciones que se encuentran
 		    // a un intercambio de elementos
-			case NEAREST_NEIGHBOUR:
-			int i = (int)(r.nextFloat() * newOrder.length);
-			int j = (int)(r.nextFloat() * newOrder.length);
-			while (i == j) {
-				j = (int)(r.nextFloat() * newOrder.length);
-			}
-			swap(newOrder, i, j);
-			break;
+			case RANDOM_SWAP:
+			  i = (int)(r.nextFloat() * newOrder.length);
+			  j = (int)(r.nextFloat() * newOrder.length);
+			  while (i == j) {
+				  j = (int)(r.nextFloat() * newOrder.length);
+			  }
+			  swap(newOrder, i, j);
+			  break;
+			case ONE_SWAP:
+			  swap(newOrder, i, j);
+			  break;
 		}
 		
 		Solution toReturn = new Solution(0, 0, problem.getAreaRec(), newOrder);
