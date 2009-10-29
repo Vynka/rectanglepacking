@@ -72,15 +72,31 @@ public class Heuristica {
 	  boolean betterFound = true;
     do {
       betterFound = false;
-      for (int i = 0; i < size; i++) {
-        for (int j = i + 1; j < size; j++) {
-          Solution aux = neighbour(actual, neighbourType, i, j);
-          evalue(aux);
-          if (best.getObjF() > aux.getObjF()) {
-            best = aux.clone();
-            betterFound = true;
+      switch (searchType) {
+        case GREEDY_SAMPLING:
+          for (int i = 0; i < size; i++) {
+            for (int j = i + 1; j < size; j++) {
+              Solution aux = neighbour(actual, neighbourType, i, j);
+              evalue(aux);
+              if (best.getObjF() > aux.getObjF()) {
+                best = aux.clone();
+                betterFound = true;
+              }
+            }
           }
-        }
+          break;
+        case ANXIOUS_SAMPLING:
+          for (int i = 0; i < size & (!betterFound); i++) {
+            for (int j = i + 1; j < size & (!betterFound); j++) {
+              Solution aux = neighbour(actual, neighbourType, i, j);
+              evalue(aux);
+              if (best.getObjF() > aux.getObjF()) {
+                best = aux.clone();
+                betterFound = true;
+              }
+            }
+          }
+          break;          
       }
       actual = best.clone();
     } while (betterFound);
@@ -152,7 +168,7 @@ public class Heuristica {
 	/**
 	 * Metodo heuristico de Busqueda por entorno numero 4. Busqueda multiarranque.
 	 */
-	public int multistartSearch(int startType) {
+	public int multistartSearch(int n, int neighbourType, int initType) {
 	  return 1;
 	}
 	
@@ -383,6 +399,9 @@ public class Heuristica {
 			  break;
 			case ONE_SWAP:
 			  swap(newOrder, i, j);
+			  break;
+			case SWAP_WITH_LAST:
+			  swap(newOrder, i, newOrder.length);
 			  break;
 		}
 		
