@@ -24,11 +24,11 @@ public class Main {
 	 *            Argumentos de la linea de comandos
 	 */
 	public static void main(String[] args) {
-		Problem r = new Problem("test2.dat");
+		Problem r = new Problem("test.dat");
 		System.out.println(r);
 		Heuristica h = new Heuristica(r);
 		System.out.println("La solucion inicial es -> " + r.getSolution());
-		h.localSearch(r.getSolution(), Heuristica.ONE_SWAP_NEIGHBOUR, Heuristica.GREEDY_SAMPLING);
+		h.localSearch(Heuristica.ONE_SWAP, Heuristica.GREEDY_SAMPLING, Solution.RANDOM);
 		System.out.println("La solucion del metodo LS con busqueda GREEDY es -> " + r.getSolution());
 		/*h.pureRandomSearch(20, Heuristica.NUMBER_OF_TIMES);
 		System.out.println("La solucion del metodo PSR es (n = 20) -> " + r.getSolution());
