@@ -11,7 +11,7 @@ import java.util.Random;
  * @author Javier Luis Moreno Villena
  * @author Alejandro Tejera Perez
  * @author Isaac Galan Estarico
- * @version 1.01.02
+ * @version 1.01.03
  * @since 1.0
  */
 
@@ -21,7 +21,7 @@ public class Heuristica {
 	 */
 	static final int RANDOM_SWAP = 0;
 	static final int ONE_SWAP = 1;
-  static final int SWAP_WITH_LAST = 2;
+    static final int SWAP_WITH_LAST = 2;
 	
 	/**
 	 * Criterios de parada
@@ -58,56 +58,78 @@ public class Heuristica {
 	public Heuristica(Problem p) {
 	  initPoints();
 	  this.problem = p;
-	  evalue(p.getSolution());
+	  evalue(problem.getSolution());
 	}			
 	
 	/**
 	 * Metodo Heuristico de Busqueda por entorno numero 1. Busqueda Local.
 	 */
-	public int localSearch(int neighbourType, int searchType, int initType) {
-    int size = problem.getRectangleSize();
+	public Solution localSearch(int neighbourType, int searchType, int initType) {
+      int size = problem.getRectangleSize();
 	  Solution actual = new Solution (problem.getAreaRec(), initType, size);
 	  evalue(actual);
 	  Solution best = actual.clone();
 	  boolean betterFound = true;
-    do {
-      betterFound = false;
-      switch (searchType) {
-        case GREEDY_SAMPLING:
-          for (int i = 0; i < size; i++) {
-            for (int j = i + 1; j < size; j++) {
-              Solution aux = neighbour(actual, neighbourType, i, j);
+      do {
+        betterFound = false;
+        switch (searchType) {
+          case GREEDY_SAMPLING:
+          	if (neighbourType == RANDOM_SWAP) {
+          	  System.out.println("Solo se usa vecino aleatorio si el muestreo es aleatorio.");
+              break;
+          	}
+            for (int i = 0; i < size; i++) {
+              for (int j = i + 1; j < size; j++) {
+                Solution aux = neighbour(actual, neighbourType, i, j);
+                evalue(aux);
+                if (best.getObjF() > aux.getObjF()) {
+                  best = aux.clone();
+                  betterFound = true;
+                }
+              }
+            }
+            break;
+          case ANXIOUS_SAMPLING:
+           	if (neighbourType == RANDOM_SWAP) {
+              System.out.println("Solo se usa vecino aleatorio si el muestreo es aleatorio.");
+              break;	
+            }
+            for (int i = 0; (i < size) && (!betterFound); i++) {
+              for (int j = i + 1; (j < size) & (!betterFound); j++) {
+                Solution aux = neighbour(actual, neighbourType, i, j);
+                evalue(aux);
+                if (best.getObjF() > aux.getObjF()) {
+                  best = aux.clone();
+                  betterFound = true;
+                }
+              }
+            }
+            break;
+          case RANDOM_SAMPLING:
+        	if (neighbourType != RANDOM_SWAP) {
+        	  System.out.println("Si se usa muestreo aleatorio el vecino debe ser aleatorio.");
+              break;	
+        	}
+            for (int i = 0; (i < (2 * size)) && (!betterFound); i++) {
+              Solution aux = neighbour(actual, RANDOM_SWAP, 0, 0);
               evalue(aux);
               if (best.getObjF() > aux.getObjF()) {
                 best = aux.clone();
                 betterFound = true;
               }
             }
-          }
-          break;
-        case ANXIOUS_SAMPLING:
-          for (int i = 0; i < size & (!betterFound); i++) {
-            for (int j = i + 1; j < size & (!betterFound); j++) {
-              Solution aux = neighbour(actual, neighbourType, i, j);
-              evalue(aux);
-              if (best.getObjF() > aux.getObjF()) {
-                best = aux.clone();
-                betterFound = true;
-              }
-            }
-          }
-          break;          
-      }
-      actual = best.clone();
-    } while (betterFound);
-    problem.setSolution(best);
-	  return best.getObjF();
+            break;
+        }
+        actual = best.clone();
+      } while (betterFound);
+      problem.setSolution(best);
+	  return best.clone();
 	}
 	
 	/**
 	 * Metodo Heuristico de Busqueda por entorno numero 2. Aleatoria pura.
 	 */
-	public int pureRandomSearch(int n, int stop) {
+	public Solution pureRandomSearch(int n, int stop) {
 		int times = n;
 		Solution best = problem.getSolution().clone();
 		Solution actual = best.clone();
@@ -131,19 +153,18 @@ public class Heuristica {
 			n--;
 		} while (n > 0);
 		problem.setSolution(best);
-		return best.getObjF();
+		return best.clone();
 	}
 	
 	/**
 	 * Metodo Heuristico de Busqueda por entorno numero 3. Recorrido al azar.
 	 */
-	public int randomSearch(int n, int neighbourType, int stop) {
-
+	public Solution randomSearch(int n, int stop) {
 		int times = n;
 		Solution best = problem.getSolution().clone();
 		Solution actual = best.clone();
 		do {
-			actual = neighbour(actual, neighbourType, 0, 0);
+			actual = neighbour(actual, RANDOM_SWAP, 0, 0);
 			evalue(actual);		
 
 			switch (stop) {
@@ -162,14 +183,40 @@ public class Heuristica {
 			n--;
 		} while (n > 0);
 		problem.setSolution(best);
-		return best.getObjF();
+		return best.clone();
 	}	
 	
 	/**
 	 * Metodo heuristico de Busqueda por entorno numero 4. Busqueda multiarranque.
 	 */
-	public int multistartSearch(int n, int neighbourType, int initType) {
-	  return 1;
+	public Solution multistartSearch(int n, int neighbourType, int searchType, int initType, int stop) {
+      int times = n;
+      problem.setSolution(new Solution (problem.getAreaRec(), initType, problem.getRectangleSize()));
+	  Solution actual;
+	  Solution best = problem.getSolution().clone();
+	  do {
+	    actual = localSearch(neighbourType, searchType, initType);
+		evalue(actual);		
+
+		switch (stop) {
+		case OUT_UNLESS_BETTER:
+			if (best.getObjF() > actual.getObjF()) {
+				best = actual;
+				n = times;
+			}
+			break;
+		case NUMBER_OF_TIMES:
+			if (best.getObjF() > actual.getObjF()) {
+				best = actual;
+			}
+			break;
+		}
+
+		problem.setSolution(new Solution (problem.getAreaRec(), initType, problem.getRectangleSize()));
+		n--;		 
+	  } while (n > 0);
+	  problem.setSolution(best);
+	  return best.clone();
 	}
 	
 	/**
@@ -368,7 +415,7 @@ public class Heuristica {
 	 * @param j
 	 * 			otra posicion del array
 	 */
-	private void swap(int[] array, int i, int j) {				
+	public static void swap(int[] array, int i, int j) {				
 		int aux = array[i];
 		array[i] = array[j];
 		array[j] = aux;
@@ -380,6 +427,10 @@ public class Heuristica {
 	 * 			solucion de la que se halla una vecina.
 	 * @param neighbourType
 	 * 			Constante que define la estructura de entorno
+	 * @param i
+	 * 			Posicion a intercambiar
+	 * @param j
+	 * 			Posicion a intercambiar
 	 * @return Solucion vecina de s siguiendo algun criterio
 	 */
 	private Solution neighbour(Solution s, int neighbourType, int i, int j) {
@@ -401,7 +452,7 @@ public class Heuristica {
 			  swap(newOrder, i, j);
 			  break;
 			case SWAP_WITH_LAST:
-			  swap(newOrder, i, newOrder.length);
+			  swap(newOrder, i, newOrder.length - 1);
 			  break;
 		}
 		

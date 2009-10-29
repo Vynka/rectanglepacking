@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StreamTokenizer;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Clase que tiene como funcion almacenar la informacion necesaria para resolver el
@@ -19,7 +21,7 @@ import java.io.StreamTokenizer;
  * @author Javier Luis Moreno Villena
  * @author Alejandro Tejera Perez
  * @author Isaac Galan Estarico
- * @version 1.01.02
+ * @version 1.01.03
  * @since 1.0
  */
 public class Problem {
@@ -48,10 +50,16 @@ public class Problem {
 	 */
 	public Problem(String fileName) {
 		this.rectangles = readFile(fileName);
+	    ArrayList<Rectangle> aux = new ArrayList<Rectangle>(0);
 		for (int i = 0; i < rectangles.length; i++) {
+			aux.add(rectangles[i]);
 			this.areaRec += rectangles[i].getArea();
 		}
-		solution = new Solution(areaRec, Solution.RANDOM, rectangles.length);
+	    Collections.sort(aux, Collections.reverseOrder());
+		for (int i = 0; i < rectangles.length; i++) {
+			rectangles[i] = aux.get(i);
+		}
+	    solution = new Solution(areaRec, Solution.DETERMINISTIC1, rectangles.length);
 	}
 
 	/**

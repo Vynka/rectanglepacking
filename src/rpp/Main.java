@@ -12,7 +12,7 @@ package rpp;
  * @author Javier Luis Moreno Villena
  * @author Alejandro Tejera Perez
  * @author Isaac Galan Estarico
- * @version 1.0a
+ * @version 1.01.03
  * @since 1.0
  */
 public class Main {
@@ -24,17 +24,17 @@ public class Main {
 	 *            Argumentos de la linea de comandos
 	 */
 	public static void main(String[] args) {
-		Problem r = new Problem("test.dat");
+		Problem r = new Problem("test2.dat");
 		System.out.println(r);
 		Heuristica h = new Heuristica(r);
 		System.out.println("La solucion inicial es -> " + r.getSolution());
-		h.localSearch(Heuristica.ONE_SWAP, Heuristica.GREEDY_SAMPLING, Solution.RANDOM);
-		System.out.println("La solucion del metodo LS con busqueda GREEDY es -> " + r.getSolution());
-		/*h.pureRandomSearch(20, Heuristica.NUMBER_OF_TIMES);
-		System.out.println("La solucion del metodo PSR es (n = 20) -> " + r.getSolution());
-		h.randomSearch(20, Heuristica.NEAREST_NEIGHBOUR, Heuristica.NUMBER_OF_TIMES);
-		System.out.println("La solucion del metodo RS es (n = 20) -> " + r.getSolution());
+		h.localSearch(Heuristica.SWAP_WITH_LAST, Heuristica.GREEDY_SAMPLING, Solution.MIXED1);
+		System.out.println("La solucion del metodo LS con busqueda GREDDY es -> " + r.getSolution());
+		h.pureRandomSearch(1000, Heuristica.NUMBER_OF_TIMES);
+		System.out.println("La solucion del metodo PRS es -> " + r.getSolution());
+		/*
 		MainFrame mf = new MainFrame();
-		mf.setVisible(true);*/
+		mf.setVisible(true);
+		*/
 	}
 }

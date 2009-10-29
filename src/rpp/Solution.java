@@ -14,7 +14,7 @@ import java.util.Collections;
  * @author Javier Luis Moreno Villena
  * @author Alejandro Tejera Perez
  * @author Isaac Galan Estarico
- * @version 1.01.02
+ * @version 1.01.03
  * @since 1.0
  */
 
@@ -240,7 +240,7 @@ public class Solution {
 	 * 			numero de rectangulos (Tamano de la solucion)
 	 */
 	
-	public void randomInit(int size) {
+	private void randomInit(int size) {
 		clearSolution();
 		ArrayList<Integer> toMix = new ArrayList<Integer>(0);
 		Random generator = new Random(System.nanoTime());
@@ -261,13 +261,12 @@ public class Solution {
 	 * @param size
 	 * 			numero de rectangulos (Tamano de la solucion)
 	 */
-    public void deterministicInit1(int size) {
+    private void deterministicInit1(int size) {
 		clearSolution();
-    	order = new int [size];
+		order = new int[size];
 		for (int i = 0; i < order.length; i++) {
-			order[i] = order.length - i - 1;
+			order[i] = i;
 		}
-
     }
 
     /**
@@ -275,19 +274,45 @@ public class Solution {
      * y luego aplica a continuacion un metodo aleatorio generando asi una solucion inicial
      * mixta
      * @param size
-	 * 			numero de rectangulos (Tamano de la solucion
+	 * 			numero de rectangulos (Tamano de la solucion)
      */
-    public void mixedInit1(int size) {
+    private void mixedInit1(int size) {
 		clearSolution();
     	order = new int [size];
+		for (int i = 0; i < order.length; i++) {
+			order[i] = i;
+		}
+		for (int i = 0; (3 * i) < order.length ; i++) {
+		  Random generator = new Random(System.nanoTime());
+		  int j = generator.nextInt(3);
+		  Heuristica.swap(order, i, j + i);
+		}
     }
 
-
-    public void mixedInit2(int size) {
+    /**
+     * Inicializa de manera mixta una solucion. Primero aplica un metodo deterministico
+     * y luego aplica a continuacion un metodo aleatorio generando asi una solucion inicial
+     * mixta
+     * @param size
+	 * 			numero de rectangulos (Tamano de la solucion)
+     */
+    private void mixedInit2(int size) {
 		clearSolution();
     	order = new int [size];
+    	int h = order.length / 8;
+		for (int i = 0; i < order.length; i++) {
+			order[i] = i;
+		}
+		for (int i = 0; (h * i) < order.length ; i++) {
+		  Random generator = new Random(System.nanoTime());
+		  int j = generator.nextInt(h);
+		  Heuristica.swap(order, i, j + i);
+		}
     }
     
+    /**
+     *  Reestablece la solucion.
+     */   
     private void clearSolution() {
 		this.b = 0;
 		this.h = 0;
