@@ -28,8 +28,8 @@ public class Main {
 		System.out.println(r);
 		Heuristica h = new Heuristica(r);
 		System.out.println("La solucion inicial es -> " + r.getSolution());
-		h.localSearch(Heuristica.SWAP_WITH_LAST, Heuristica.GREEDY_SAMPLING, Solution.MIXED1);
-		System.out.println("La solucion del metodo LS con busqueda GREDDY es -> " + r.getSolution());
+		h.multistartSearch(5, Heuristica.SWAP_WITH_LAST, Heuristica.ANXIOUS_SAMPLING, Solution.RANDOM, Heuristica.OUT_UNLESS_BETTER);
+		System.out.println("La solucion del metodo MSS con busqueda ANXIOUS es -> " + r.getSolution());
 		h.pureRandomSearch(1000, Heuristica.NUMBER_OF_TIMES);
 		System.out.println("La solucion del metodo PRS es -> " + r.getSolution());
 		/*
