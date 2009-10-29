@@ -20,6 +20,9 @@
 *																*
 *****************************************************************
 
+- Hay que meter los muestreos en la funcion neighbour (el que lo vaya a hacer y quiera saber
+  por qué se lo comento). [Haside]
+
 - TO [Eferroja]:
     El problema es que el rectangulo tiene asignada la posicion (0,0) y el
     panel tiene como posicion ~(0, 30). Cambia la posicion del rectangulo, o el translate.

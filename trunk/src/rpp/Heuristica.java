@@ -58,13 +58,13 @@ public class Heuristica {
 	public Heuristica(Problem p) {
 	  initPoints();
 	  this.problem = p;
-	  evalue(problem.getSolution());
+	  evalue(p.getSolution());
 	}			
 	
 	/**
 	 * Metodo Heuristico de Busqueda por entorno numero 1. Busqueda Local.
 	 */
-	public Solution localSearch(int neighbourType, int searchType, int initType) {
+	public Solution localSearch(int neighbourType, int sampleType, int initType) {
       int size = problem.getRectangleSize();
 	  Solution actual = new Solution (problem.getAreaRec(), initType, size);
 	  evalue(actual);
@@ -72,7 +72,7 @@ public class Heuristica {
 	  boolean betterFound = true;
       do {
         betterFound = false;
-        switch (searchType) {
+        switch (sampleType) {
           case GREEDY_SAMPLING:
           	if (neighbourType == RANDOM_SWAP) {
           	  System.out.println("Solo se usa vecino aleatorio si el muestreo es aleatorio.");
@@ -189,13 +189,14 @@ public class Heuristica {
 	/**
 	 * Metodo heuristico de Busqueda por entorno numero 4. Busqueda multiarranque.
 	 */
-	public Solution multistartSearch(int n, int neighbourType, int searchType, int initType, int stop) {
+	public Solution multistartSearch(int n, int neighbourType, int sampleType, int initType, int stop) {
       int times = n;
       problem.setSolution(new Solution (problem.getAreaRec(), initType, problem.getRectangleSize()));
+      evalue(problem.getSolution());
 	  Solution actual;
 	  Solution best = problem.getSolution().clone();
 	  do {
-	    actual = localSearch(neighbourType, searchType, initType);
+	    actual = localSearch(neighbourType, sampleType, initType);
 		evalue(actual);		
 
 		switch (stop) {
