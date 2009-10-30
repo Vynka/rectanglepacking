@@ -2,26 +2,27 @@
 
 * ARCHIVO TODO PARA TENER SEGUIMIENTO DE LOS CAMBIOS POR HACER. *
 *****************************************************************
-* Estilo:                                      					*
+* Estilo:                                             					*
 * - TODO en si. [Quien ha puesto la nota]                       *
 * ? Sugerencia. [Quien ha puesto la nota]                       *
 * Si se resuelve el TODO poner en la segunda seccion una nota   *
 * de lo resuelto y el nombre de quien la resolvio.              *
 * Asi si tenemos que contactar a alguien por algun problema     *
 * sera mas llevadero.                                           *
-* No pongan tildes. La codificacion difiere segun SO y 			*
-* genera caracteres ilegibles									*
-*																*
-*  VERSION: XX.YY.ZZ											*
-*		XX =  Remodelacion completa. No creo que se cambie      *
-*		YY =  Numero de heuristicas difetentes.					* 
-*				(GRASP, Entorno...) 							*
-*		ZZ =  Subtipos de Heuristicas (Busqueda local, BAP...)	*
-*																*
+* No pongan tildes. La codificacion difiere segun SO y 			    *
+* genera caracteres ilegibles									                  *
+*																                                *
+*  VERSION: XX.YY.ZZ										                      	*
+*		XX =  Remodelacion completa. No creo que se cambie          *
+*		YY =  Numero de heuristicas difetentes.					            * 
+*				(GRASP, Entorno...) 						                      	*
+*		ZZ =  Subtipos de Heuristicas (Busqueda local, BAP...)	    *
+*															                                 	*
 *****************************************************************
 
 - Hay que meter los muestreos en la funcion neighbour (el que lo vaya a hacer y quiera saber
   por quÈ se lo comento). [Haside]
+  ? Te lo pregunto yo maÒana ;) [Ale]
 
 - TO [Eferroja]:
     El problema es que el rectangulo tiene asignada la posicion (0,0) y el
@@ -36,33 +37,28 @@
     - Me parece bien. [Ale]
     - Tambi√©n se podr√≠a mirar la utilizaci√≥n de bugzilla. [Vynka]
 
-- Funcion/es para hallar una solucion vecina, es decir, Heuristicas de busqueda. [Haside]
-    ? Intercambio de dos elementos, uno de ellos el ultimo de la permutacion. [Ale]
-
-- Documentar las funciones PRS, LS y RS [Ale]
-
-? Considerar la modularizacion, en varios metodos separados, del LS segun el muestreo
-  del entorno en: GLS, ALS... (greedy, anxious...) [Ale]
-
 - Visualizacion del problema. (GUI) [Haside]
-    * Proceso: 5% [Isaac]
+    * En proceso [Isaac]
 
 - Actualizar UML y javadoc [Vynka]
-	- ESO NO SE PONE EN EL TODO, ESO COGES Y LO HACES QUE TAMPOCO ES TAN DIFICIL
 	> javadoc --help
-    > umbrello heuristicas.xmi
+  > umbrello heuristicas.xmi
 	 
 
 ? Se podr√≠a mirar la posibilidad de que la clase heur√≠stica implemente runnable,
   para hacer m√°s sencillo (y eficiente?) el multiarranque [Vynka]
   - Complica m·s que hacer m·s simple. [Haside]
-  
-! Registrarse en el p**o foro. [Vynka]
 
 
 ****************************************
 * TODO YA RESUELTOS (MOVER AQUI ABAJO) *
 ****************************************
+
+- Documentar las funciones PRS, LS y RS [Ale]
+  * DONE [Ale]
+  
+- Documentar el metodo multistartSearch [Ale]
+  * DONE [Ale]
 
 - Funciones de PRS, LS y RS. (Busquedas de entorno) [Haside]
 	* DONE PRS y RS.
