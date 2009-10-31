@@ -35,6 +35,7 @@ public class Heuristica {
 	static final int GREEDY_SAMPLING = 0;
 	static final int ANXIOUS_SAMPLING = 1;
 	static final int RANDOM_SAMPLING = 2;
+	static final int NO_NEIGHBOUR_SAMPLING = 3;
 	
 	
 	
@@ -84,64 +85,20 @@ public class Heuristica {
 	 *        @see Solution
 	 */
 	public Solution localSearch(int neighbourType, int sampleType, int initType) {
-      int size = problem.getRectangleSize();
-	  Solution actual = new Solution (problem.getAreaRec(), initType, size);
+	  Solution actual = new Solution (problem.getAreaRec(), initType, problem.getRectangleSize());
 	  evalue(actual);
 	  Solution best = actual.clone();
-	  boolean betterFound = true;
+	  boolean betterFound;
       do {
         betterFound = false;
-        switch (sampleType) {
-          case GREEDY_SAMPLING:                //Muestreo GREEDY, se escoje el mejor de los vecinos
-          	if (neighbourType == RANDOM_SWAP) {
-          	  System.out.println("Solo se usa vecino aleatorio si el muestreo es aleatorio.");
-              break;
-          	}
-            for (int i = 0; i < size; i++) {
-              for (int j = i + 1; j < size; j++) {
-                Solution aux = neighbour(actual, neighbourType, i, j);
-                evalue(aux);
-                if (best.getObjF() > aux.getObjF()) {
-                  best = aux.clone();
-                  betterFound = true;
-                }
-              }
-            }
-            break;
-          case ANXIOUS_SAMPLING:               //Muestreo ANXIOUS, se escoje el primer mejor
-           	if (neighbourType == RANDOM_SWAP) {
-              System.out.println("Solo se usa vecino aleatorio si el muestreo es aleatorio.");
-              break;	
-            }
-            for (int i = 0; (i < size) && (!betterFound); i++) {
-              for (int j = i + 1; (j < size) & (!betterFound); j++) {
-                Solution aux = neighbour(actual, neighbourType, i, j);
-                evalue(aux);
-                if (best.getObjF() > aux.getObjF()) {
-                  best = aux.clone();
-                  betterFound = true;
-                }
-              }
-            }
-            break;
-          case RANDOM_SAMPLING:              //Muestreo RANDOM, se escoje el primer aleatorio que mejore
-        	  if (neighbourType != RANDOM_SWAP) {
-        	    System.out.println("Si se usa muestreo aleatorio el vecino debe ser aleatorio.");
-              break;	
-        	  }
-            for (int i = 0; (i < (2 * size)) && (!betterFound); i++) {
-              Solution aux = neighbour(actual, RANDOM_SWAP, 0, 0);
-              evalue(aux);
-              if (best.getObjF() > aux.getObjF()) {
-                best = aux.clone();
-                betterFound = true;
-              }
-            }
-            break;
+        actual = neighbour(actual, neighbourType, sampleType);
+        evalue(actual);
+        if (best.getObjF() > actual.getObjF()) {
+          best = actual.clone();
+          betterFound = true;
         }
-        actual = best.clone();
       } while (betterFound);
-      problem.setSolution(best);
+    problem.setSolution(best);
 	  return best.clone();
 	}
 	
@@ -209,7 +166,7 @@ public class Heuristica {
 		Solution best = problem.getSolution().clone();
 		Solution actual = best.clone();
 		do {
-			actual = neighbour(actual, RANDOM_SWAP, 0, 0);
+			actual = neighbour(actual, RANDOM_SWAP, NO_NEIGHBOUR_SAMPLING);
 			evalue(actual);		
 
 			switch (stop) {
@@ -505,28 +462,118 @@ public class Heuristica {
 	 * 			Posicion a intercambiar
 	 * @return Solucion vecina de s siguiendo algun criterio
 	 */
-	private Solution neighbour(Solution s, int neighbourType, int i, int j) {
+	private Solution neighbour(Solution s, int neighbourType, int SampleType) {
 		Random r = new Random(System.nanoTime());
+    int size = problem.getRectangleSize();
+    Solution best = s.clone();
+    boolean betterFound;
 		int [] newOrder = s.getOrder().clone();
 		
-		switch (neighbourType) {
-			case RANDOM_SWAP:
-			  i = (int)(r.nextFloat() * newOrder.length);
-			  j = (int)(r.nextFloat() * newOrder.length);
-			  while (i == j) {
-				  j = (int)(r.nextFloat() * newOrder.length);
-			  }
-			  swap(newOrder, i, j);
-			  break;
-			case ONE_SWAP:
-			  swap(newOrder, i, j);
-			  break;
-			case SWAP_WITH_LAST:
-			  swap(newOrder, i, newOrder.length - 1);
-			  break;
+		switch (SampleType) {
+		  case NO_NEIGHBOUR_SAMPLING: {              //Sin muestreo del entorno
+        if (neighbourType != RANDOM_SWAP) {
+          System.out.println("No se puede usar otro tipo de vecino sin muestreo de entorno");
+          break;
+        }
+        int i = (int)(r.nextFloat() * newOrder.length);
+        int j = (int)(r.nextFloat() * newOrder.length);
+        while (i == j)
+          j = (int)(r.nextFloat() * newOrder.length);
+        swap(newOrder, i, j);
+        best.setOrder(newOrder);
+        break;
+		  }
+		    
+		  case GREEDY_SAMPLING: {              //Muestreo GREEDY, se escoje el mejor de los vecinos
+		    if (neighbourType == RANDOM_SWAP) {
+          System.out.println("Solo se usa vecino aleatorio si el muestreo es aleatorio.");
+          break;
+        }
+		    for (int i = 0; i < size; i++) {
+		      for (int j = i + 1; j < size; j++) {
+		        Solution aux = s.clone();
+		        switch (neighbourType) {
+  		        case RANDOM_SWAP:
+  	            int l = (int)(r.nextFloat() * newOrder.length);
+  	            int k = (int)(r.nextFloat() * newOrder.length);
+  	            while (l == k)
+  	              k = (int)(r.nextFloat() * newOrder.length);
+  	            swap(newOrder, l, k);
+  		        case ONE_SWAP:
+  		          swap(newOrder, i, j);
+  		          break;
+  		        case SWAP_WITH_LAST:
+  		          swap(newOrder, i, newOrder.length - 1);
+  		          break;
+		        }
+		        aux.setOrder(newOrder);
+		        evalue(aux);
+		        if (best.getObjF() > aux.getObjF()) {
+		          best = aux.clone();
+		        }
+		      }
+		    }
+		    break;
+		  }
+		    
+		  case ANXIOUS_SAMPLING: {
+        if (neighbourType == RANDOM_SWAP) {
+          System.out.println("Solo se usa vecino aleatorio si el muestreo es aleatorio.");
+          break;
+        }
+        betterFound = false;
+        for (int i = 0; (i < size) && (!betterFound); i++) {
+          for (int j = i + 1; (j < size) && (!betterFound); j++) {
+            Solution aux = s.clone();
+            switch (neighbourType) {
+              case RANDOM_SWAP:
+                int l = (int)(r.nextFloat() * newOrder.length);
+                int k = (int)(r.nextFloat() * newOrder.length);
+                while (l == k)
+                  k = (int)(r.nextFloat() * newOrder.length);
+                swap(newOrder, l, k);
+              case ONE_SWAP:
+                swap(newOrder, i, j);
+                break;
+              case SWAP_WITH_LAST:
+                swap(newOrder, i, newOrder.length - 1);
+                break;
+            }
+            aux.setOrder(newOrder);
+            evalue(aux);
+            if (best.getObjF() > aux.getObjF()) {
+              best = aux.clone();
+              betterFound = true;
+            }
+          }
+        }
+        break;
+		  }
+		    
+		  case RANDOM_SAMPLING: {
+        if (neighbourType != RANDOM_SWAP) {
+          System.out.println("Si se usa muestreo aleatorio el vecino debe ser aleatorio.");
+          break;    
+        }
+        betterFound = false;
+        for (int i = 0; (i < (2 * size)) && (!betterFound); i++) {
+          Solution aux = s.clone();
+          int l = (int)(r.nextFloat() * newOrder.length);
+          int k = (int)(r.nextFloat() * newOrder.length);
+          while (l == k)
+            k = (int)(r.nextFloat() * newOrder.length);
+          swap(newOrder, l, k);
+          aux.setOrder(newOrder);
+          evalue(aux);
+          if (best.getObjF() > aux.getObjF()) {
+            best = aux.clone();
+            betterFound = true;
+          }
+        }
+      break;
+		  }
 		}
 		
-		Solution toReturn = new Solution(0, 0, problem.getAreaRec(), newOrder);
-		return toReturn;
+		return best;
 	}
 }
