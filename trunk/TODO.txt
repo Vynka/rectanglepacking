@@ -2,22 +2,22 @@
 
 * ARCHIVO TODO PARA TENER SEGUIMIENTO DE LOS CAMBIOS POR HACER. *
 *****************************************************************
-* Estilo:                                             					*
+* Estilo:                                             			*
 * - TODO en si. [Quien ha puesto la nota]                       *
 * ? Sugerencia. [Quien ha puesto la nota]                       *
 * Si se resuelve el TODO poner en la segunda seccion una nota   *
 * de lo resuelto y el nombre de quien la resolvio.              *
 * Asi si tenemos que contactar a alguien por algun problema     *
 * sera mas llevadero.                                           *
-* No pongan tildes. La codificacion difiere segun SO y 			    *
-* genera caracteres ilegibles									                  *
-*																                                *
-*  VERSION: XX.YY.ZZ										                      	*
-*		XX =  Remodelacion completa. No creo que se cambie          *
-*		YY =  Numero de heuristicas difetentes.					            * 
-*				(GRASP, Entorno...) 						                      	*
-*		ZZ =  Subtipos de Heuristicas (Busqueda local, BAP...)	    *
-*															                                 	*
+* No pongan tildes. La codificacion difiere segun SO y 			*
+* genera caracteres ilegibles									*
+*																*
+*  VERSION: XX.YY.ZZ										    *
+*		XX =  Remodelacion completa. No creo que se cambie      *
+*		YY =  Numero de heuristicas difetentes.					* 
+*				(GRASP, Entorno...) 						    *
+*		ZZ =  Subtipos de Heuristicas (Busqueda local, BAP...)	*
+*															    *
 *****************************************************************
 
 ? El metodo Heuristica.neighbour() es muy grande y eso lo hace ilegible. Se podria modularizar
@@ -30,6 +30,7 @@
 - TO [Eferroja]:
     El problema es que el rectangulo tiene asignada la posicion (0,0) y el
     panel tiene como posicion ~(0, 30). Cambia la posicion del rectangulo, o el translate.
+    -Hecho, he puesto un offset de 33 para corregirlo, aunque no s� si en otros monitores/resoluciones sirve ese offset, hay que comprobarlo. [Eferroja] 
 
 - Ampliar la Wiki [Haside]
     ? Utilizar la wiki de googlecode más seriamente [Vynka]
@@ -40,8 +41,8 @@
     - Me parece bien. [Ale]
     - También se podría mirar la utilización de bugzilla. [Vynka]
 
-- Visualizacion del problema. (GUI) [Haside]
-    * En proceso [Isaac]
+- Visualizacion del problema (GUI): [Haside]
+    -Arreglar el escalado en el DrawPanel e implementar las otras partes de la GUI. [Eferroja]
 
 - Actualizar UML y javadoc [Vynka]
 	> javadoc --help
@@ -52,6 +53,7 @@
   para hacer más sencillo (y eficiente?) el multiarranque [Vynka]
   - Complica m�s que hacer m�s simple. [Haside]
 
+-El rectangulo que devuelve Solution como solucion no coincide con los rectangulos colocados. [Eferroja]
 
 ****************************************
 * TODO YA RESUELTOS (MOVER AQUI ABAJO) *
@@ -146,5 +148,3 @@
 - ¿No deberia esta lista estar almacenada en la clase Solution? [Ale]
     * END La lista no va en la solucion porque son los puntos donde puede ir el SIGUIENTE rectangulo.
       En todo caso iria o ahi (en Problem) o en la clase Heuristica. [Haside]
-      
-

@@ -24,7 +24,7 @@ public class Main {
 	 *            Argumentos de la linea de comandos
 	 */
 	public static void main(String[] args) {
-		Problem r = new Problem("test.dat");
+		/*Problem r = new Problem("test.dat");
 		System.out.println(r);
 		Heuristica h = new Heuristica(r);
 		System.out.println("La solucion inicial es -> " + r.getSolution());
@@ -33,11 +33,10 @@ public class Main {
 		h.pureRandomSearch(5000000, Heuristica.NUMBER_OF_TIMES);
 		System.out.println("La solucion del metodo PRS es -> " + r.getSolution());
 		h.localSearch(Heuristica.ONE_SWAP, Heuristica.GREEDY_SAMPLING, Solution.RANDOM);
-		System.out.println("La solucion del metodo LS con muestreo GREEDY es -> " + r.getSolution());
-		/*
+		System.out.println("La solucion del metodo LS con muestreo GREEDY es -> " + r.getSolution());*/
+		
 		MainFrame mf = new MainFrame();
 		mf.setVisible(true);
-		*/
 	}
 	
 }
