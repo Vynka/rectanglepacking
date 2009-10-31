@@ -21,7 +21,7 @@ public class Heuristica {
 	 */
 	static final int RANDOM_SWAP = 0;
 	static final int ONE_SWAP = 1;
-    static final int SWAP_WITH_LAST = 2;
+  static final int SWAP_WITH_LAST = 2;
 	
 	/**
 	 * Criterios de parada
@@ -451,25 +451,26 @@ public class Heuristica {
  	}
 	
 	/**
-	 * Halla una solucion vecina a partir de una dada.
+	 * Halla una solucion vecina a partir de una dada, teniendo en cuenta el tipo de muestreo
+	 * y el tipo de estructura de entorno.
 	 * @param s
 	 * 			solucion de la que se halla una vecina.
 	 * @param neighbourType
-	 * 			Constante que define la estructura de entorno
-	 * @param i
-	 * 			Posicion a intercambiar
-	 * @param j
-	 * 			Posicion a intercambiar
+	 * 			Constante que define la estructura de entorno, puede ser:
+	 *      NO_NEIGHBOUR_SAMPLING, GREEDY_SAMPLING, ANXIOUS_SAMPLING, o RANDOM_SAMPLING
+	 * @param sampleType
+	 *      Constante que define el tipo de muestreo de la estructura de entorno, puede ser:
+	 *      RANDOM_SWAP, ONE_SWAP o SWAP_WITH_LAST
 	 * @return Solucion vecina de s siguiendo algun criterio
 	 */
-	private Solution neighbour(Solution s, int neighbourType, int SampleType) {
+	private Solution neighbour(Solution s, int neighbourType, int sampleType) {
 		Random r = new Random(System.nanoTime());
     int size = problem.getRectangleSize();
     Solution best = s.clone();
     boolean betterFound;
 		int [] newOrder = s.getOrder().clone();
 		
-		switch (SampleType) {
+		switch (sampleType) {
 		  case NO_NEIGHBOUR_SAMPLING: {              //Sin muestreo del entorno
         if (neighbourType != RANDOM_SWAP) {
           System.out.println("No se puede usar otro tipo de vecino sin muestreo de entorno");
@@ -516,7 +517,7 @@ public class Heuristica {
 		    break;
 		  }
 		    
-		  case ANXIOUS_SAMPLING: {
+		  case ANXIOUS_SAMPLING: {              //Muestreo ANXIOUS, se escoje el primer mejor vecino
         if (neighbourType == RANDOM_SWAP) {
           System.out.println("Solo se usa vecino aleatorio si el muestreo es aleatorio.");
           break;
@@ -550,7 +551,7 @@ public class Heuristica {
         break;
 		  }
 		    
-		  case RANDOM_SAMPLING: {
+		  case RANDOM_SAMPLING: {              //Muestreo RANDOM, se escoje el primer mejor vecino aleatorio
         if (neighbourType != RANDOM_SWAP) {
           System.out.println("Si se usa muestreo aleatorio el vecino debe ser aleatorio.");
           break;    

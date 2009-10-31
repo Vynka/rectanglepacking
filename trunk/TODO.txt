@@ -20,9 +20,12 @@
 *															                                 	*
 *****************************************************************
 
-- Hay que meter los muestreos en la funcion neighbour (el que lo vaya a hacer y quiera saber
-  por qué se lo comento). [Haside]
-  ? Te lo pregunto yo mañana ;) [Ale]
+? El metodo Heuristica.neighbour() es muy grande y eso lo hace ilegible. Se podria modularizar
+  de alguna forma? [Ale]
+
+- Realizar un entorno de ventanas para poder hacer un testeo y depuracion de lo implemetado.
+  Lo haría yo pero tardaria demasiado en aprender a hacerlo XD Aun asi me pondre con ello
+  por si acaso. [Ale]
 
 - TO [Eferroja]:
     El problema es que el rectangulo tiene asignada la posicion (0,0) y el
@@ -53,6 +56,14 @@
 ****************************************
 * TODO YA RESUELTOS (MOVER AQUI ABAJO) *
 ****************************************
+
+- Comentar el metodo neighbour. [Ale]
+  * DONE [Ale]
+
+- Hay que meter los muestreos en la funcion neighbour (el que lo vaya a hacer y quiera saber
+  por qué se lo comento). [Haside]
+  ? Te lo pregunto yo mañana ;) [Ale]
+  * DONE [Ale]
 
 - Documentar las funciones PRS, LS y RS [Ale]
   * DONE [Ale]
