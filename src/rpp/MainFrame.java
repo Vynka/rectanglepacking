@@ -19,47 +19,49 @@ import java.awt.Toolkit;
  */
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
-	/**
-	 * Atributo dp: Panel donde se representara la solucion. 
-	 */
-	private DrawPanel dp;
-	
-	/**
-	 * Barra de menu del programa.
-	 */
-	private OptionsMenu om;
+        /**
+         * Atributo dp: Panel donde se representara la solucion. 
+         */
+        private DrawPanel dp;
+        
+        /**
+         * Barra de menu del programa.
+         */
+        private OptionsMenu om;
 
-	/**
-	 * Constructor por defecto, en el que se aniaden los objetos de la GUI y se le ajustan los parametros.
-	 */
-	public MainFrame() {
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setTitle("RPP Solver");
-		
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screenDim = kit.getScreenSize();
+        /**
+         * Constructor por defecto, en el que se aniaden los objetos de la GUI y se le ajustan los parametros.
+         */
+        public MainFrame() {
+                this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+                this.setTitle("RPP Solver");
+                
+                Toolkit kit = Toolkit.getDefaultToolkit();
+                Dimension screenDim = kit.getScreenSize();
 
-		// Se establece la posicion del marco
-		int width = (screenDim.width / 2);
-		int height = (screenDim.height / 2);
-		this.setSize(width, height);
-		this.setLocation(width / 2, height / 2);
-		
-		om = new OptionsMenu();
-		this.add(om, BorderLayout.NORTH);
-		
-		dp = new DrawPanel();
-		this.add(dp, BorderLayout.CENTER);
-		
-		//Testeo
-		Problem r = new Problem("test2.dat");
-		System.out.println(r);
-		Heuristica h = new Heuristica(r);
-		System.out.println("La solucion inicial es -> " + r.getSolution());
-		h.pureRandomSearch(20, Heuristica.NUMBER_OF_TIMES);
-		System.out.println("La solucion del metodo PSR es (n = 20) -> " + r.getSolution());
-		/*h.randomSearch(20, Heuristica.NEAREST_NEIGHBOUR, Heuristica.NUMBER_OF_TIMES);
-		System.out.println("La solucion del metodo RS es (n = 20) -> " + r.getSolution());*/
-		dp.setProblem(r);
-	}
+                // Se establece la posicion del marco
+                int width = (screenDim.width / 2);
+                int height = (screenDim.height / 2);
+                this.setSize(width, height);
+                this.setLocation(width / 2, height / 2);
+                
+                om = new OptionsMenu();
+                this.add(om, BorderLayout.NORTH);
+                
+                dp = new DrawPanel();
+                this.add(dp, BorderLayout.CENTER);
+                
+                //Testeo
+                Problem r = new Problem("test2.dat");
+        		System.out.println(r);
+        		Heuristica h = new Heuristica(r);
+        		System.out.println("La solucion inicial es -> " + r.getSolution());
+        		/*h.multistartSearch(5, Heuristica.SWAP_WITH_LAST, Heuristica.ANXIOUS_SAMPLING, Solution.RANDOM, Heuristica.OUT_UNLESS_BETTER);
+        		System.out.println("La solucion del metodo MSS con busqueda ANXIOUS es -> " + r.getSolution());*/
+        		/*h.pureRandomSearch(5000000, Heuristica.NUMBER_OF_TIMES);
+        		System.out.println("La solucion del metodo PRS es -> " + r.getSolution());*/
+        		h.localSearch(Heuristica.ONE_SWAP, Heuristica.GREEDY_SAMPLING, Solution.RANDOM);
+        		System.out.println("La solucion del metodo LS con muestreo GREEDY es -> " + r.getSolution());
+                dp.setProblem(r);
+        }
 }
