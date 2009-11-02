@@ -9,7 +9,7 @@
 * de lo resuelto y el nombre de quien la resolvio.              *
 * Asi si tenemos que contactar a alguien por algun problema     *
 * sera mas llevadero.                                           *
-* No pongan tildes. La codificacion difiere segun SO y 			*
+* NO PONGAN TILDES. La codificacion difiere segun SO y 			*
 * genera caracteres ilegibles									*
 *																*
 *  VERSION: XX.YY.ZZ										    *
@@ -22,24 +22,31 @@
 
 ? El metodo Heuristica.neighbour() es muy grande y eso lo hace ilegible. Se podria modularizar
   de alguna forma? [Ale]
+  - Bajo mi punto de vista lo que lo hace ilegible no es que sea tan grande, sino mas bien la indentacion que tiene.
+    Explico: Los Case estan mas indentados que el codigo que tienen asociado, y no hay espacio suficiente para leer
+    el metodo de forma comoda. De todas formas se podria separar en varios metodos cada case. Me he tomado la libertad
+    de indentarlos para ver que tal queda. Ya me diras. [Vynka]
 
 - Realizar un entorno de ventanas para poder hacer un testeo y depuracion de lo implemetado.
-  Lo harÌa yo pero tardaria demasiado en aprender a hacerlo XD Aun asi me pondre con ello
+  Lo haria yo pero tardaria demasiado en aprender a hacerlo XD Aun asi me pondre con ello
   por si acaso. [Ale]
 
 - TO [Eferroja]:
     El problema es que el rectangulo tiene asignada la posicion (0,0) y el
     panel tiene como posicion ~(0, 30). Cambia la posicion del rectangulo, o el translate.
-    -Hecho, he puesto un offset de 33 para corregirlo, aunque no sÈ si en otros monitores/resoluciones sirve ese offset, hay que comprobarlo. [Eferroja] 
+    -Hecho, he puesto un offset de 33 para corregirlo, aunque no si si en otros monitores/resoluciones sirve ese offset, hay que comprobarlo. [Eferroja] 
 
 - Ampliar la Wiki [Haside]
     ? Utilizar la wiki de googlecode m√°s seriamente [Vynka]
     - Por la del google code no nos van a dar nota. La que hay que actualizar es la del moodle.
+    - OK, recordad poner quien pone cada comentario. De todas formas podemos usar la de
+      google code como un borrador para luego subirlo bien hecho al moodle [Vynka]
 
 ? Aprender a usar el menu Task List del Eclipse para asi tener mejor clasificadas las tareas 
   a realizar y realizadas, pasando TODO.txt a ser una copia de seguridad de las mismas. [Haside]
     - Me parece bien. [Ale]
     - Tambi√©n se podr√≠a mirar la utilizaci√≥n de bugzilla. [Vynka]
+    ^ En proceso. [Vynka]
 
 - Visualizacion del problema (GUI): [Haside]
     -Arreglar el escalado en el DrawPanel e implementar las otras partes de la GUI. [Eferroja]
@@ -51,7 +58,8 @@
 
 ? Se podr√≠a mirar la posibilidad de que la clase heur√≠stica implemente runnable,
   para hacer m√°s sencillo (y eficiente?) el multiarranque [Vynka]
-  - Complica m·s que hacer m·s simple. [Haside]
+  - Complica mas que hacer mas simple. [Haside]
+  - Descartamos entonces? [Vynka]
 
 -El rectangulo que devuelve Solution como solucion no coincide con los rectangulos colocados. [Eferroja]
 
@@ -63,8 +71,8 @@
   * DONE [Ale]
 
 - Hay que meter los muestreos en la funcion neighbour (el que lo vaya a hacer y quiera saber
-  por quÈ se lo comento). [Haside]
-  ? Te lo pregunto yo maÒana ;) [Ale]
+  por que se lo comento). [Haside]
+  ? Te lo pregunto yo maÔøΩana ;) [Ale]
   * DONE [Ale]
 
 - Documentar las funciones PRS, LS y RS [Ale]

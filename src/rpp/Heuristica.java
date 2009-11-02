@@ -463,69 +463,82 @@ public class Heuristica {
 	 *      RANDOM_SWAP, ONE_SWAP o SWAP_WITH_LAST
 	 * @return Solucion vecina de s siguiendo algun criterio
 	 */
-	private Solution neighbour(Solution s, int neighbourType, int sampleType) {
-		Random r = new Random(System.nanoTime());
+    private Solution neighbour(Solution s, int neighbourType, int sampleType) {
+	
+    Random r = new Random(System.nanoTime());
     int size = problem.getRectangleSize();
     Solution best = s.clone();
     boolean betterFound;
-		int [] newOrder = s.getOrder().clone();
+
+    int [] newOrder = s.getOrder().clone();
 		
-		switch (sampleType) {
-		  case NO_NEIGHBOUR_SAMPLING: {              //Sin muestreo del entorno
+	switch (sampleType) {
+	  case NO_NEIGHBOUR_SAMPLING: { //Sin muestreo del entorno
         if (neighbourType != RANDOM_SWAP) {
           System.out.println("No se puede usar otro tipo de vecino sin muestreo de entorno");
           break;
-        }
+        } //if
+        
         int i = (int)(r.nextFloat() * newOrder.length);
         int j = (int)(r.nextFloat() * newOrder.length);
+       
         while (i == j)
           j = (int)(r.nextFloat() * newOrder.length);
+    
         swap(newOrder, i, j);
         best.setOrder(newOrder);
-        break;
-		  }
-		    
-		  case GREEDY_SAMPLING: {              //Muestreo GREEDY, se escoje el mejor de los vecinos
-		    if (neighbourType == RANDOM_SWAP) {
+      break;
+	  } //NO_NEIGHBOUR_SAMPLING
+	  
+	  case GREEDY_SAMPLING: { //Muestreo GREEDY, se escoje el mejor de los vecinos
+		if (neighbourType == RANDOM_SWAP) {
           System.out.println("Solo se usa vecino aleatorio si el muestreo es aleatorio.");
           break;
         }
-		    for (int i = 0; i < size; i++) {
-		      for (int j = i + 1; j < size; j++) {
-		        Solution aux = s.clone();
-		        switch (neighbourType) {
-  		        case RANDOM_SWAP:
+		
+		for (int i = 0; i < size; i++) {
+		  for (int j = i + 1; j < size; j++) {
+		    Solution aux = s.clone();
+		    
+		    switch (neighbourType) {
+  		      case RANDOM_SWAP:
   	            int l = (int)(r.nextFloat() * newOrder.length);
   	            int k = (int)(r.nextFloat() * newOrder.length);
+  	    
   	            while (l == k)
   	              k = (int)(r.nextFloat() * newOrder.length);
+  	            
   	            swap(newOrder, l, k);
-  		        case ONE_SWAP:
-  		          swap(newOrder, i, j);
-  		          break;
-  		        case SWAP_WITH_LAST:
+  		      case ONE_SWAP:
+  		        swap(newOrder, i, j);
+  		        break;
+  		      case SWAP_WITH_LAST:
   		          swap(newOrder, i, newOrder.length - 1);
   		          break;
-		        }
-		        aux.setOrder(newOrder);
-		        evalue(aux);
-		        if (best.getObjF() > aux.getObjF()) {
-		          best = aux.clone();
-		        }
-		      }
 		    }
-		    break;
-		  }
 		    
-		  case ANXIOUS_SAMPLING: {              //Muestreo ANXIOUS, se escoje el primer mejor vecino
+		    aux.setOrder(newOrder);
+		    evalue(aux);
+		    
+		    if (best.getObjF() > aux.getObjF())
+		      best = aux.clone();
+		  }
+		}
+	  break;
+	  } //GREEDY_SAMPLING
+		    
+	  case ANXIOUS_SAMPLING: { //Muestreo ANXIOUS, se escoje el primer mejor vecino
         if (neighbourType == RANDOM_SWAP) {
           System.out.println("Solo se usa vecino aleatorio si el muestreo es aleatorio.");
           break;
         }
+        
         betterFound = false;
+        
         for (int i = 0; (i < size) && (!betterFound); i++) {
           for (int j = i + 1; (j < size) && (!betterFound); j++) {
             Solution aux = s.clone();
+            
             switch (neighbourType) {
               case RANDOM_SWAP:
                 int l = (int)(r.nextFloat() * newOrder.length);
@@ -540,41 +553,51 @@ public class Heuristica {
                 swap(newOrder, i, newOrder.length - 1);
                 break;
             }
+            
             aux.setOrder(newOrder);
             evalue(aux);
+            
             if (best.getObjF() > aux.getObjF()) {
               best = aux.clone();
               betterFound = true;
             }
+          
           }
         }
-        break;
-		  }
+      break;
+	  } //ANXIOUS_SAMPLING
 		    
-		  case RANDOM_SAMPLING: {              //Muestreo RANDOM, se escoje el primer mejor vecino aleatorio
+	  case RANDOM_SAMPLING: { //Muestreo RANDOM, se escoje el primer mejor vecino aleatorio
         if (neighbourType != RANDOM_SWAP) {
           System.out.println("Si se usa muestreo aleatorio el vecino debe ser aleatorio.");
           break;    
         }
+        
         betterFound = false;
+    
         for (int i = 0; (i < (2 * size)) && (!betterFound); i++) {
           Solution aux = s.clone();
           int l = (int)(r.nextFloat() * newOrder.length);
           int k = (int)(r.nextFloat() * newOrder.length);
+        
           while (l == k)
             k = (int)(r.nextFloat() * newOrder.length);
+          
           swap(newOrder, l, k);
           aux.setOrder(newOrder);
           evalue(aux);
+          
           if (best.getObjF() > aux.getObjF()) {
             best = aux.clone();
             betterFound = true;
           }
         }
+        
       break;
-		  }
-		}
+	  } //RANDOM_SAMPLING
+    
+	} //Switch(Sample_Type)
 		
-		return best;
-	}
+	return best;
+    } //Metodo neighbour
 }
