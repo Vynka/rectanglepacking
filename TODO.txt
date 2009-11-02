@@ -20,12 +20,7 @@
 *															    *
 *****************************************************************
 
-? El metodo Heuristica.neighbour() es muy grande y eso lo hace ilegible. Se podria modularizar
-  de alguna forma? [Ale]
-  - Bajo mi punto de vista lo que lo hace ilegible no es que sea tan grande, sino mas bien la indentacion que tiene.
-    Explico: Los Case estan mas indentados que el codigo que tienen asociado, y no hay espacio suficiente para leer
-    el metodo de forma comoda. De todas formas se podria separar en varios metodos cada case. Me he tomado la libertad
-    de indentarlos para ver que tal queda. Ya me diras. [Vynka]
+- Documentar modularizacion del metodo Heuristica.neighbour() [Ale]
 
 - Realizar un entorno de ventanas para poder hacer un testeo y depuracion de lo implemetado.
   Lo haria yo pero tardaria demasiado en aprender a hacerlo XD Aun asi me pondre con ello
@@ -61,11 +56,20 @@
   - Complica mas que hacer mas simple. [Haside]
   - Descartamos entonces? [Vynka]
 
--El rectangulo que devuelve Solution como solucion no coincide con los rectangulos colocados. [Eferroja]
+- El rectangulo que devuelve Solution como solucion no coincide con los rectangulos colocados. [Eferroja]
+  - Estoy comprobandolo [Ale]
 
 ****************************************
 * TODO YA RESUELTOS (MOVER AQUI ABAJO) *
 ****************************************
+
+? El metodo Heuristica.neighbour() es muy grande y eso lo hace ilegible. Se podria modularizar
+  de alguna forma? [Ale]
+  - Bajo mi punto de vista lo que lo hace ilegible no es que sea tan grande, sino mas bien la indentacion que tiene.
+    Explico: Los Case estan mas indentados que el codigo que tienen asociado, y no hay espacio suficiente para leer
+    el metodo de forma comoda. De todas formas se podria separar en varios metodos cada case. Me he tomado la libertad
+    de indentarlos para ver que tal queda. Ya me diras. [Vynka]
+  * DONE Modularizado [Ale]
 
 - Comentar el metodo neighbour. [Ale]
   * DONE [Ale]
