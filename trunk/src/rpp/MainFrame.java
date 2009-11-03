@@ -4,6 +4,8 @@ import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Marco principal de la GUI, que servira como objeto de comunicacion entre la GUI y las clases para
@@ -18,7 +20,7 @@ import java.awt.Toolkit;
  * @since 1.0
  */
 @SuppressWarnings("serial")
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements ActionListener {
         /**
          * Atributo dp: Panel donde se representara la solucion. 
          */
@@ -29,6 +31,8 @@ public class MainFrame extends JFrame {
          */
         private OptionsMenu om;
 
+
+        
         /**
          * Constructor por defecto, en el que se aniaden los objetos de la GUI y se le ajustan los parametros.
          */
@@ -64,4 +68,7 @@ public class MainFrame extends JFrame {
         		System.out.println("La solucion del metodo LS con muestreo GREEDY es -> " + r.getSolution());
                 dp.setProblem(r);
         }
+
+		public void actionPerformed(ActionEvent e) {
+		}
 }
