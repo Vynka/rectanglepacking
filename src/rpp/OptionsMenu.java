@@ -19,6 +19,7 @@ public class OptionsMenu extends JMenuBar {
 		mExit = new JMenuItem("Exit");
 
 		optionBut = new JMenu("Opciones");
+		//optionBut.add(mFile);
 		optionBut.add(mProperties);
 		optionBut.add(mExit);
 

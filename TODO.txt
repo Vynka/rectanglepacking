@@ -59,6 +59,9 @@
 - El rectangulo que devuelve Solution como solucion no coincide con los rectangulos colocados. [Eferroja]
   - Estoy comprobandolo [Ale]
 
+? Hacer una clase Parameters para guardar los parametros del problema, que sea rellenado por el usuario en el menu de propiedades
+y que sea recibido por Heuristica para que haga el metodo correspondiente. 
+
 ****************************************
 * TODO YA RESUELTOS (MOVER AQUI ABAJO) *
 ****************************************
