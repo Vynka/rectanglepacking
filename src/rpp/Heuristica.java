@@ -401,7 +401,7 @@ public class Heuristica {
 				i++;
 			}
 		}
-		// Se a�aden si son puntos utiles
+		// Se aniaden si son puntos utiles
 		if (newy)
 			addPoint(py);
 		if (newx)
@@ -451,8 +451,9 @@ public class Heuristica {
  	}
 	
 	/**
-	 * Halla una solucion vecina a partir de una dada, teniendo en cuenta el tipo de muestreo
-	 * y el tipo de estructura de entorno.
+	 * Lanza los distintos metodos para buscar soluciones vecinas a una dada segun el tipo
+	 * de muestreo escogido.
+	 * 
 	 * @param s
 	 * 			solucion de la que se halla una vecina.
 	 * @param neighbourType
@@ -466,22 +467,27 @@ public class Heuristica {
   private Solution neighbour(Solution s, int neighbourType, int sampleType) {
     Solution best = s.clone();
   	switch (sampleType) {
-  	  case NO_NEIGHBOUR_SAMPLING:           //Sin muestreo del entorno
+  	  case NO_NEIGHBOUR_SAMPLING:   //Sin muestreo del entorno
   	    noNeighbourSampling(best, neighbourType);
-  	  case GREEDY_SAMPLING:                 //Muestreo GREEDY, se escoje el mejor de los vecinos
+  	  case GREEDY_SAMPLING:         //Muestreo GREEDY, se escoje el mejor de los vecinos
   	    greedyNeighbourSampling(best, neighbourType);
-  	  case ANXIOUS_SAMPLING:                //Muestreo ANXIOUS, se escoje el primer mejor vecino
+  	  case ANXIOUS_SAMPLING:        //Muestreo ANXIOUS, se escoje el primer mejor vecino
   	    anxiousNeighbourSampling(best, neighbourType);
-  	  case RANDOM_SAMPLING:                 //Muestreo RANDOM, se escoje el primer mejor vecino aleatorio
+  	  case RANDOM_SAMPLING:         //Muestreo RANDOM, se escoje el primer mejor vecino aleatorio
   	    randomNeighbourSampling(best, neighbourType);
   	}
   	return best;
   }
 
 /**
+ * Metodo que devuelve una solución vecina a una dada, sin muestreo del entorno.
  * 
  * @param s
+ *          Solucion para la que se halla una vecina
  * @param neighbourType
+ *          Constante que define la estructura de entorno, puede ser:
+ *      NO_NEIGHBOUR_SAMPLING, GREEDY_SAMPLING, ANXIOUS_SAMPLING, o RANDOM_SAMPLING
+ * @return solucion vecina de s sin muestreo del entorno
  */
   private void noNeighbourSampling(Solution s, int neighbourType) {
     if (neighbourType != RANDOM_SWAP)
@@ -502,9 +508,15 @@ public class Heuristica {
   }
 
   /**
+   * Metodo que devuelve una solucion vecina a una dada, con muestreo Voraz. Evalua todos los
+   * vecinos candidatos y escoge el mejor entre todos ellos.
    * 
    * @param s
+   *          Solucion para la que se halla una vecina
    * @param neighbourType
+   *          Constante que define la estructura de entorno, puede ser:
+   *      NO_NEIGHBOUR_SAMPLING, GREEDY_SAMPLING, ANXIOUS_SAMPLING, o RANDOM_SAMPLING
+   * @return solucion vecina de s con muestreo Voraz
    */
   private void greedyNeighbourSampling(Solution s, int neighbourType) {
     if (neighbourType == RANDOM_SWAP)
@@ -540,9 +552,15 @@ public class Heuristica {
   }
   
   /**
+   * Metodo que devuelve una solucion vecina a una dada, con muestreo Ansioso. Selecciona la
+   * primera solucion vecina que mejore a s.
    * 
    * @param s
+   *          Solucion para la que se halla una vecina
    * @param neighbourType
+   *          Constante que define la estructura de entorno, puede ser:
+   *      NO_NEIGHBOUR_SAMPLING, GREEDY_SAMPLING, ANXIOUS_SAMPLING, o RANDOM_SAMPLING
+   * @return solucion vecina de s con muestreo Ansioso
    */
   private void anxiousNeighbourSampling(Solution s, int neighbourType) {
     if (neighbourType == RANDOM_SWAP)
@@ -581,9 +599,15 @@ public class Heuristica {
   }
   
   /**
+   * Metodo que devuelve una solucion vecina a una dada, con muestreo Aleatorio. Selecciona de
+   * forma aleatoria un vecino que mejora a s.
    * 
    * @param s
+   *          Solucion para la que se halla una vecina
    * @param neighbourType
+   *          Constante que define la estructura de entorno, puede ser:
+   *      NO_NEIGHBOUR_SAMPLING, GREEDY_SAMPLING, ANXIOUS_SAMPLING, o RANDOM_SAMPLING
+   * @return solucion vecina de s con muestreo Aleatorio
    */
   private void randomNeighbourSampling(Solution s, int neighbourType) {
     if (neighbourType != RANDOM_SWAP)

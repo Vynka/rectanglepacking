@@ -20,7 +20,7 @@
 *															    *
 *****************************************************************
 
-- Documentar modularizacion del metodo Heuristica.neighbour() [Ale]
+
 
 - Realizar un entorno de ventanas para poder hacer un testeo y depuracion de lo implemetado.
   Lo haria yo pero tardaria demasiado en aprender a hacerlo XD Aun asi me pondre con ello
@@ -62,6 +62,9 @@
 ****************************************
 * TODO YA RESUELTOS (MOVER AQUI ABAJO) *
 ****************************************
+
+- Documentar modularizacion del metodo Heuristica.neighbour() [Ale]
+  * DONE Comentada [Vynka]
 
 ? El metodo Heuristica.neighbour() es muy grande y eso lo hace ilegible. Se podria modularizar
   de alguna forma? [Ale]
