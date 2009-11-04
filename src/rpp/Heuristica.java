@@ -469,12 +469,16 @@ public class Heuristica {
   	switch (sampleType) {
   	  case NO_NEIGHBOUR_SAMPLING:   //Sin muestreo del entorno
   	    noNeighbourSampling(best, neighbourType);
+  	    break;
   	  case GREEDY_SAMPLING:         //Muestreo GREEDY, se escoje el mejor de los vecinos
   	    greedyNeighbourSampling(best, neighbourType);
+        break;
   	  case ANXIOUS_SAMPLING:        //Muestreo ANXIOUS, se escoje el primer mejor vecino
   	    anxiousNeighbourSampling(best, neighbourType);
+        break;
   	  case RANDOM_SAMPLING:         //Muestreo RANDOM, se escoje el primer mejor vecino aleatorio
   	    randomNeighbourSampling(best, neighbourType);
+        break;
   	}
   	return best;
   }
@@ -491,7 +495,7 @@ public class Heuristica {
  */
   private void noNeighbourSampling(Solution s, int neighbourType) {
     if (neighbourType != RANDOM_SWAP)
-      System.out.println("No se puede usar otro tipo de vecino sin muestreo de entorno");
+      System.out.println("No se puede usar otro tipo de vecino sin muestreo de entorno que no sea RANDOM_SWAP");
     else {
       Random r = new Random(System.nanoTime());
       int [] newOrder = s.getOrder().clone();
