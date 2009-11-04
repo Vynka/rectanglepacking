@@ -15,16 +15,16 @@ public class OptionsMenu extends JMenuBar {
 
 	
 	public OptionsMenu () {
+		mFile = new JMenuItem("File...");
 		mProperties = new JMenuItem("Properties");
 		mExit = new JMenuItem("Exit");
 
 		optionBut = new JMenu("Opciones");
-		//optionBut.add(mFile);
+		optionBut.add(mFile);
 		optionBut.add(mProperties);
 		optionBut.add(mExit);
 
 		this.setLayout(new FlowLayout(FlowLayout.LEFT));
 		this.add(optionBut);
 	}
-
 }

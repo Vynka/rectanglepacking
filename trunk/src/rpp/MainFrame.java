@@ -31,11 +31,23 @@ public class MainFrame extends JFrame implements ActionListener {
          */
         private OptionsMenu om;
 
+        /**
+         * Dialogo que salta al clicar en Opciones -> Properties.
+         */
         private PropertiesDialog pd = null;
         
         /**
-         * Constructor por defecto, en el que se aniaden los objetos de la GUI y se le ajustan los parametros.
+         * Dialogo que salta al clicar en Opciones -> File...
          */
+        private FileDialog fd = null;
+        
+        /**
+         * Parametros para la heuristica.
+         */
+        HeuristicOptions hop;
+        /**
+         * Constructor por defecto, en el que se aniaden los objetos de la GUI y se le ajustan los parametros.
+         */      
         public MainFrame() {
                 this.setDefaultCloseOperation(EXIT_ON_CLOSE);
                 this.setTitle("RPP Solver");
@@ -51,10 +63,12 @@ public class MainFrame extends JFrame implements ActionListener {
                 
                 om = new OptionsMenu();
                 this.add(om, BorderLayout.NORTH);
-                om.mProperties.setActionCommand("propiedades");
+                om.mProperties.setActionCommand("properties");
                 om.mProperties.addActionListener(this);
-                om.mExit.setActionCommand("cerrar");
+                om.mExit.setActionCommand("close");
                 om.mExit.addActionListener(this);
+                om.mFile.setActionCommand("file");
+                om.mFile.addActionListener(this);
                 
                 dp = new DrawPanel();
                 this.add(dp, BorderLayout.CENTER);
@@ -74,11 +88,14 @@ public class MainFrame extends JFrame implements ActionListener {
         }
 
 		public void actionPerformed(ActionEvent e) {
-			if (e.getActionCommand() == "propiedades") {
+			if (e.getActionCommand() == "properties") {
 				pd = new PropertiesDialog(this);
 			}
-			else if (e.getActionCommand() == "cerrar") {
+			else if (e.getActionCommand() == "close") {
 				System.exit(0);
+			}
+			else if (e.getActionCommand() == "file") {
+				fd = new FileDialog(this);
 			}
 		}
 }
