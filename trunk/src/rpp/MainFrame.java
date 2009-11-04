@@ -31,7 +31,7 @@ public class MainFrame extends JFrame implements ActionListener {
          */
         private OptionsMenu om;
 
-
+        private PropertiesDialog pd = null;
         
         /**
          * Constructor por defecto, en el que se aniaden los objetos de la GUI y se le ajustan los parametros.
@@ -51,6 +51,10 @@ public class MainFrame extends JFrame implements ActionListener {
                 
                 om = new OptionsMenu();
                 this.add(om, BorderLayout.NORTH);
+                om.mProperties.setActionCommand("propiedades");
+                om.mProperties.addActionListener(this);
+                om.mExit.setActionCommand("cerrar");
+                om.mExit.addActionListener(this);
                 
                 dp = new DrawPanel();
                 this.add(dp, BorderLayout.CENTER);
@@ -70,5 +74,11 @@ public class MainFrame extends JFrame implements ActionListener {
         }
 
 		public void actionPerformed(ActionEvent e) {
+			if (e.getActionCommand() == "propiedades") {
+				pd = new PropertiesDialog(this);
+			}
+			else if (e.getActionCommand() == "cerrar") {
+				System.exit(0);
+			}
 		}
 }

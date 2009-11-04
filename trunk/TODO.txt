@@ -26,11 +26,8 @@
   Lo haria yo pero tardaria demasiado en aprender a hacerlo XD Aun asi me pondre con ello
   por si acaso. [Ale]
 
-- TO [Eferroja]:
-    El problema es que el rectangulo tiene asignada la posicion (0,0) y el
-    panel tiene como posicion ~(0, 30). Cambia la posicion del rectangulo, o el translate.
-    -Hecho, he puesto un offset de 33 para corregirlo, aunque no si si en otros monitores/resoluciones sirve ese offset, hay que comprobarlo. [Eferroja] 
 
+	
 - Ampliar la Wiki [Haside]
     ? Utilizar la wiki de googlecode más seriamente [Vynka]
     - Por la del google code no nos van a dar nota. La que hay que actualizar es la del moodle.
@@ -44,7 +41,11 @@
     ^ En proceso. [Vynka]
 
 - Visualizacion del problema (GUI): [Haside]
-    -Arreglar el escalado en el DrawPanel e implementar las otras partes de la GUI. [Eferroja]
+    -Arreglar el escalado en el DrawPanel.
+    -Terminar el dialogo de propiedades con los elementos para elegir los parametros del problema. (Needs: Saber que parametros para Heuristica habra)
+    -Hacer el dialogo de seleccion de fichero de rectangulos.
+    -Hacer el panel con las etiquetas de los parametros a la derecha del dibujo. (Needs: Saber que parametros para Heuristica habra)
+    -Etiquetas mostrando la fObj, Ideal, y los botones Solve, etc. debajo del dibujo. [Eferroja]
 
 - Actualizar UML y javadoc [Vynka]
 	> javadoc --help
@@ -65,7 +66,12 @@ y que sea recibido por Heuristica para que haga el metodo correspondiente.
 ****************************************
 * TODO YA RESUELTOS (MOVER AQUI ABAJO) *
 ****************************************
-
+- TO [Eferroja]:
+    El problema es que el rectangulo tiene asignada la posicion (0,0) y el
+    panel tiene como posicion ~(0, 30). Cambia la posicion del rectangulo, o el translate.
+    -Hecho, he puesto un offset de 33 para corregirlo, aunque no si si en otros monitores/resoluciones sirve ese offset, hay que comprobarlo. [Eferroja] 
+	*El offset con panel.getLocation fracasa, se queda en 33. [Eferroja]
+	
 - Documentar modularizacion del metodo Heuristica.neighbour() [Ale]
   * DONE Comentada [Vynka]
 
