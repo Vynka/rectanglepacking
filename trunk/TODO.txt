@@ -19,12 +19,6 @@
 *		ZZ =  Subtipos de Heuristicas (Busqueda local, BAP...)	*
 *															    *
 *****************************************************************
-
-
-
-- Realizar un entorno de ventanas para poder hacer un testeo y depuracion de lo implemetado.
-  Lo haria yo pero tardaria demasiado en aprender a hacerlo XD Aun asi me pondre con ello
-  por si acaso. [Ale]
 	
 - Ampliar la Wiki [Haside]
     ? Utilizar la wiki de googlecode más seriamente [Vynka]
@@ -49,8 +43,13 @@
 	> javadoc --help
   > umbrello heuristicas.xmi
 
-? Hacer una clase Parameters para guardar los parametros del problema, que sea rellenado por el usuario en el menu de propiedades
-y que sea recibido por Heuristica para que haga el metodo correspondiente. 
+- Hacer una clase HeuristicOptions para guardar los parametros del problema, que sea rellenado
+  por el usuario en el menu de propiedades y que sea recibido por Heuristica para que
+  haga el metodo correspondiente.
+  - Implementacion de la clase HeuristicOptions (comenzado por Haside)
+  - Modificacion de la clase Heuristica [Ale]
+
+- Implementar la busqueda por entornos numero 5, Recocido Simulado [Ale]
 
 ****************************************
 * TODO YA RESUELTOS (MOVER AQUI ABAJO) *
