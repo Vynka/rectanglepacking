@@ -25,8 +25,6 @@
 - Realizar un entorno de ventanas para poder hacer un testeo y depuracion de lo implemetado.
   Lo haria yo pero tardaria demasiado en aprender a hacerlo XD Aun asi me pondre con ello
   por si acaso. [Ale]
-
-
 	
 - Ampliar la Wiki [Haside]
     ? Utilizar la wiki de googlecode más seriamente [Vynka]
@@ -50,15 +48,6 @@
 - Actualizar UML y javadoc [Vynka]
 	> javadoc --help
   > umbrello heuristicas.xmi
-	 
-
-? Se podría mirar la posibilidad de que la clase heurística implemente runnable,
-  para hacer más sencillo (y eficiente?) el multiarranque [Vynka]
-  - Complica mas que hacer mas simple. [Haside]
-  - Descartamos entonces? [Vynka]
-
-- El rectangulo que devuelve Solution como solucion no coincide con los rectangulos colocados. [Eferroja]
-  - Estoy comprobandolo [Ale]
 
 ? Hacer una clase Parameters para guardar los parametros del problema, que sea rellenado por el usuario en el menu de propiedades
 y que sea recibido por Heuristica para que haga el metodo correspondiente. 
@@ -66,6 +55,11 @@ y que sea recibido por Heuristica para que haga el metodo correspondiente.
 ****************************************
 * TODO YA RESUELTOS (MOVER AQUI ABAJO) *
 ****************************************
+
+- El rectangulo que devuelve Solution como solucion no coincide con los rectangulos colocados. [Eferroja]
+  - Estoy comprobandolo [Ale]
+  * DONE [Ale]
+
 - TO [Eferroja]:
     El problema es que el rectangulo tiene asignada la posicion (0,0) y el
     panel tiene como posicion ~(0, 30). Cambia la posicion del rectangulo, o el translate.

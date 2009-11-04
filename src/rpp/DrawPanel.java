@@ -49,12 +49,12 @@ public class DrawPanel extends JPanel {
         Solution sol = p.getSolution();
         //double x = this.getSize().getWidth();
         double y = this.getSize().getHeight() + Y_OFFSET;
-        double scalex = getWidth() / sol.getBase();
-        double scaley = getHeight() / sol.getHeight();
+        //double scalex = getWidth() / sol.getBase();
+        //double scaley = getHeight() / sol.getHeight();
         
         af = new AffineTransform();
         af.translate(0, y);
-        af.scale(scalex, scaley); //Se situa el origen en la esquina inf izq y se escala al tamanio
+        //af.scale(scalex, scaley); //Se situa el origen en la esquina inf izq y se escala al tamanio
                                   //del rectangulo solucion
         
         //Mirar de cambiar la escala con botones + y -
