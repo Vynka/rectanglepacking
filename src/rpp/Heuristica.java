@@ -21,7 +21,7 @@ public class Heuristica {
 	 */
 	static final int RANDOM_SWAP = 0;
 	static final int ONE_SWAP = 1;
-  static final int SWAP_WITH_LAST = 2;
+	static final int SWAP_WITH_LAST = 2;
 	
 	/**
 	 * Criterios de parada
@@ -35,9 +35,7 @@ public class Heuristica {
 	static final int GREEDY_SAMPLING = 0;
 	static final int ANXIOUS_SAMPLING = 1;
 	static final int RANDOM_SAMPLING = 2;
-	static final int NO_NEIGHBOUR_SAMPLING = 3;
-	
-	
+	static final int NO_SAMPLING = 3;		
 	
 	/**
 	 * Lista de puntos factibles en los que colocar un rectangulo
@@ -98,7 +96,7 @@ public class Heuristica {
           betterFound = true;
         }
       } while (betterFound);
-    problem.setSolution(best);
+      problem.setSolution(best);
 	  return best.clone();
 	}
 	
@@ -146,27 +144,27 @@ public class Heuristica {
 	
 	/**
 	 * Metodo Heuristico de Busqueda por entorno numero 3. Recorrido al azar.
-   * 
-   * Este metodo Heuristico implementa una busqueda aleatoria en todo el conjunto de
-   * soluciones posibles del problema, pero dentro de las soluciones vecinas a una solucion
-   * dada. Para ello genera una solucion inicial, y obtiene una solucion aleatoria vecina de esta.
-   * Si dicha solucion vecina mejora la actual, se toma como actual y se repite el proceso. En
-   * caso contrario se genera una nueva. Continua hasta que se cumpla la condicion de parada.
-   * 
-   * @param n
-   *        numero de iteraciones
-   * @param stop
-   *        condicion de parada, puede ser OUT_UNLESS_BETTER si se quiere terminar la
-   *        ejecucion al cumpli una serie de iteraciones sin encontrar una solucion
-   *        que mejore, o NUMBER_OF_TIMES, si se quiere terminar la ejecucion en el numero
-   *        exacto de iteraciones especificadas. 
+	 * 
+	 * Este metodo Heuristico implementa una busqueda aleatoria en todo el conjunto de
+	 * soluciones posibles del problema, pero dentro de las soluciones vecinas a una solucion
+	 * dada. Para ello genera una solucion inicial, y obtiene una solucion aleatoria vecina de esta.
+	 * Si dicha solucion vecina mejora la actual, se toma como actual y se repite el proceso. En
+	 * caso contrario se genera una nueva. Continua hasta que se cumpla la condicion de parada.
+	 * 
+	 * @param n
+	 *        	numero de iteraciones
+	 * @param stop
+	 *        	condicion de parada, puede ser OUT_UNLESS_BETTER si se quiere terminar la
+   	 *        	ejecucion al cumpli una serie de iteraciones sin encontrar una solucion
+   	 *        	que mejore, o NUMBER_OF_TIMES, si se quiere terminar la ejecucion en el numero
+   	 *        	exacto de iteraciones especificadas. 
 	 */
 	public Solution randomSearch(int n, int stop) {
 		int times = n;
 		Solution best = problem.getSolution().clone();
 		Solution actual = best.clone();
 		do {
-			actual = neighbour(actual, RANDOM_SWAP, NO_NEIGHBOUR_SAMPLING);
+			actual = neighbour(actual, RANDOM_SWAP, NO_SAMPLING);
 			evalue(actual);		
 
 			switch (stop) {
@@ -191,61 +189,61 @@ public class Heuristica {
 	/**
 	 * Metodo heuristico de Busqueda por entorno numero 4. Busqueda multiarranque.
 	 * 
-   * Este metodo Heuristico se desarrolla de la siguiente manera. Se generan tantas soluciones
-   * iniciales como las especificadas y de la forma especificada, y se lanzan busquedas locales
-   * (Busquedas por entorno numero 1) desde ellas con el fin de evitar obtener solo 
-   * soluciones relativas. El metodo escoje la mejor solucion de las devueltas por las 
-   * busquedas locales y la toma como solucion optima.
-   * 
-   * @param n
-   *        numero de iteraciones
-   * @param neighbourType
-   *        tipo de estructura de entorno, puede ser RANDOM_SWAP, ONE_SWAP o SWAP_WITH_LAST (de momento)
-   *        ATENCION: El tipo de estructura aleatoria solo se puede usar con el muestreo aleatorio
-   * @param sampleType
-   *        tipo de comportamiento de la busqueda local (o tipo de muestreo) que puede ser
-   *        GREEDY_SAMPLING si se escoje el mejor vecino de todo el entorno, ANXIOUS_SAMPLING si se
-   *        coje el primer mejor vecino, o RANDOM_SAMPLING si se coje el primer 
-   *        vecino al azar que mejore
-   * @param initType
-   *        tipo de generacion de solucion inicial, puede ser RANDOM, DETERMINISTICINIT1, 
-   *        DETERMINISTICINIT2, MIXEDINIT1, MIXEDINIT2,...
-   *        @see Solution
-   * @param stop
-   *        condicion de parada, puede ser OUT_UNLESS_BETTER si se quiere terminar la
-   *        ejecucion al cumpli una serie de iteraciones sin encontrar una solucion
-   *        que mejore, o NUMBER_OF_TIMES, si se quiere terminar la ejecucion en el numero
-   *        exacto de iteraciones especificadas. 
+	 * Este metodo Heuristico se desarrolla de la siguiente manera. Se generan tantas soluciones
+	 * iniciales como las especificadas y de la forma especificada, y se lanzan busquedas locales
+	 * (Busquedas por entorno numero 1) desde ellas con el fin de evitar obtener solo 
+	 * soluciones relativas. El metodo escoje la mejor solucion de las devueltas por las 
+	 * busquedas locales y la toma como solucion optima.
+	 * 
+	 * @param n
+	 *        numero de iteraciones
+	 * @param neighbourType
+	 *        tipo de estructura de entorno, puede ser RANDOM_SWAP, ONE_SWAP o SWAP_WITH_LAST (de momento)
+	 *        ATENCION: El tipo de estructura aleatoria solo se puede usar con el muestreo aleatorio
+	 * @param sampleType
+	 *        tipo de comportamiento de la busqueda local (o tipo de muestreo) que puede ser
+	 *        GREEDY_SAMPLING si se escoje el mejor vecino de todo el entorno, ANXIOUS_SAMPLING si se
+	 *        coje el primer mejor vecino, o RANDOM_SAMPLING si se coje el primer 
+	 *        vecino al azar que mejore
+	 * @param initType
+	 *        tipo de generacion de solucion inicial, puede ser RANDOM, DETERMINISTICINIT1, 
+	 *        DETERMINISTICINIT2, MIXEDINIT1, MIXEDINIT2,...
+	 *        @see Solution
+	 * @param stop
+	 *        condicion de parada, puede ser OUT_UNLESS_BETTER si se quiere terminar la
+	 *        ejecucion al cumpli una serie de iteraciones sin encontrar una solucion
+	 *        que mejore, o NUMBER_OF_TIMES, si se quiere terminar la ejecucion en el numero
+	 *        exacto de iteraciones especificadas. 
 	 */
 	public Solution multistartSearch(int n, int neighbourType, int sampleType, int initType, int stop) {
-    int times = n;
-    problem.setSolution(new Solution (problem.getAreaRec(), initType, problem.getRectangleSize()));
-    evalue(problem.getSolution());
-    Solution actual;
-    Solution best = problem.getSolution().clone();
-    do {
-      actual = localSearch(neighbourType, sampleType, initType);
-      evalue(actual);		
-
-      switch (stop) {
-        case OUT_UNLESS_BETTER:
-          if (best.getObjF() > actual.getObjF()) {
-            best = actual;
-            n = times;
-          }
-          break;
-        case NUMBER_OF_TIMES:
-          if (best.getObjF() > actual.getObjF()) {
-            best = actual;
-          }
-          break;
-      }
-
-      problem.setSolution(new Solution (problem.getAreaRec(), initType, problem.getRectangleSize()));
-      n--;		 
-    } while (n > 0);
-    problem.setSolution(best);
-    return best.clone();
+		int times = n;
+		problem.setSolution(new Solution (problem.getAreaRec(), initType, problem.getRectangleSize()));
+		evalue(problem.getSolution());
+		Solution actual;
+		Solution best = problem.getSolution().clone();
+		do {
+			actual = localSearch(neighbourType, sampleType, initType);
+			evalue(actual);		
+			
+			switch (stop) {
+			case OUT_UNLESS_BETTER:
+				if (best.getObjF() > actual.getObjF()) {
+					best = actual;
+					n = times;
+				}
+				break;
+			case NUMBER_OF_TIMES:
+				if (best.getObjF() > actual.getObjF()) {
+					best = actual;
+				}
+				break;
+			}
+			
+			problem.setSolution(new Solution (problem.getAreaRec(), initType, problem.getRectangleSize()));
+			n--;		 
+		} while (n > 0);
+		problem.setSolution(best);
+		return best.clone();
 	}
 	
 	/**
@@ -467,7 +465,7 @@ public class Heuristica {
   private Solution neighbour(Solution s, int neighbourType, int sampleType) {
     Solution best = s.clone();
   	switch (sampleType) {
-  	  case NO_NEIGHBOUR_SAMPLING:   //Sin muestreo del entorno
+  	  case NO_SAMPLING:   //Sin muestreo del entorno
   	    noNeighbourSampling(best, neighbourType);
   	    break;
   	  case GREEDY_SAMPLING:         //Muestreo GREEDY, se escoje el mejor de los vecinos
