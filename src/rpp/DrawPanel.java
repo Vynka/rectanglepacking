@@ -12,7 +12,7 @@ import java.awt.geom.Rectangle2D;
 
 @SuppressWarnings("serial")
 public class DrawPanel extends JPanel {
-	final double Y_OFFSET = 33; //Offset para arreglar la diferencia entre el (0, 0) de los rectangulos y el (0, 0) del panel.
+	final double Y_OFFSET = 30; //Offset para arreglar la diferencia entre el (0, 0) de los rectangulos y el (0, 0) del panel.
 	/**
 	 * Atributo p: Referencia a un objeto Problem.
 	 */
@@ -56,6 +56,8 @@ public class DrawPanel extends JPanel {
         af.translate(0, y);
         af.scale(scalex, scaley); //Se situa el origen en la esquina inf izq y se escala al tamanio
                                   //del rectangulo solucion
+        
+        //Mirar de cambiar la escala con botones + y -
         g2.setTransform(af);
         
         g2.setStroke(new BasicStroke(0.2f));

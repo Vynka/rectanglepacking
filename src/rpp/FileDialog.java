@@ -1,31 +1,30 @@
 package rpp;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
-public class PropertiesDialog extends JDialog implements ActionListener {
+public class FileDialog extends JDialog implements ActionListener {
 	
-	//Aqui deberia ir una referencia a un objeto Parametros que seria el que guardase los parametros dados por el usuario
-	//y que seria enviado por MainFrame a Heuristica.
+	JTextField filename = new JTextField("", 20);
 	JButton acceptbut = new JButton("Aceptar");
 	JButton cancelbut = new JButton("Cancelar");
-	JLabel blaolbl = new JLabel("Parametros aqui y eso.");
 	
-	public PropertiesDialog(MainFrame owner) {
-		super(owner, "Properties", true);
-		this.setSize(200, 200);
-		this.setLocation(owner.getLocation());
+	public FileDialog(MainFrame owner) {
+		super(owner, "File", true);
+		this.setSize(300, 100);
+		this.setLocation(owner. getLocation());
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setLayout(new FlowLayout());
 		
-		this.add(blaolbl);
-		acceptbut.setActionCommand("accept");
+		this.add(filename);
+		acceptbut.setActionCommand("fdaccept");
 		acceptbut.addActionListener(this);
+		acceptbut.addActionListener(owner);
 		this.add(acceptbut);
 		cancelbut.setActionCommand("cancel");
 		cancelbut.addActionListener(this);
@@ -33,10 +32,12 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 		
 		this.setVisible(true);
 	}
+
+	
 	
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand() == "accept") {
-			System.out.println("Choy guay");
+		if (e.getActionCommand() == "fdaccept") {
+			System.out.println(filename.getText());
 			this.dispose();
 		}
 		else if(e.getActionCommand() == "cancel") {
