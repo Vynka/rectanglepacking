@@ -19,18 +19,33 @@
 *		ZZ =  Subtipos de Heuristicas (Busqueda local, BAP...)	*
 *															    *
 *****************************************************************
-	
+
+- Tratemos de no causar problemas con las indentaciones, se aceptan sugerencias de estilo- [Vynka]
+  - De momento se me ocurren:
+    * Espacios de 4 caracteres en blanco antes de cada linea(tabulador)
+    * Seguir los estandares de Java
+    * Lineas en blanco antes de bucles y/o sentencias de control:
+      |    Linea_previa_al_bucle/sentencia_de_control;
+      |
+      |    for.../while.../if...
+      ...
+      |
+      |    Siguiente_linea_de_codigo;
+    * Comentarios explicativos si se estiman minimamente necesarios.
+    [Vynka]
+
 - Ampliar la Wiki [Haside]
     ? Utilizar la wiki de googlecode más seriamente [Vynka]
     - Por la del google code no nos van a dar nota. La que hay que actualizar es la del moodle.
     - OK, recordad poner quien pone cada comentario. De todas formas podemos usar la de
       google code como un borrador para luego subirlo bien hecho al moodle [Vynka]
+    - En proceso; faltan de un par de referencias mas y que revise la redaccion [Vynka] 
 
 ? Aprender a usar el menu Task List del Eclipse para asi tener mejor clasificadas las tareas 
   a realizar y realizadas, pasando TODO.txt a ser una copia de seguridad de las mismas. [Haside]
     - Me parece bien. [Ale]
     - También se podría mirar la utilización de bugzilla. [Vynka]
-    ^ En proceso. [Vynka]
+    ^ Espero haceros el tutorial (Task List) este mismo lunes en el foro. [Vynka]
 
 - Visualizacion del problema (GUI): [Haside]
     -Arreglar el escalado en el DrawPanel.
@@ -50,6 +65,8 @@
   - Modificacion de la clase Heuristica [Ale]
 
 - Implementar la busqueda por entornos numero 5, Recocido Simulado [Ale]
+  - En proceso (Ya he empezado a trabajar en ello, aunque no lo subiré hasta tenerlo
+    correcto) [Vynka]
 
 ****************************************
 * TODO YA RESUELTOS (MOVER AQUI ABAJO) *
