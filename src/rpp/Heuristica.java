@@ -115,8 +115,8 @@ public class Heuristica {
    *        que mejore, o NUMBER_OF_TIMES, si se quiere terminar la ejecucion en el numero
    *        exacto de iteraciones especificadas. 
 	 */
-	public Solution pureRandomSearch(int n, int stop) {
-		int times = n;
+	public Solution pureRandomSearch(int times, int stop) {
+		int n = times;
 		Solution best = problem.getSolution().clone();
 		Solution actual = best.clone();
 		do {
@@ -159,8 +159,8 @@ public class Heuristica {
    	 *        	que mejore, o NUMBER_OF_TIMES, si se quiere terminar la ejecucion en el numero
    	 *        	exacto de iteraciones especificadas. 
 	 */
-	public Solution randomSearch(int n, int stop) {
-		int times = n;
+	public Solution randomSearch(int times, int stop) {
+		int n = times;
 		Solution best = problem.getSolution().clone();
 		Solution actual = best.clone();
 		do {
@@ -215,8 +215,8 @@ public class Heuristica {
 	 *        que mejore, o NUMBER_OF_TIMES, si se quiere terminar la ejecucion en el numero
 	 *        exacto de iteraciones especificadas. 
 	 */
-	public Solution multistartSearch(int n, int neighbourType, int sampleType, int initType, int stop) {
-		int times = n;
+	public Solution multistartSearch(int times, int neighbourType, int sampleType, int initType, int stop) {
+		int n = times;
 		problem.setSolution(new Solution (problem.getAreaRec(), initType, problem.getRectangleSize()));
 		evalue(problem.getSolution());
 		Solution actual;

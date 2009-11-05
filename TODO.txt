@@ -20,6 +20,37 @@
 *															    *
 *****************************************************************
 
+- El rectangulo que devuelve Solution como solucion no coincide con los rectangulos colocados.v2 [Haside]
+	
+- Visualizacion del problema (GUI): [Haside]
+    -Arreglar el escalado en el DrawPanel. Mejor hacer lo de los botones para escalar manualmente. [Haside]
+    -Terminar el dialogo de propiedades con los elementos para elegir los parametros del problema. (Needs: Saber que parametros para Heuristica habra)
+    -Hacer el dialogo de seleccion de fichero de rectangulos.
+    -Hacer el panel con las etiquetas de los parametros a la derecha del dibujo. (Needs: Saber que parametros para Heuristica habra)
+    -Etiquetas mostrando la fObj, Ideal, y los botones Solve, etc. debajo del dibujo. [Eferroja]
+
+- Actualizar UML y javadoc [Vynka]
+	> javadoc --help
+  > umbrello heuristicas.xmi
+  - Hecho javadoc. Mira era tan facil como Project -> Generate Javadoc [Haside]
+
+- Hacer una clase HeuristicOptions para guardar los parametros del problema, que sea rellenado
+  por el usuario en el menu de propiedades y que sea recibido por Heuristica para que
+  haga el metodo correspondiente. [Haside]
+  - Implementacion de la clase HeuristicOptions [Haside]
+  *DONE
+  - Modificacion de la clase Heuristica [Ale]
+
+- Implementar la busqueda por entornos numero 5, Recocido Simulado [Ale]
+  - En proceso (Ya he empezado a trabajar en ello, aunque no lo subire hasta tenerlo
+    correcto) [Vynka]
+
+- Implementar la busqueda constructiva GRASP con sus posibles variaciones [Haside]
+
+****************************************
+* TODO YA RESUELTOS (MOVER AQUI ABAJO) *
+****************************************
+
 - Tratemos de no causar problemas con las indentaciones, se aceptan sugerencias de estilo- [Vynka]
   - De momento se me ocurren:
     * Espacios de 4 caracteres en blanco antes de cada linea(tabulador)
@@ -33,48 +64,40 @@
       |    Siguiente_linea_de_codigo;
     * Comentarios explicativos si se estiman minimamente necesarios.
     [Vynka]
+  - Traduzco: ¿Que les parece si volvemos a program I? [Haside]
+
+
+- Añadidos Data sets segun tamano de problemas. [Haside]
 
 - Ampliar la Wiki [Haside]
     ? Utilizar la wiki de googlecode mÃ¡s seriamente [Vynka]
     - Por la del google code no nos van a dar nota. La que hay que actualizar es la del moodle.
     - OK, recordad poner quien pone cada comentario. De todas formas podemos usar la de
       google code como un borrador para luego subirlo bien hecho al moodle [Vynka]
-    - En proceso; faltan de un par de referencias mas y que revise la redaccion [Vynka] 
 
 ? Aprender a usar el menu Task List del Eclipse para asi tener mejor clasificadas las tareas 
   a realizar y realizadas, pasando TODO.txt a ser una copia de seguridad de las mismas. [Haside]
     - Me parece bien. [Ale]
     - TambiÃ©n se podrÃ­a mirar la utilizaciÃ³n de bugzilla. [Vynka]
+    * Se tarda tanto como en actualizar JAVADOC?
     ^ Espero haceros el tutorial (Task List) este mismo lunes en el foro. [Vynka]
-
-- Visualizacion del problema (GUI): [Haside]
-    -Arreglar el escalado en el DrawPanel.
-    -Terminar el dialogo de propiedades con los elementos para elegir los parametros del problema. (Needs: Saber que parametros para Heuristica habra)
-    -Hacer el dialogo de seleccion de fichero de rectangulos.
-    -Hacer el panel con las etiquetas de los parametros a la derecha del dibujo. (Needs: Saber que parametros para Heuristica habra)
-    -Etiquetas mostrando la fObj, Ideal, y los botones Solve, etc. debajo del dibujo. [Eferroja]
-
-- Actualizar UML y javadoc [Vynka]
-	> javadoc --help
-  > umbrello heuristicas.xmi
-
-- Hacer una clase HeuristicOptions para guardar los parametros del problema, que sea rellenado
-  por el usuario en el menu de propiedades y que sea recibido por Heuristica para que
-  haga el metodo correspondiente.
-  - Implementacion de la clase HeuristicOptions (comenzado por Haside)
-  - Modificacion de la clase Heuristica [Ale]
-
-- Implementar la busqueda por entornos numero 5, Recocido Simulado [Ale]
-  - En proceso (Ya he empezado a trabajar en ello, aunque no lo subirÃ© hasta tenerlo
-    correcto) [Vynka]
-
-****************************************
-* TODO YA RESUELTOS (MOVER AQUI ABAJO) *
-****************************************
-
-- El rectangulo que devuelve Solution como solucion no coincide con los rectangulos colocados. [Eferroja]
-  - Estoy comprobandolo [Ale]
-  * DONE [Ale]
+    
+       ^---- Esto no resuelve los problemas que hay. ¿Que te parece si dejas de tocarte los cojones y haces algo mas? 
+       |---- Como mirar donde esta el problema del rectangulo, o testear (Eso que hice para ver que el error seguia ahi),
+       |---- o buscar baterias (DONE), o hacer el GRASP, o hacer el Simulated Annealing, o comenzar la Memoria la toma de datos,
+       |---- o ayudar a Isaac con la GUI o actualizar el javadoc (DONE) (señor "Yo estoy con la documentacion y eso" @CC)
+       |---- o actualizar el UML. Ah no espera, que estas empezando con el Recocido Simulado. 
+       |---- Avise que si tenia que pasarme otro fin de semana haciendo cosas me cabreaba, lo cual no quiere decir que
+       |---- no haberlo hecho, porque los otros trabajen, salve a alguien. Llevas 2 semanas para lo del bugzilla. Los unicos
+       |---- cambios que has hecho son: meter y sacar cosas del TODO (sin hacer nada) y pintar la mona en el CC porque toca practica.
+       |---- ¿Sabes que lo unico que pedi cuando me pegue todo el fin de semana haciendo toda la heuristica de colocacion
+       |---- fue que se mirasen el codigo? Pues bastante claro quedo el mismito, sobre todo cuando tardaron un ratazo en el CC
+       |---- en darse cuenta de su funcionamiento. Grande el asunto. 
+       |---- ¿Sabes por que me toca las narices? Porque has tenido tiempo, cierto es que te paso lo de la practica de TALF
+       |---- pero eso fue hace semanas, y si no dime, ¿que tal te lo pasaste en la playa? ¿Y cenando el viernes pasado?
+       |---- ¿Y que tal los super foros esos en los que te metes entre horas en la 2.4? 
+       |---- Así a modo de cultura general. ¿Sabes cuantos metodos has subido? "cero"                   [Happyde :D]
+       |---- P.D: No me creo que te hayas pasado tanto estudiando el examen de algebra as que nada por tus "voy a estirar las piernas".
 
 - TO [Eferroja]:
     El problema es que el rectangulo tiene asignada la posicion (0,0) y el
