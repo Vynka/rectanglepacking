@@ -74,7 +74,7 @@ public class MainFrame extends JFrame implements ActionListener {
                 this.add(dp, BorderLayout.CENTER);
                 
                 //Testeo
-                Problem r = new Problem("test.dat");
+                Problem r = new Problem("datasets/c4/1.dat");
         		System.out.println(r);
         		Heuristica h = new Heuristica(r);
         		System.out.println("La solucion inicial es -> " + r.getSolution());
@@ -82,7 +82,7 @@ public class MainFrame extends JFrame implements ActionListener {
         		System.out.println("La solucion del metodo MSS con busqueda ANXIOUS es -> " + r.getSolution());*/
         		/*h.pureRandomSearch(5000000, Heuristica.NUMBER_OF_TIMES);
         		System.out.println("La solucion del metodo PRS es -> " + r.getSolution());*/
-        		h.localSearch(Heuristica.ONE_SWAP, Heuristica.GREEDY_SAMPLING, Solution.RANDOM);
+        		h.randomSearch(10, Heuristica.OUT_UNLESS_BETTER);
         		System.out.println("La solucion del metodo LS con muestreo GREEDY es -> " + r.getSolution());
                 dp.setProblem(r);
         }
