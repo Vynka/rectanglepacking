@@ -74,7 +74,7 @@ public class MainFrame extends JFrame implements ActionListener {
                 this.add(dp, BorderLayout.CENTER);
                 
                 //Testeo
-                Problem r = new Problem("datasets/c4/1.dat");
+                Problem r = new Problem("datasets/C4/1.dat");
         		System.out.println(r);
         		Heuristica h = new Heuristica(r);
         		System.out.println("La solucion inicial es -> " + r.getSolution());

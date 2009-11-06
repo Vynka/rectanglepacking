@@ -55,6 +55,7 @@ public class Rectangle implements Comparable<Rectangle> {
 		this.b = b;
 		this.h = h;
 		this.a = b * h;
+		this.p = new Point(0,0);
 	}
 
 	/**
@@ -151,6 +152,9 @@ public class Rectangle implements Comparable<Rectangle> {
 		return new Point(p.getX(), p.getY() + h);
 	}
 
+	public Point getBottomRight() {
+		return new Point(p.getX() + b,p.getY());
+	}
 	/**
 	 * Establece como comparar dos rectangulos mediante su area
 	 * @param r
