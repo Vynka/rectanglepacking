@@ -97,6 +97,7 @@ public class Heuristica {
         }
       } while (betterFound);
       problem.setSolution(best);
+      //evalue(best);
 	  return best.clone();
 	}
 	
@@ -280,36 +281,36 @@ public class Heuristica {
 	 * 			solucion en la que va a ser asignado
 	 */
 	private void allocateRectangle(Rectangle r, Solution s) {
-	  // El mejor caso es que las menores dimensiones sean las ya obtenidas anteriormente
-	  int minorH = 0;
-	  int minorB = 0;
-	  boolean modified = false;
-	  int selected = 0;
-    // Se toman los nuevos datos resultantes de colocar el rectangulo
-    // Como minimo van a ser iguales que los actuales
-	  for (int i = 0; i < points.size(); i++) {
-      // Eje y
-	    int newH = s.getHeight();
-      if ((points.get(i).getY() + r.getHeight()) > (s.getHeight()))
-        newH = points.get(i).getY() + r.getHeight();
-	    // Eje X
-      int newB = s.getBase();
-      if ((points.get(i).getX() + r.getBase()) > (s.getBase()))
-        newB = points.get(i).getX() + r.getBase();
-      // Si son mejores que los actuales se guardan
-	    if ((!modified) || (newH * newB) < (minorH * minorB)) {
-	      selected = i;
-        minorH = newH;
-        minorB = newB;
-        modified = true;
-      }
-	  }
-	  // Se actualiza la solucion
-	  if (modified) {
-		  s.setBase(minorB);
-		  s.setHeight(minorH);
-	  }
-	  r.setPosition(this.points.get(selected));
+		//El mejor caso es que las menores dimensiones sean las ya obtenidas anteriormente
+		int minorH = 0;
+		int minorB = 0;
+		boolean modified = false;
+		int selected = 0;
+			// Se toman los nuevos datos resultantes de colocar el rectangulo
+			// Como minimo van a ser iguales que los actuales
+		for (int i = 0; i < points.size(); i++) {
+			// Eje y
+			int newH = s.getHeight();
+			if ((points.get(i).getY() + r.getHeight()) > (s.getHeight()))
+				newH = points.get(i).getY() + r.getHeight();
+			// Eje X
+			int newB = s.getBase();
+			if ((points.get(i).getX() + r.getBase()) > (s.getBase()))
+				newB = points.get(i).getX() + r.getBase();
+			// Si son mejores que los actuales se guardan
+			if ((!modified) || (newH * newB) < (minorH * minorB)) {
+				selected = i;
+				minorH = newH;
+				minorB = newB;
+				modified = true;
+			}
+		}
+		// Se actualiza la solucion
+		//if (modified) {   //No sobra? if !modified cambia modified a true.
+			s.setBase(minorB); // Osea, que modified va a ser true.
+			s.setHeight(minorH);
+		//}
+		r.setPosition(this.points.get(selected));
 	}
 	
 	/**
@@ -424,9 +425,9 @@ public class Heuristica {
 		initPoints(); // Inicializa los puntos (establece como unico punto el origen)
 		s.setBase(0);
 		s.setHeight(0);
-		Rectangle r;
+		//Rectangle r;
 		for (int i = 0; i < problem.getRectangleSize(); i++) {
-			r = getNewRectangle(i, s);
+			Rectangle r = getNewRectangle(i, s);
 			allocateRectangle(r, s);
 			if (i != (problem.getRectangleSize() - 1))
 				managePoints(r);
