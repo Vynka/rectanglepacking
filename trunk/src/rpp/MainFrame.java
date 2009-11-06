@@ -78,12 +78,12 @@ public class MainFrame extends JFrame implements ActionListener {
         		System.out.println(r);
         		Heuristica h = new Heuristica(r);
         		System.out.println("La solucion inicial es -> " + r.getSolution());
-        		/*h.multistartSearch(5, Heuristica.SWAP_WITH_LAST, Heuristica.ANXIOUS_SAMPLING, Solution.RANDOM, Heuristica.OUT_UNLESS_BETTER);
-        		System.out.println("La solucion del metodo MSS con busqueda ANXIOUS es -> " + r.getSolution());*/
-        		/*h.pureRandomSearch(5000000, Heuristica.NUMBER_OF_TIMES);
-        		System.out.println("La solucion del metodo PRS es -> " + r.getSolution());*/
-        		h.randomSearch(10, Heuristica.OUT_UNLESS_BETTER);
-        		System.out.println("La solucion del metodo LS con muestreo GREEDY es -> " + r.getSolution());
+        		h.multistartSearch(5, Heuristica.ONE_SWAP, Heuristica.GREEDY_SAMPLING, Solution.RANDOM, Heuristica.OUT_UNLESS_BETTER);
+        		System.out.println("La solucion del metodo MSS con busqueda GREEDY es -> " + r.getSolution());
+        		//h.pureRandomSearch(500, Heuristica.NUMBER_OF_TIMES);
+        		//System.out.println("La solucion del metodo PRS es -> " + r.getSolution());
+        		//h.randomSearch(100, Heuristica.OUT_UNLESS_BETTER);
+        		//System.out.println("La solucion del metodo RS -> " + r.getSolution());
                 dp.setProblem(r);
         }
 

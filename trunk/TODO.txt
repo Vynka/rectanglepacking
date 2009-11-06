@@ -19,8 +19,6 @@
 *		ZZ =  Subtipos de Heuristicas (Busqueda local, BAP...)	*
 *															    *
 *****************************************************************
-
-- El rectangulo que devuelve Solution como solucion no coincide con los rectangulos colocados.v2 [Haside]
 	
 - Visualizacion del problema (GUI): [Haside]
     -Arreglar el escalado en el DrawPanel. Mejor hacer lo de los botones para escalar manualmente. [Haside]
@@ -29,10 +27,9 @@
     -Hacer el panel con las etiquetas de los parametros a la derecha del dibujo. (Needs: Saber que parametros para Heuristica habra)
     -Etiquetas mostrando la fObj, Ideal, y los botones Solve, etc. debajo del dibujo. [Eferroja]
 
-- Actualizar UML y javadoc [Vynka]
-	> javadoc --help
+- Actualizar UML [Vynka]
   > umbrello heuristicas.xmi
-  - Hecho javadoc. Mira era tan facil como Project -> Generate Javadoc [Haside]
+
 
 - Hacer una clase HeuristicOptions para guardar los parametros del problema, que sea rellenado
   por el usuario en el menu de propiedades y que sea recibido por Heuristica para que
@@ -50,6 +47,11 @@
 ****************************************
 * TODO YA RESUELTOS (MOVER AQUI ABAJO) *
 ****************************************
+
+- Hecho javadoc. Es tan facil como Project -> Generate Javadoc [Haside]
+
+- El rectangulo que devuelve Solution como solucion no coincide con los rectangulos colocados.v2 [Haside]
+	* DONE At last [Haside]
 
 - Tratemos de no causar problemas con las indentaciones, se aceptan sugerencias de estilo- [Vynka]
   - De momento se me ocurren:

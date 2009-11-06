@@ -59,7 +59,7 @@ public class Problem {
 		for (int i = 0; i < rectangles.length; i++) {
 			rectangles[i] = aux.get(i);
 		}
-	    solution = new Solution(areaRec, Solution.DETERMINISTIC1, rectangles.length);
+	    solution = new Solution(areaRec, Solution.DETERMINISTIC2, rectangles.length);
 	}
 
 	/**
@@ -162,6 +162,26 @@ public class Problem {
 	 */
 	public void setSolution(Solution s) {
 	  this.solution = s;
+	}
+	
+	/**
+	 * Cambia las posiciones de los rectangulos para mostrarlos por pantalla
+	 * @param pos
+	 * 				Nuevas posiciones.
+	 */
+	public void changeRectanglePositions(Point [] pos) {
+		for (int i = 0; i < pos.length; i++) {
+			rectangles[i].setPosition(pos[i]);
+		}
+	}
+	
+	
+	public Point[] getActualPositions() {
+		Point [] toReturn = new Point[rectangles.length];
+		for (int i = 0; i < toReturn.length; i++) {
+			toReturn[i] = rectangles[i].getPosition();
+		}
+		return toReturn;
 	}
 	
 	/**

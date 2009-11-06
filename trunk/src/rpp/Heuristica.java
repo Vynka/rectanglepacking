@@ -77,27 +77,24 @@ public class Heuristica {
 	 *        GREEDY_SAMPLING si se escoje el mejor vecino de todo el entorno, ANXIOUS_SAMPLING si se
 	 *        coje el primer mejor vecino, o RANDOM_SAMPLING si se coje el primer 
 	 *        vecino al azar que mejore
-	 * @param initType
-	 *        tipo de generacion de solucion inicial, puede ser RANDOM, DETERMINISTICINIT1, 
-	 *        DETERMINISTICINIT2, MIXEDINIT1, MIXEDINIT2,...
-	 *        @see Solution
 	 */
-	public Solution localSearch(int neighbourType, int sampleType, int initType) {
-	  Solution actual = new Solution (problem.getAreaRec(), initType, problem.getRectangleSize());
-	  evalue(actual);
+	public Solution localSearch(int neighbourType, int sampleType) {
+	  Solution actual = problem.getSolution().clone();
+	  Point [] bestPos = evalue(actual);
 	  Solution best = actual.clone();
 	  boolean betterFound;
       do {
         betterFound = false;
         actual = neighbour(actual, neighbourType, sampleType);
-        evalue(actual);
+        Point[] actPos = evalue(actual);
         if (best.getObjF() > actual.getObjF()) {
           best = actual.clone();
+          bestPos = actPos.clone();
           betterFound = true;
         }
       } while (betterFound);
       problem.setSolution(best);
-      //evalue(best);
+      problem.changeRectanglePositions(bestPos);
 	  return best.clone();
 	}
 	
@@ -119,27 +116,32 @@ public class Heuristica {
 	public Solution pureRandomSearch(int times, int stop) {
 		int n = times;
 		Solution best = problem.getSolution().clone();
+		Point [] bestPos = problem.getActualPositions();
 		Solution actual = best.clone();
 		do {
 			actual = new Solution (problem.getAreaRec(), Solution.RANDOM, problem.getRectangleSize());
-			evalue(actual);	
+	        Point[] actPos = evalue(actual);
 
 			switch (stop) {
 			case OUT_UNLESS_BETTER:
 				if (best.getObjF() > actual.getObjF()) {
-					best = actual;
+					best = actual.clone();
+			        bestPos = actPos.clone();
 					n = times;
 				}
 				break;
 			case NUMBER_OF_TIMES:
-				if (best.getObjF() > actual.getObjF())
-					best = actual;
+				if (best.getObjF() > actual.getObjF()){
+					best = actual.clone();
+					bestPos = actPos.clone();
+				}
 				break;
 			}
 
 			n--;
 		} while (n > 0);
 		problem.setSolution(best);
+	    problem.changeRectanglePositions(bestPos);
 		return best.clone();
 	}
 	
@@ -163,27 +165,32 @@ public class Heuristica {
 	public Solution randomSearch(int times, int stop) {
 		int n = times;
 		Solution best = problem.getSolution().clone();
+		Point [] bestPos = problem.getActualPositions();
 		Solution actual = best.clone();
 		do {
 			actual = neighbour(actual, RANDOM_SWAP, NO_SAMPLING);
-			evalue(actual);		
+			Point [] actPos = evalue(actual);		
 
 			switch (stop) {
 			case OUT_UNLESS_BETTER:
 				if (best.getObjF() > actual.getObjF()) {
-					best = actual;
+					best = actual.clone();
+			        bestPos = actPos.clone();
 					n = times;
 				}
 				break;
 			case NUMBER_OF_TIMES:
-				if (best.getObjF() > actual.getObjF())
-					best = actual;
+				if (best.getObjF() > actual.getObjF()) {
+					best = actual.clone();
+					bestPos = actPos.clone();
+				}
 				break;
 			}
 
 			n--;
 		} while (n > 0);
 		problem.setSolution(best);
+	    problem.changeRectanglePositions(bestPos);
 		return best.clone();
 	}	
 	
@@ -219,23 +226,25 @@ public class Heuristica {
 	public Solution multistartSearch(int times, int neighbourType, int sampleType, int initType, int stop) {
 		int n = times;
 		problem.setSolution(new Solution (problem.getAreaRec(), initType, problem.getRectangleSize()));
-		evalue(problem.getSolution());
+		Point [] bestPos = evalue(problem.getSolution());
 		Solution actual;
 		Solution best = problem.getSolution().clone();
 		do {
-			actual = localSearch(neighbourType, sampleType, initType);
-			evalue(actual);		
+			actual = localSearch(neighbourType, sampleType);
+			Point [] actPos = evalue(actual);		
 			
 			switch (stop) {
 			case OUT_UNLESS_BETTER:
 				if (best.getObjF() > actual.getObjF()) {
-					best = actual;
+					best = actual.clone();
+					bestPos = actPos.clone();
 					n = times;
 				}
 				break;
 			case NUMBER_OF_TIMES:
 				if (best.getObjF() > actual.getObjF()) {
-					best = actual;
+					best = actual.clone();
+					bestPos = actPos.clone();
 				}
 				break;
 			}
@@ -244,6 +253,7 @@ public class Heuristica {
 			n--;		 
 		} while (n > 0);
 		problem.setSolution(best);
+	    problem.changeRectanglePositions(bestPos);
 		return best.clone();
 	}
 	
@@ -279,8 +289,9 @@ public class Heuristica {
 	 * 			rectangulo a asignar
 	 * @param s
 	 * 			solucion en la que va a ser asignado
+	 * @return el punto donde ira colocado el rectangulo.
 	 */
-	private void allocateRectangle(Rectangle r, Solution s) {
+	private Point allocateRectangle(Rectangle r, Solution s) {
 		//El mejor caso es que las menores dimensiones sean las ya obtenidas anteriormente
 		int minorH = 0;
 		int minorB = 0;
@@ -306,11 +317,10 @@ public class Heuristica {
 			}
 		}
 		// Se actualiza la solucion
-		//if (modified) {   //No sobra? if !modified cambia modified a true.
-			s.setBase(minorB); // Osea, que modified va a ser true.
-			s.setHeight(minorH);
-		//}
+		s.setBase(minorB);
+		s.setHeight(minorH);
 		r.setPosition(this.points.get(selected));
+		return r.getPosition();
 	}
 	
 	/**
@@ -421,18 +431,19 @@ public class Heuristica {
 	 * @param s
 	 *          Solucion a evaluar.
 	 */
-	private void evalue(Solution s) {
+	private Point[] evalue(Solution s) {
 		initPoints(); // Inicializa los puntos (establece como unico punto el origen)
-		s.setBase(0);
-		s.setHeight(0);
-		//Rectangle r;
+		s.reset();
+		Point [] rectanglePosition = new Point[problem.getRectangleSize()];
 		for (int i = 0; i < problem.getRectangleSize(); i++) {
 			Rectangle r = getNewRectangle(i, s);
-			allocateRectangle(r, s);
+			// Guardamos la posicion del rectangulo i
+			rectanglePosition[s.getOrder(i)] = allocateRectangle(r, s);
 			if (i != (problem.getRectangleSize() - 1))
 				managePoints(r);
 		}
 		s.setObjF();
+		return rectanglePosition;
 	}
 	
 	/**
