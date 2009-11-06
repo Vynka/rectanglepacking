@@ -113,7 +113,7 @@ public class Rectangle implements Comparable<Rectangle> {
 	 * @return String representativo del rectangulo "(base, altura)".
 	 */
 	public String toString() {
-		return new String("[" + this.getBase() + " x " + this.getHeight() + "], Area = " + this.getArea());
+		return new String("[" + this.getBase() + " x " + this.getHeight() + "], Area = " + this.getArea() + "  " + this.p);
 	}
 
 	/**

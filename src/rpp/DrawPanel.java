@@ -63,20 +63,11 @@ public class DrawPanel extends JPanel {
         g2.setStroke(new BasicStroke(0.2f));
         
         int[] orden = sol.getOrder();
-        int arearects = 0;
-        int maxY = 0,maxX = 0;
 
         for (int i = 0; i < p.getRectangleSize(); i++) {
         	Rectangle rec = p.getRectangle(orden[i]);
-        	arearects += rec.getArea();
-        	//System.out.println("Orden i: " + orden[i] + " i " + i);
         	Point topLeft = rec.getTopLeft();
-        	Point bottomRight = rec.getBottomRight();
-        	if (topLeft.getY() > maxY)
-        		maxY = topLeft.getY();
-        	if (bottomRight.getX() > maxX)
-        		maxX = bottomRight.getX();
-        	//System.out.println("Punto topleft: " + topleft);
+        	
         	Rectangle2D.Float r = new Rectangle2D.Float(topLeft.getX(), -topLeft.getY(), rec.getBase(), rec.getHeight());
             g2.setPaint(Color.GRAY);
         	g2.fill(r);
@@ -84,10 +75,7 @@ public class DrawPanel extends JPanel {
         	g2.draw(r);
         }
         g2.setPaint(Color.RED);
-        System.out.println("Base de la Solución   " + maxX);
-        System.out.println("Altura de la Solución   " + maxY);
-        Rectangle2D.Float rsol = new Rectangle2D.Float(0, -maxY, maxX, maxY);
+        Rectangle2D.Float rsol = new Rectangle2D.Float(0, -sol.getHeight(), sol.getBase(), sol.getHeight());
         g2.draw(rsol);
-        System.out.println("Area de los rectángulos presentes:   " + arearects);
 	}
 }

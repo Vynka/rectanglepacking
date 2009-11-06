@@ -24,9 +24,10 @@ public class Solution {
 	 * Constantes de tipos de generacion inicial
 	 */
 	static final int RANDOM = 0;
-	static final int DETERMINISTIC1 = 1; 
-	static final int MIXED1 = 2;
-	static final int MIXED2 = 3;
+	static final int DETERMINISTIC1 = 1;
+	static final int DETERMINISTIC2 = 2;
+	static final int MIXED1 = 3;
+	static final int MIXED2 = 4;
 	
 	/**
 	 * Constante INFinito para inicializar la funcion objetivo.
@@ -97,7 +98,7 @@ public class Solution {
 		this.h = h;
 		this.area = b * h;
 		this.recArea = recArea;
-		this.objF = this.area - recArea;
+		this.objF = this.area;
 		this.order = order;
 	}
 	
@@ -114,13 +115,16 @@ public class Solution {
 		this.h = 0;
 		this.area = 0;
 		this.recArea = recArea;
-		this.objF = -recArea;
+		this.objF = 0;
 		switch (initType) {
 		case RANDOM:
 			randomInit(size);
 			break;
 		case DETERMINISTIC1:
 			deterministicInit1(size);
+			break;
+		case DETERMINISTIC2:
+			deterministicInit2(size);
 			break;
 		case MIXED1:
 			mixedInit1(size);
@@ -189,7 +193,7 @@ public class Solution {
 	 * Establece el valor de la funciono objetivo
 	 */
 	public void setObjF() {
-		this.objF = this.area - this.recArea; 
+		this.objF = this.area; 
 	}
 
 	/**
@@ -241,7 +245,7 @@ public class Solution {
 	 */
 	
 	private void randomInit(int size) {
-		clearSolution();
+		clear();
 		ArrayList<Integer> toMix = new ArrayList<Integer>(0);
 		Random generator = new Random(System.nanoTime());
 		for (int i = 0; i < size; i++) {
@@ -257,15 +261,33 @@ public class Solution {
 
 	/**
 	 * Inicializa de una manera concreta una solucion. Para el mismo conjunto
-	 * N de rectangulos siempre devolvera la misma solucion inicial.
+	 * N de rectangulos siempre devolvera la misma solucion inicial. Ordenado por Tamaño de areas
 	 * @param size
 	 * 			numero de rectangulos (Tamano de la solucion)
 	 */
     private void deterministicInit1(int size) {
-		clearSolution();
+		clear();
 		order = new int[size];
 		for (int i = 0; i < order.length; i++) {
 			order[i] = i;
+		}
+    }
+    
+	/**
+	 * Inicializa de una manera concreta una solucion. Para el mismo conjunto
+	 * N de rectangulos siempre devolvera la misma solucion inicial. Uno Grande uno pequeño
+	 * @param size
+	 * 			numero de rectangulos (Tamano de la solucion)
+	 */
+    private void deterministicInit2(int size) {
+		clear();
+		order = new int[size];
+		for (int i = 0; i < (order.length / 2); i++) {
+			order[2 * i] = i;
+			order[2 * i + 1] = order.length - 1 - i;
+		}
+		if (order.length % 2 == 1) {
+			order[order.length - 1] = (int)(order.length / 2);
 		}
     }
 
@@ -277,7 +299,7 @@ public class Solution {
 	 * 			numero de rectangulos (Tamano de la solucion)
      */
     private void mixedInit1(int size) {
-		clearSolution();
+		clear();
     	order = new int [size];
 		for (int i = 0; i < order.length; i++) {
 			order[i] = i;
@@ -297,7 +319,7 @@ public class Solution {
 	 * 			numero de rectangulos (Tamano de la solucion)
      */
     private void mixedInit2(int size) {
-		clearSolution();
+		clear();
     	order = new int [size];
     	int h = order.length / 8;
 		for (int i = 0; i < order.length; i++) {
@@ -313,12 +335,22 @@ public class Solution {
     /**
      *  Reestablece la solucion.
      */   
-    private void clearSolution() {
+    private void clear() {
 		this.b = 0;
 		this.h = 0;
 		this.area = 0;
-		this.objF = -this.recArea;
+		this.objF = 0;
 		this.order = null;
+    }
+    
+    /**
+     *  Reestablece la solucion.
+     */   
+    public void reset() {
+		this.b = 0;
+		this.h = 0;
+		this.area = 0;
+		this.objF = 0;
     }
 	
 }
