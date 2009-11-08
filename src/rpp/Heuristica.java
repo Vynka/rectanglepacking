@@ -35,7 +35,15 @@ public class Heuristica {
 	static final int GREEDY_SAMPLING = 0;
 	static final int ANXIOUS_SAMPLING = 1;
 	static final int RANDOM_SAMPLING = 2;
-	static final int NO_SAMPLING = 3;		
+	static final int NO_SAMPLING = 3;
+	
+	/**
+	 * Tipos de busqueda de solucion
+	 */
+	static final int LOCAL_SEARCH = 0;
+	static final int RANDOM_SEARCH = 1;
+	static final int PURE_RANDOM_SEARCH = 2;
+	
 	
 	/**
 	 * Lista de puntos factibles en los que colocar un rectangulo
@@ -256,6 +264,73 @@ public class Heuristica {
 	    problem.changeRectanglePositions(bestPos);
 		return best.clone();
 	}
+	
+	/**
+   * Metodo heuristico de Busqueda por entorno numero 5. Busqueda por Recocido Simulado.
+	 */
+	public Solution simulatedAnnealingSearch(int initType, int neighbourType, int sampleType) {
+	  Solution actual;
+	  switch (initType) {
+	    case LOCAL_SEARCH :
+	      actual = localSearch(neighbourType, sampleType);
+	      break;
+	    case RANDOM_SEARCH :
+	      actual = randomSearch(neighbourType, sampleType);
+	      break;
+	    case PURE_RANDOM_SEARCH :
+        actual = pureRandomSearch(neighbourType, sampleType);
+        break;
+      default:
+        actual = new Solution (problem.getAreaRec(), initType, problem.getRectangleSize());
+        break;
+	  }
+	  int c = /*numero suficientemente grande como para poder aceptar cualquier solucion vecina al principio*/ ;
+	  int L = /*numero de iteraciones pequeño al principio*/;
+	  int k = 0; //Numero de iteraciones
+	  Point [] bestPos = evalue(actual);
+	  Solution best = actual.clone();
+	  do {
+      actual = neighbour(actual, neighbourType, sampleType);
+      Point[] actPos = evalue(actual);
+      if (best.getObjF() > actual.getObjF()) {
+        best = actual.clone();
+        bestPos = actPos.clone();
+        k++;
+      } else if (exp((actual.getObjF() - best.getObjF()) / c) > random(0, 1))) {
+        best = actual.clone();
+        bestPos = actPos.clone();
+        k++;
+      }
+      CalculateTemperature(c, k);
+      CalculateSize(L, k);
+    } while (c > 0);
+    problem.setSolution(best);
+    problem.changeRectanglePositions(bestPos);
+	  return best.clone();
+	}
+	
+	/**
+	 * Calcula la temperatura del metodo de busqueda SimulatedAnnealing para la iteracion k
+	 * @param c
+	 *        temperatura anterior
+   * @param k
+   *        Numero de iteraciones hechas
+	 */
+	int CalculateTemperature(int c, int k) {
+	  return 0;
+	}
+	
+	/**
+	 * Calcula el numero de iteraciones del metodo de busqueda SimulatedAnneaing para la iteracion k
+	 * @param L
+	 *        Numero de iteraciones anterior
+	 * @param k
+	 *        Numero de iteraciones hechas
+	 */
+	int CalculateSize(int L, int k) {
+	  return 0;
+	}
+	
 	
 	/**
 	 * Anade un punto a la lista de puntos factibles.

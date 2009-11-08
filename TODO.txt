@@ -41,6 +41,12 @@
 - Implementar la busqueda por entornos numero 5, Recocido Simulado [Ale]
   - En proceso (Ya he empezado a trabajar en ello, aunque no lo subire hasta tenerlo
     correcto) [Vynka]
+  - Tenemos que quedar para ver pq yo tb tengo hecho bastante. Podriamos mezclar ideas para dejarlo mejor.
+    de momento subo lo que tengo hecho yo, lo ire arreglando estos dias pq no esta completo.
+    NOTA: no es definitivo, es para si quieren mirarlo, opinar, o
+    cambiarlo (Vynka sobre todo que tiene hecho parte) [Ale]
+
+- Comentar SimulatedAnnealing [Ale]
 
 - Implementar la busqueda constructiva GRASP con sus posibles variaciones [Haside]
 
