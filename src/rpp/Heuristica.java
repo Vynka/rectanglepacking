@@ -40,9 +40,9 @@ public class Heuristica {
 	/**
 	 * Tipos de busqueda de solucion
 	 */
-	static final int LOCAL_SEARCH = 0;
-	static final int RANDOM_SEARCH = 1;
-	static final int PURE_RANDOM_SEARCH = 2;
+	static final int LOCAL_SEARCH = 30;
+	static final int RANDOM_SEARCH = 31;
+	static final int PURE_RANDOM_SEARCH = 32;
 	
 	
 	/**
