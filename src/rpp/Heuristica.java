@@ -41,8 +41,6 @@ public class Heuristica {
 	 * Tipos de busqueda de solucion
 	 */
 	static final int LOCAL_SEARCH = 30;
-	static final int RANDOM_SEARCH = 31;
-	static final int PURE_RANDOM_SEARCH = 32;
 	
 	
 	/**
@@ -270,20 +268,10 @@ public class Heuristica {
 	 */
 	public Solution simulatedAnnealingSearch(int initType, int neighbourType, int sampleType) {
 	  Solution actual;
-	  switch (initType) {
-	    case LOCAL_SEARCH :
+	  if (initType == LOCAL_SEARCH)
 	      actual = localSearch(neighbourType, sampleType);
-	      break;
-	    case RANDOM_SEARCH :
-	      actual = randomSearch(neighbourType, sampleType);
-	      break;
-	    case PURE_RANDOM_SEARCH :
-        actual = pureRandomSearch(neighbourType, sampleType);
-        break;
-      default:
+	  else
         actual = new Solution (problem.getAreaRec(), initType, problem.getRectangleSize());
-        break;
-	  }
 	  int c = /*numero suficientemente grande como para poder aceptar cualquier solucion vecina al principio*/ ;
 	  int L = /*numero de iteraciones pequeño al principio*/;
 	  int k = 0; //Numero de iteraciones
