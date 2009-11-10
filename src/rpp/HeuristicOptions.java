@@ -12,31 +12,31 @@ public class HeuristicOptions {
 	/**
 	 * Posibles espacios de entorno para soluciones vecinas.
 	 */
-	static final int RANDOM_SWAP = 0;
-	static final int ONE_SWAP = 1;
-    static final int SWAP_WITH_LAST = 2;
+	public static final int RANDOM_SWAP = 0;
+	public static final int ONE_SWAP = 1;
+	public static final int SWAP_WITH_LAST = 2;
 	
 	/**
 	 * Criterios de parada
 	 */
-	static final int OUT_UNLESS_BETTER = 0;
-	static final int NUMBER_OF_TIMES = 1;
+	public static final int OUT_UNLESS_BETTER = 0;
+	public static final int NUMBER_OF_TIMES = 1;
 	
 	/**
 	 * Tipos de muestreo del entorno
 	 */
-	static final int GREEDY_SAMPLING = 0;
-	static final int ANXIOUS_SAMPLING = 1;
-	static final int RANDOM_SAMPLING = 2;
-	static final int NO_SAMPLING = 3;
+	public static final int GREEDY_SAMPLING = 0;
+	public static final int ANXIOUS_SAMPLING = 1;
+	public static final int RANDOM_SAMPLING = 2;
+	public static final int NO_SAMPLING = 3;
 	
 	/**
 	 * Metodos de resolucion del problema
 	 */
-	static final int PURE_RANDOM_SEARCH = 0;
-	static final int RANDOM_SEARCH = 1;
-	static final int LOCAL_SEARCH = 2;
-	static final int MULTISTART_WITH_LOCAL_SEARCH = 3;
+	public static final int PURE_RANDOM_SEARCH = 0;
+	public static final int RANDOM_SEARCH = 1;
+	public static final int LOCAL_SEARCH = 2;
+	public static final int MULTISTART_WITH_LOCAL_SEARCH = 3;
 	
 	/**
 	 * StopCritera: Criterio de parada del problema

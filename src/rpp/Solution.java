@@ -23,11 +23,11 @@ public class Solution {
 	/**
 	 * Constantes de tipos de generacion inicial
 	 */
-	static final int RANDOM = 0;
-	static final int DETERMINISTIC1 = 1;
-	static final int DETERMINISTIC2 = 2;
-	static final int MIXED1 = 3;
-	static final int MIXED2 = 4;
+	public static final int RANDOM = 0;
+	public static final int DETERMINISTIC1 = 1;
+	public static final int DETERMINISTIC2 = 2;
+	public static final int MIXED1 = 3;
+	public static final int MIXED2 = 4;
 	
 	/**
 	 * Constante INFinito para inicializar la funcion objetivo.
@@ -261,7 +261,7 @@ public class Solution {
 
 	/**
 	 * Inicializa de una manera concreta una solucion. Para el mismo conjunto
-	 * N de rectangulos siempre devolvera la misma solucion inicial. Ordenado por Tamaño de areas
+	 * N de rectangulos siempre devolvera la misma solucion inicial. Ordenado por Tamaï¿½o de areas
 	 * @param size
 	 * 			numero de rectangulos (Tamano de la solucion)
 	 */
@@ -275,7 +275,7 @@ public class Solution {
     
 	/**
 	 * Inicializa de una manera concreta una solucion. Para el mismo conjunto
-	 * N de rectangulos siempre devolvera la misma solucion inicial. Uno Grande uno pequeño
+	 * N de rectangulos siempre devolvera la misma solucion inicial. Uno Grande uno pequeï¿½o
 	 * @param size
 	 * 			numero de rectangulos (Tamano de la solucion)
 	 */
