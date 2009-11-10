@@ -2,6 +2,8 @@ package rpp;
 
 import javax.swing.JFrame;
 
+import GUI.MainFrame;
+
 /**
  * Clase que tiene como objetivo la definicion y resolucion del problema conocido
  * como "Rectangle Packing Problem". El objetivo de dicho problema es empaquetar

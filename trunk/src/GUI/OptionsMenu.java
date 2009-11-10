@@ -1,4 +1,4 @@
-package rpp;
+package GUI;
 
 import java.awt.FlowLayout;
 import javax.swing.JMenu;

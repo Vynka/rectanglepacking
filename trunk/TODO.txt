@@ -22,10 +22,15 @@
 	
 - Visualizacion del problema (GUI): [Haside]
     -Arreglar el escalado en el DrawPanel. Mejor hacer lo de los botones para escalar manualmente. [Haside]
-    -Terminar el dialogo de propiedades con los elementos para elegir los parametros del problema. (Needs: Saber que parametros para Heuristica habra)
+    -Terminar el dialogo de propiedades con los elementos para elegir los parametros del problema.
+    	*DONE. [Eferroja]
+    	-Mantenerlo actualizado.[Eferroja]
     -Hacer el dialogo de seleccion de fichero de rectangulos.
-    -Hacer el panel con las etiquetas de los parametros a la derecha del dibujo. (Needs: Saber que parametros para Heuristica habra)
-    -Etiquetas mostrando la fObj, Ideal, y los botones Solve, etc. debajo del dibujo. [Eferroja]
+    	*DONE JFileChooser+copypaste FTW. [Eferroja]
+    -Hacer el panel con las etiquetas de los parametros a la derecha del dibujo.
+    -Etiquetas mostrando la fObj, Ideal, y los botones Solve, etc. debajo del dibujo.
+    	-Almost done. [Eferroja]
+    -Documentar decentemente, que lo tengo todo hecho un asco. [Eferroja]
 
 - Actualizar UML [Vynka]
   > umbrello heuristicas.xmi
@@ -72,10 +77,10 @@
       |    Siguiente_linea_de_codigo;
     * Comentarios explicativos si se estiman minimamente necesarios.
     [Vynka]
-  - Traduzco: ¿Que les parece si volvemos a program I? [Haside]
+  - Traduzco: ï¿½Que les parece si volvemos a program I? [Haside]
 
 
-- Añadidos Data sets segun tamano de problemas. [Haside]
+- Aï¿½adidos Data sets segun tamano de problemas. [Haside]
 
 - Ampliar la Wiki [Haside]
     ? Utilizar la wiki de googlecode mÃ¡s seriamente [Vynka]
@@ -90,21 +95,21 @@
     * Se tarda tanto como en actualizar JAVADOC?
     ^ Espero haceros el tutorial (Task List) este mismo lunes en el foro. [Vynka]
     
-       ^---- Esto no resuelve los problemas que hay. ¿Que te parece si dejas de tocarte los cojones y haces algo mas? 
+       ^---- Esto no resuelve los problemas que hay. ï¿½Que te parece si dejas de tocarte los cojones y haces algo mas? 
        |---- Como mirar donde esta el problema del rectangulo, o testear (Eso que hice para ver que el error seguia ahi),
        |---- o buscar baterias (DONE), o hacer el GRASP, o hacer el Simulated Annealing, o comenzar la Memoria la toma de datos,
-       |---- o ayudar a Isaac con la GUI o actualizar el javadoc (DONE) (señor "Yo estoy con la documentacion y eso" @CC)
+       |---- o ayudar a Isaac con la GUI o actualizar el javadoc (DONE) (seï¿½or "Yo estoy con la documentacion y eso" @CC)
        |---- o actualizar el UML. Ah no espera, que estas empezando con el Recocido Simulado. 
        |---- Avise que si tenia que pasarme otro fin de semana haciendo cosas me cabreaba, lo cual no quiere decir que
        |---- no haberlo hecho, porque los otros trabajen, salve a alguien. Llevas 2 semanas para lo del bugzilla. Los unicos
        |---- cambios que has hecho son: meter y sacar cosas del TODO (sin hacer nada) y pintar la mona en el CC porque toca practica.
-       |---- ¿Sabes que lo unico que pedi cuando me pegue todo el fin de semana haciendo toda la heuristica de colocacion
+       |---- ï¿½Sabes que lo unico que pedi cuando me pegue todo el fin de semana haciendo toda la heuristica de colocacion
        |---- fue que se mirasen el codigo? Pues bastante claro quedo el mismito, sobre todo cuando tardaron un ratazo en el CC
        |---- en darse cuenta de su funcionamiento. Grande el asunto. 
-       |---- ¿Sabes por que me toca las narices? Porque has tenido tiempo, cierto es que te paso lo de la practica de TALF
-       |---- pero eso fue hace semanas, y si no dime, ¿que tal te lo pasaste en la playa? ¿Y cenando el viernes pasado?
-       |---- ¿Y que tal los super foros esos en los que te metes entre horas en la 2.4? 
-       |---- Así a modo de cultura general. ¿Sabes cuantos metodos has subido? "cero"                   [Happyde :D]
+       |---- ï¿½Sabes por que me toca las narices? Porque has tenido tiempo, cierto es que te paso lo de la practica de TALF
+       |---- pero eso fue hace semanas, y si no dime, ï¿½que tal te lo pasaste en la playa? ï¿½Y cenando el viernes pasado?
+       |---- ï¿½Y que tal los super foros esos en los que te metes entre horas en la 2.4? 
+       |---- Asï¿½ a modo de cultura general. ï¿½Sabes cuantos metodos has subido? "cero"                   [Happyde :D]
        |---- P.D: No me creo que te hayas pasado tanto estudiando el examen de algebra as que nada por tus "voy a estirar las piernas".
 
 - TO [Eferroja]:
