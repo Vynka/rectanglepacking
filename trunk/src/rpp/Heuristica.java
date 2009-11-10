@@ -264,47 +264,72 @@ public class Heuristica {
 	}
 	
 	/**
-   * Metodo heuristico de Busqueda por entorno numero 5. Busqueda por Recocido Simulado.
+	 * Metodo heuristico de Busqueda por entorno numero 5. Busqueda por Recocido Simulado.
 	 */
 	public Solution simulatedAnnealingSearch(int initType, int neighbourType, int sampleType) {
 	  Solution actual;
+	  Random r = new Random(System.nanoTime());
 	  if (initType == LOCAL_SEARCH)
 	      actual = localSearch(neighbourType, sampleType);
 	  else
         actual = new Solution (problem.getAreaRec(), initType, problem.getRectangleSize());
-	  int c = /*numero suficientemente grande como para poder aceptar cualquier solucion vecina al principio*/ ;
-	  int L = /*numero de iteraciones pequeño al principio*/;
+	  int c = 0/*numero suficientemente grande como para poder aceptar cualquier solucion vecina al principio*/ ;
+	  int L = 0/*numero de iteraciones pequeï¿½o al principio*/;
 	  int k = 0; //Numero de iteraciones
 	  Point [] bestPos = evalue(actual);
 	  Solution best = actual.clone();
 	  do {
-      actual = neighbour(actual, neighbourType, sampleType);
-      Point[] actPos = evalue(actual);
-      if (best.getObjF() > actual.getObjF()) {
-        best = actual.clone();
-        bestPos = actPos.clone();
-        k++;
-      } else if (exp((actual.getObjF() - best.getObjF()) / c) > random(0, 1))) {
-        best = actual.clone();
-        bestPos = actPos.clone();
-        k++;
-      }
-      CalculateTemperature(c, k);
-      CalculateSize(L, k);
-    } while (c > 0);
-    problem.setSolution(best);
-    problem.changeRectanglePositions(bestPos);
+		  actual = neighbour(actual, neighbourType, sampleType);
+		  Point[] actPos = evalue(actual);
+		  if (best.getObjF() > actual.getObjF()) {
+			  best = actual.clone();
+			  bestPos = actPos.clone();
+			  k++;
+		  } else if (Math.exp((actual.getObjF() - best.getObjF()) / c) > r.nextFloat()) {
+			  best = actual.clone();
+			  bestPos = actPos.clone();
+			  k++;
+		  }
+		  CalculateTemperature(c, k);
+		  CalculateSize(L, k);
+	  } while (c > 0);
+	  problem.setSolution(best);
+	  problem.changeRectanglePositions(bestPos);
 	  return best.clone();
+	}
+	
+	
+	/**
+	 * Genera una solucion de manera constructiva.
+	 */
+	public Solution GRASP1() {
+		return null;
+	}
+
+	
+	/**
+	 * Genera una solucion de manera constructiva.
+	 */
+	public Solution GRASP2() {
+		return null;
+	}
+	
+	
+	/**
+	 * Genera una solucion de manera constructiva.
+	 */
+	public Solution GRASP3() {
+		return null;
 	}
 	
 	/**
 	 * Calcula la temperatura del metodo de busqueda SimulatedAnnealing para la iteracion k
 	 * @param c
 	 *        temperatura anterior
-   * @param k
-   *        Numero de iteraciones hechas
+	 * @param k
+	 *        Numero de iteraciones hechas
 	 */
-	int CalculateTemperature(int c, int k) {
+	private int CalculateTemperature(int c, int k) {
 	  return 0;
 	}
 	
@@ -315,7 +340,7 @@ public class Heuristica {
 	 * @param k
 	 *        Numero de iteraciones hechas
 	 */
-	int CalculateSize(int L, int k) {
+	private int CalculateSize(int L, int k) {
 	  return 0;
 	}
 	
@@ -602,29 +627,44 @@ public class Heuristica {
     else {
       Random r = new Random(System.nanoTime());
       int [] newOrder = s.getOrder().clone();
-      int size = problem.getRectangleSize();     
-      for (int i = 0; i < size; i++) {
-        for (int j = i + 1; j < size; j++) {
-          Solution aux = s.clone();     
-          switch (neighbourType) {
-            case RANDOM_SWAP:
-              int l = (int)(r.nextFloat() * newOrder.length);
+      int size = problem.getRectangleSize();
+      switch (neighbourType) {
+      case ONE_SWAP:
+      	for (int i = 0; i < size; i++) {
+      		for (int j = i + 1; j < size; j++) {
+      			Solution aux = s.clone();                           
+            	swap(newOrder, i, j);
+          		aux.setOrder(newOrder);
+              	evalue(aux);      
+              	if (s.getObjF() > aux.getObjF())
+              		s = aux.clone();
+      		}    
+          }
+          break;
+      case RANDOM_SWAP:
+    	  for (int i = 0; i < (2 * size); i++) {
+    		  Solution aux = s.clone(); 
+    		  int l = (int)(r.nextFloat() * newOrder.length);
               int k = (int)(r.nextFloat() * newOrder.length);
               while (l == k)
                 k = (int)(r.nextFloat() * newOrder.length);       
               swap(newOrder, l, k);
-            case ONE_SWAP:
-              swap(newOrder, i, j);
-              break;
-            case SWAP_WITH_LAST:
-              swap(newOrder, i, newOrder.length - 1);
-              break;
-          }    
-          aux.setOrder(newOrder);
-          evalue(aux);      
-          if (s.getObjF() > aux.getObjF())
-            s = aux.clone();
-        }
+    		  aux.setOrder(newOrder);
+            	evalue(aux);      
+            	if (s.getObjF() > aux.getObjF())
+            		s = aux.clone();
+    	  } 
+          break;
+      case SWAP_WITH_LAST:
+    	  for (int i = 0; i < size; i++) {
+    		  Solution aux = s.clone(); 
+    		  swap(newOrder, i, newOrder.length - 1);
+    		  aux.setOrder(newOrder);
+            	evalue(aux);      
+            	if (s.getObjF() > aux.getObjF())
+            		s = aux.clone();
+    	  }
+          break;
       }
     }
   }
@@ -648,30 +688,43 @@ public class Heuristica {
       int [] newOrder = s.getOrder().clone();
       int size = problem.getRectangleSize();    
       boolean betterFound = false;    
-      for (int i = 0; (i < size) && (!betterFound); i++) {
-        for (int j = i + 1; (j < size) && (!betterFound); j++) {
-          Solution aux = s.clone();
-          switch (neighbourType) {
-            case RANDOM_SWAP:
-              int l = (int)(r.nextFloat() * newOrder.length);
+      switch (neighbourType) {
+      case ONE_SWAP:
+      	for (int i = 0; (i < size) && (!betterFound); i++) {
+      		for (int j = i + 1; (j < size) && (!betterFound); j++) {
+      			Solution aux = s.clone();                           
+            	swap(newOrder, i, j);
+          		aux.setOrder(newOrder);
+              	evalue(aux);      
+              	if (s.getObjF() > aux.getObjF())
+              		s = aux.clone();
+      		}    
+          }
+          break;
+      case RANDOM_SWAP:
+    	  for (int i = 0; i < (2 * size) && (!betterFound); i++) {
+    		  Solution aux = s.clone(); 
+    		  int l = (int)(r.nextFloat() * newOrder.length);
               int k = (int)(r.nextFloat() * newOrder.length);
               while (l == k)
-                k = (int)(r.nextFloat() * newOrder.length);
+                k = (int)(r.nextFloat() * newOrder.length);       
               swap(newOrder, l, k);
-            case ONE_SWAP:
-              swap(newOrder, i, j);
-              break;
-            case SWAP_WITH_LAST:
-              swap(newOrder, i, newOrder.length - 1);
-              break;
-          }  
-          aux.setOrder(newOrder);
-          evalue(aux);
-          if (s.getObjF() > aux.getObjF()) {
-            s = aux.clone();
-            betterFound = true;
-          }
-        }
+    		  aux.setOrder(newOrder);
+            	evalue(aux);      
+            	if (s.getObjF() > aux.getObjF())
+            		s = aux.clone();
+    	  } 
+          break;
+      case SWAP_WITH_LAST:
+    	  for (int i = 0; (i < size) && (!betterFound); i++) {
+    		  Solution aux = s.clone(); 
+    		  swap(newOrder, i, newOrder.length - 1);
+    		  aux.setOrder(newOrder);
+            	evalue(aux);      
+            	if (s.getObjF() > aux.getObjF())
+            		s = aux.clone();
+    	  }
+          break;
       }
     }
   }
