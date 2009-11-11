@@ -114,6 +114,9 @@ public class MainFrame extends JFrame implements ActionListener {
                 calcbut.setActionCommand("calc");
                 calcbut.addActionListener(this);
                 
+                ScalePanel sp = new ScalePanel();
+                southpan.add(sp);
+                
                 hop = new HeuristicOptions("");
                 dp.setProblem(r);
         }
