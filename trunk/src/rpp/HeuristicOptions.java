@@ -64,6 +64,11 @@ public class HeuristicOptions {
 	private String fileName;
 	
 	/**
+	 * times: Numero de veces a ejecutar la heuristica (Si aplicable)
+	 */
+	private int times;
+	
+	/**
 	 * Constructor por defecto: PSR con OUT_UNLESS_BETTER
 	 */
 	public HeuristicOptions(String fileName) {
@@ -71,8 +76,24 @@ public class HeuristicOptions {
 		this.neighbors = 0;
 		this.sampling = 0;
 		this.procedure = 0;
+		this.times = 0;
 		this.fileName = fileName;
 	}	
+	
+	/**
+	 * @param times the number of times to set
+	 */
+	public void setTimes(int times) {
+		this.times = times;
+	}
+
+
+	/**
+	 * @return number of times to execute an heuristic
+	 */
+	public int getTimes() {
+		return times;
+	}
 	
 	
 	/**

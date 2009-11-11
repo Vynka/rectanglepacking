@@ -135,7 +135,6 @@ public class MainFrame extends JFrame implements ActionListener {
 		            hop.setFileName(file.getAbsolutePath());
 		            r = new Problem(file.getAbsolutePath());
 		            h = new Heuristica(r);
-		            //h.randomSearch(5, HeuristicOptions.OUT_UNLESS_BETTER);
 		            dp.setProblem(r);
 		        } 
 		        else {
@@ -152,19 +151,7 @@ public class MainFrame extends JFrame implements ActionListener {
 				}
 			}
 			else if (e.getActionCommand() == "calc") {
-				switch (hop.getProcedure()) {
-					case HeuristicOptions.PURE_RANDOM_SEARCH:
-						h.pureRandomSearch(500, hop.getStopCriteria());
-						break;
-					case HeuristicOptions.RANDOM_SEARCH:
-						h.randomSearch(500, hop.getStopCriteria());
-						break;
-					case HeuristicOptions.LOCAL_SEARCH:
-						h.localSearch(hop.getNeighbors(), hop.getSampling());
-						break;
-					case HeuristicOptions.MULTISTART_WITH_LOCAL_SEARCH:
-						h.multistartSearch(500, hop.getNeighbors(), hop.getSampling(), Solution.DETERMINISTIC1, hop.getStopCriteria());
-				}
+				h.callProcedure(hop);
 			}
 		}
 		
