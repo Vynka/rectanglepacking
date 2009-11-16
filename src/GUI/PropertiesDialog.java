@@ -36,7 +36,9 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 	final String[] neighborstrings = {"Random swap", "One swap", "Swap with last"};
 	final String[] stopstrings = {"Out unless better", "Number of times"};
 	final String[] samplingstrings = {"Greedy sampling", "Anxious sampling", "Random sampling", "No sampling"};
-	final String[] searchstrings = {"Pure random seach", "Random search", "Local search", "Multistart with local search"};
+	final String[] searchstrings = {"Pure random seach", "Random search", "Local search", "Multistart with local search",
+																	"Simulated annealing search"};
+	final String[] initstrings = {"Random", "Deterministic 01", "Deterministic 02", "Mixed 01", "Mixed 02"};
 	
 	/**
 	 * ComboBoxes para la seleccion de parametros de la heuristica.
@@ -45,6 +47,7 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 	JComboBox stoplist = new JComboBox(stopstrings);
 	JComboBox samplinglist = new JComboBox(samplingstrings);
 	JComboBox searchlist = new JComboBox(searchstrings);
+	JComboBox initlist = new JComboBox(initstrings);
 	
 	/**
 	 * Campo de obtencion de las repeticiones
@@ -84,6 +87,12 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 		this.add(searchlist);
 		searchlist.setActionCommand("search");
 		searchlist.setSelectedIndex(dialoghop.getProcedure());
+		searchlist.addActionListener(this);
+		
+		this.add(new JLabel("Tipo de inicializacion:"));
+		this.add(initlist);
+		searchlist.setActionCommand("init");
+		searchlist.setSelectedIndex(dialoghop.getInitialization());
 		searchlist.addActionListener(this);
 		
 		this.add(new JLabel("Numero de repeticiones: "));
@@ -134,6 +143,10 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 		else if(e.getActionCommand() == "search") {
 			System.out.println("Search: " + searchlist.getSelectedIndex());
 			dialoghop.setProcedure(searchlist.getSelectedIndex());
+		}
+		else if(e.getActionCommand() == "init") {
+			System.out.println("Initialization: " + initlist.getSelectedIndex());
+			dialoghop.setInitialization(initlist.getSelectedIndex());
 		}
 	}
 }
