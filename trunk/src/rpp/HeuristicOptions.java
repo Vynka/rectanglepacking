@@ -4,11 +4,21 @@ package rpp;
 /**
  * Concepto abstracto para la eleccion del metodo a realizar en la heuristica.
  * @author Haside
- * @version 1.01.04
+ * @version 1.01.05
  * @since 1.01.04
  * @see Heuristica
  */
 public class HeuristicOptions {
+	
+	/**
+	 * Constantes de tipos de generacion inicial
+	 */
+	public static final int RANDOM = 0;
+	public static final int DETERMINISTIC1 = 1;
+	public static final int DETERMINISTIC2 = 2;
+	public static final int MIXED1 = 3;
+	public static final int MIXED2 = 4;
+	
 	/**
 	 * Posibles espacios de entorno para soluciones vecinas.
 	 */
@@ -37,6 +47,7 @@ public class HeuristicOptions {
 	public static final int RANDOM_SEARCH = 1;
 	public static final int LOCAL_SEARCH = 2;
 	public static final int MULTISTART_WITH_LOCAL_SEARCH = 3;
+	public static final int SIMULATED_ANNEALING_SEARCH = 4;
 	
 	/**
 	 * StopCritera: Criterio de parada del problema
@@ -47,6 +58,11 @@ public class HeuristicOptions {
 	 * Neighbors: Espacio de entorno. (Estructura de entorno) 
 	 */
 	private int neighbors;
+	
+	/**
+	 * Initialization: Tipo de generacion de la solution inicial
+	 */
+	private int initialization;
 	
 	/**
 	 * Sampling: Tipo de estructura de entorno.
@@ -77,8 +93,23 @@ public class HeuristicOptions {
 		this.sampling = 0;
 		this.procedure = 0;
 		this.times = 0;
+		this.initialization = 0;
 		this.fileName = fileName;
 	}	
+	
+	/**
+	 * @param init the initialization type
+	 */
+	public void setInitialization(int init) {
+		this.initialization = init;
+	}
+	
+	/**
+	 * @return tipo de inicializacion
+	 */
+	public int getInitialization() {
+		return initialization;
+	}
 	
 	/**
 	 * @param times the number of times to set

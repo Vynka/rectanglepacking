@@ -21,7 +21,7 @@ import java.util.Collections;
  * @author Javier Luis Moreno Villena
  * @author Alejandro Tejera Perez
  * @author Isaac Galan Estarico
- * @version 1.01.03
+ * @version 1.01.05
  * @since 1.0
  */
 public class Problem {
@@ -136,14 +136,14 @@ public class Problem {
 	}
 	
 	/**
-	 * @return rectangulo de la posicion i-ésima
+	 * @return rectangulo de la posicion i-esima
 	 */
 	public Rectangle getRectangle(int i) {
 	  return this.rectangles[i];
 	}
 	
 	/**
-	 * @return rectangulo de la posicion i-esima
+	 * @return numero de rectangulos del problema
 	 */
 	public int getRectangleSize() {
 	  return this.rectangles.length;

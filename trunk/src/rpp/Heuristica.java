@@ -12,7 +12,7 @@ import java.util.Random;
  * @author Javier Luis Moreno Villena
  * @author Alejandro Tejera Perez
  * @author Isaac Galan Estarico
- * @version 1.01.03
+ * @version 1.01.05
  * @since 1.0
  */
 
@@ -45,6 +45,7 @@ public class Heuristica {
 	public static final int RANDOM_SEARCH = 1;
 	public static final int LOCAL_SEARCH = 2;
 	public static final int MULTISTART_WITH_LOCAL_SEARCH = 3;
+	public static final int SIMULATED_ANNEALING_SEARCH = 4;
 
 	/**
 	 * Tipos de busqueda de solucion
@@ -92,7 +93,10 @@ public class Heuristica {
 			break;
 		case MULTISTART_WITH_LOCAL_SEARCH:
 			multistartSearch(hop.getTimes(), hop.getNeighbors(), hop.getSampling(),
-							 Solution.DETERMINISTIC1, hop.getStopCriteria());
+							 hop.getInitialization(), hop.getStopCriteria());
+			break;
+		case SIMULATED_ANNEALING_SEARCH:
+			simulatedAnnealingSearch(hop.getInitialization(), hop.getNeighbors(), hop.getSampling());
 			break;
 		default:
 			return false;
@@ -318,33 +322,64 @@ public class Heuristica {
 	/**
 	 * Metodo heuristico de Busqueda por entorno numero 5. Busqueda por Recocido
 	 * Simulado.
+	 * 
+	 * Este metodo de busqueda simula el recocido que se realiza para dar forma
+	 * a ciertos metales. El procedimiento es simple: Se calienta y enfria el metal
+	 * de froma continuada de forma que los enlaces de los atomos se hagan fuertes.
+	 * La simulacion pretende demostrar que una solucion peor que la encontrada en
+	 * busqueda puede llevar a una solucion mejor. Dicho "puede" equivale a una
+	 * probabilidad. Por ello, se realiza una busqueda local y se acepta la solucion
+	 * vecina si es mejor o si tiene probabilidad de mejorar la solucion actual.
+	 * 
+	 * La temperatura "c" es un parametro de control que influye directamente en la
+	 * probabilidad de aceptación. A mayor numero de iteraciones, menor probabilidad,
+	 * por lo que la temperatura es menor.
+	 * 
+	 * El tamanio "L" es el numero de soluciones que se generaran en la iteracion
+	 * actual. Dado que la probabilidad de aceptar una solucion como valida cada
+	 * vez es menor, el numero de soluciones a generar cada vez es mayor.
+	 * 
+	 * @param initType
+	 * 				tipo de inicializacion del problema entre:
+	 *        RANDOM, DETERMINISTICINIT1, DETERMINISTICINIT2,
+	 *        MIXEDINIT1, MIXEDINIT2,...
+	 *        
+	 * @param neighbourType
+	 *        tipo de estructura de entorno, puede ser RANDOM_SWAP, ONE_SWAP
+	 *        o SWAP_WITH_LAST (de momento) ATENCION: El tipo de estructura
+	 *        aleatoria solo se puede usar con el muestreo aleatorio
+	 *            
+	 * @param sampleType
+	 *        tipo de comportamiento de la busqueda local (o tipo de
+	 *        muestreo) que puede ser GREEDY_SAMPLING si se escoje el mejor
+	 *        vecino de todo el entorno, ANXIOUS_SAMPLING si se coje el
+	 *        primer mejor vecino, o RANDOM_SAMPLING si se coje el primer
+	 *        vecino al azar que mejore
 	 */
 	public Solution simulatedAnnealingSearch(int initType, int neighbourType,
 											 int sampleType) {
 		Solution actual;
 		Random r = new Random(System.nanoTime());
 		actual = new Solution(problem.getAreaRec(), initType, problem.getRectangleSize());
-		int c = 0/*
-				 * numero suficientemente grande como para poder aceptar
-				 * cualquier solucion vecina al principio
-				 */;
-		int L = 0/* numero de iteraciones pequeï¿½o al principio */;
-		int k = 0; // Numero de iteraciones
+		int c = (int) Math.sqrt(problem.getRectangleSize());
+		int L = (int) Math.pow(problem.getRectangleSize(), 2);
+		int k = 0;                // Numero de iteraciones hechas
 		Point[] bestPos = evalue(actual);
 		Solution best = actual.clone();
 		do {
-			actual = neighbour(actual, neighbourType, sampleType);
-			Point[] actPos = evalue(actual);
-			if (best.getObjF() > actual.getObjF()) {
-				best = actual.clone();
-				bestPos = actPos.clone();
-				k++;
-			} else if (Math.exp((actual.getObjF() - best.getObjF()) / c) > r.nextFloat()) {
-				best = actual.clone();
-				bestPos = actPos.clone();
-				k++;
+			for (int i = 0; i < L; i++) {
+				actual = neighbour(actual, neighbourType, sampleType);
+				Point[] actPos = evalue(actual);
+				if (best.getObjF() > actual.getObjF()) {
+					best = actual.clone();
+					bestPos = actPos.clone();
+				} else if (Math.exp((actual.getObjF() - best.getObjF()) / c) > r.nextFloat()) {
+					best = actual.clone();
+					bestPos = actPos.clone();
+				}
 			}
-			CalculateTemperature(c, k);
+			k++;
+			CalculateTemperature(c);
 			CalculateSize(L, k);
 		} while (c > 0);
 		problem.setSolution(best);
@@ -374,21 +409,20 @@ public class Heuristica {
 	}
 
 	/**
-	 * Calcula la temperatura del metodo de busqueda SimulatedAnnealing para la
-	 * iteracion k
+	 * Calcula la temperatura del metodo de busqueda SimulatedAnnealing.
 	 * 
 	 * @param c
 	 *            temperatura anterior
 	 * @param k
 	 *            Numero de iteraciones hechas
 	 */
-	private int CalculateTemperature(int c, int k) {
-		return 0;
+	private int CalculateTemperature(int c) {
+		return (int)(c * 0.95);
 	}
 
 	/**
 	 * Calcula el numero de iteraciones del metodo de busqueda SimulatedAnneaing
-	 * para la iteracion k
+	 * para la iteracion k.
 	 * 
 	 * @param L
 	 *            Numero de iteraciones anterior
@@ -396,7 +430,7 @@ public class Heuristica {
 	 *            Numero de iteraciones hechas
 	 */
 	private int CalculateSize(int L, int k) {
-		return 0;
+		return (int)(k * 1.05);
 	}
 
 	/**

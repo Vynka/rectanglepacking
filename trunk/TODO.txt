@@ -35,13 +35,11 @@
 - Actualizar UML [Vynka]
   > umbrello heuristicas.xmi
 
+- Implementar la busqueda constructiva GRASP con sus posibles variaciones [Haside]
 
-- Hacer una clase HeuristicOptions para guardar los parametros del problema, que sea rellenado
-  por el usuario en el menu de propiedades y que sea recibido por Heuristica para que
-  haga el metodo correspondiente. [Haside]
-  - Implementacion de la clase HeuristicOptions [Haside]
-  *DONE
-  - Modificacion de la clase Heuristica [Ale]
+****************************************
+* TODO YA RESUELTOS (MOVER AQUI ABAJO) *
+****************************************
 
 - Implementar la busqueda por entornos numero 5, Recocido Simulado [Ale]
   - En proceso (Ya he empezado a trabajar en ello, aunque no lo subire hasta tenerlo
@@ -50,14 +48,18 @@
     de momento subo lo que tengo hecho yo, lo ire arreglando estos dias pq no esta completo.
     NOTA: no es definitivo, es para si quieren mirarlo, opinar, o
     cambiarlo (Vynka sobre todo que tiene hecho parte) [Ale]
+    *DONE version 1
 
 - Comentar SimulatedAnnealing [Ale]
+    *DONE
 
-- Implementar la busqueda constructiva GRASP con sus posibles variaciones [Haside]
-
-****************************************
-* TODO YA RESUELTOS (MOVER AQUI ABAJO) *
-****************************************
+- Hacer una clase HeuristicOptions para guardar los parametros del problema, que sea rellenado
+  por el usuario en el menu de propiedades y que sea recibido por Heuristica para que
+  haga el metodo correspondiente. [Haside]
+  - Implementacion de la clase HeuristicOptions [Haside]
+  *DONE
+  - Modificacion de la clase Heuristica [Ale]
+  *Ya no hace falta por el ingenio del "callProcedure" ;)
 
 - Hecho javadoc. Es tan facil como Project -> Generate Javadoc [Haside]
 
