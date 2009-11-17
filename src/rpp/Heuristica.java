@@ -875,4 +875,81 @@ public class Heuristica {
 		}
 	}
 
+	 
+	/**
+	 * Busca un punto de la lista de puntos que minimize el criterio de colocacion de
+	 * rectangulos, es decir, que al colocar el rectangulo seleccionado sea menor area
+	 * desperdiciada.
+	 * El critero para comparar es la relacion de unidades que aumenta el rectangulo de
+	 * la funcion objetivo. Al ser un rectangulo es igual cual sea la direccion de crecimiento,
+	 * por lo que se toma la suma de las dos unidades como medida de comparacion.
+	 * El rectangulo ira colocado en aquel punto que haga que las dimensiones del rectangulo
+	 * de la solucion crezcan lo menos posible.
+	 * @param r
+	 * 			rectangulo a asignar
+	 * @param s
+	 * 			solucion en la que va a ser asignado
+	 * @return el punto donde ira colocado el rectangulo.
+	 */
+	private Point wasteAllocateRectangle(Rectangle r, Solution s, Integer waste) {
+		// El mejor caso es que las menores dimensiones sean las ya obtenidas anteriormente
+		int minorWaste = 0;
+		int newB = 0;
+		int newH = 0;
+		boolean modified = false;
+		int selected = 0;
+		// Se toman los nuevos datos resultantes de colocar el rectangulo
+		// Como minimo van a ser iguales que los actuales
+		for (int i = 0; i < points.size(); i++) {
+			// Eje y
+			int auxH = s.getHeight();
+			if ((points.get(i).getY() + r.getHeight()) > (s.getHeight()))
+				auxH = points.get(i).getY() + r.getHeight();
+			// Eje X
+			int auxB = s.getBase();
+			if ((points.get(i).getX() + r.getBase()) > (s.getBase()))
+				auxB = points.get(i).getX() + r.getBase();
+			int actualWaste = (auxH * auxB) - s.getArea() - r.getArea();
+			// Si son mejores que los actuales se guardan
+			if ((!modified) || (actualWaste < minorWaste)) {
+				selected = i;
+				minorWaste = actualWaste;
+				newH = auxH;
+				newB = auxB;
+				modified = true;
+			}
+		}
+		// Se actualiza la solucion
+		s.setBase(newB);
+		s.setHeight(newH);
+		r.setPosition(this.points.get(selected));
+		return r.getPosition();
+	}
+  
+	
+	/**
+	 * Funcion que tiene como objetivo la colocacion de los rectangulos para hallar el valor
+	 * que tiene la funcion objetivo dada una solucion representada con una permutacion de 
+	 * rectangulos.
+	 * @param s
+	 *          Solucion a evaluar.
+	 */
+	private Point[] wasteEvalue(Solution s) {
+		initPoints(); // Inicializa los puntos (establece como unico punto el origen)
+		s.reset();
+		Point [] rectanglePosition = new Point[problem.getRectangleSize()];
+		Integer waste = new Integer (0);
+		for (int i = 0; i < problem.getRectangleSize(); i++) {
+			Rectangle r = getNewRectangle(i, s);
+			// Guardamos la posicion del rectangulo i
+			rectanglePosition[s.getOrder(i)] = wasteAllocateRectangle(r, s, waste);
+			if (i != (problem.getRectangleSize() - 1))
+				managePoints(r);
+		}
+		s.setObjF();
+		return rectanglePosition;
+	}
+	
+	
+	
 }
