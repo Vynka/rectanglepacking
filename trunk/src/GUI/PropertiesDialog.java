@@ -88,9 +88,9 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 		
 		this.add(new JLabel("Tipo de inicializacion:"));
 		this.add(initlist);
-		searchlist.setActionCommand("init");
-		searchlist.setSelectedIndex(dialoghop.getInitialization());
-		searchlist.addActionListener(this);
+		initlist.setActionCommand("init");
+		initlist.setSelectedIndex(dialoghop.getInitialization());
+		initlist.addActionListener(this);
 		
 		this.add(new JLabel("Numero de repeticiones: "));
 		timesField.setSize(100, 50);
@@ -143,6 +143,5 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 			System.out.println("Initialization: " + initlist.getSelectedIndex());
 			dialoghop.setInitialization(initlist.getSelectedIndex());
 		}
-		dialogowner.setOptions(dialoghop);
 	}
 }

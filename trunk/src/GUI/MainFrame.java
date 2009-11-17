@@ -163,10 +163,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		}
 		
 		public void setOptions(HeuristicOptions h) {
-			System.out.println("hop procedure: " + hop.getProcedure());
-			System.out.println("h procedure: " + h.getProcedure());
 			hop = h;
-			System.out.println("hop2 procedure: " + hop.getProcedure());
 		}
 		
 		void setScaleDraw(double x, double y) {
