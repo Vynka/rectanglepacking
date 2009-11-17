@@ -9,11 +9,17 @@ import javax.swing.JButton;
 
 @SuppressWarnings("serial")
 public class ScalePanel extends JPanel implements ActionListener {
-	private int x;
-	private int y;
+	private Double x = new Double(1.0);
+	private Double y = new Double(1.0);
+	private MainFrame owner;
+	private JTextField txtx = new JTextField (x.toString());
+	private JTextField txty = new JTextField (y.toString());
 	
-	public ScalePanel () {
+	
+	public ScalePanel (MainFrame own) {
 		this.setLayout(new GridLayout(2, 4));
+		owner = own;
+		
 		JButton plusx = new JButton("X+");
 		plusx.setActionCommand("x+");
 		plusx.addActionListener(this);
@@ -38,11 +44,9 @@ public class ScalePanel extends JPanel implements ActionListener {
 		defy.setActionCommand("dy");
 		defy.addActionListener(this);
 		
-		JTextField txtx = new JTextField ("0");
 		txtx.setActionCommand("txtx");
 		txtx.addActionListener(this);
 		
-		JTextField txty = new JTextField ("0");
 		txty.setActionCommand("txty");
 		txty.addActionListener(this);
 		
@@ -54,10 +58,36 @@ public class ScalePanel extends JPanel implements ActionListener {
 		add(lessy);
 		add(defy);
 		add(txty);
-
 	}
 
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getActionCommand() == "x+") {x += 0.5;}
+		else if (e.getActionCommand() == "y+") {y += 0.5;}
+		else if (e.getActionCommand() == "x-") {x -= 0.5;}
+		else if (e.getActionCommand() == "y-") {y -= 0.5;}
+		else if (e.getActionCommand() == "dx") {x = 1.0;}
+		else if (e.getActionCommand() == "dy") {y = 1.0;}
+		else if (e.getActionCommand() == "txtx") {
+			try {
+				Double d = new Double(txtx.getText());
+				x = d;
+			}
+			catch (NumberFormatException exc) {
+				System.out.println("Fail");
+			}
+		}
+		else if (e.getActionCommand() == "txty") {
+			try {
+				Double d = new Double(txty.getText());
+				y = d;
+			}
+			catch (NumberFormatException exc) {
+				System.out.println("Fail");
+			}
+		}
+		txtx.setText(x.toString());
+		txty.setText(y.toString());
+		owner.setScaleDraw(x.doubleValue(), y.doubleValue());
 	}
 }

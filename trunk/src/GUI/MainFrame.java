@@ -7,8 +7,6 @@ import javax.swing.JPanel;
 import rpp.HeuristicOptions;
 import rpp.Heuristica;
 import rpp.Problem;
-import rpp.Solution;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -44,7 +42,8 @@ public class MainFrame extends JFrame implements ActionListener {
         /**
          * Dialogo que salta al clicar en Opciones -> Properties.
          */
-        private PropertiesDialog pd = null;
+        @SuppressWarnings("unused")
+		private PropertiesDialog pd = null;
             
         /**
          * Parametros para la heuristica.
@@ -57,22 +56,22 @@ public class MainFrame extends JFrame implements ActionListener {
         private JButton shbut = new JButton ("Show");
         
         /**
-         * Boton 
+         * Boton que manda a calcular el resultado del problema.
          */
         private JButton calcbut = new JButton("Calculate");
         
         /**
-         * 
+         * Selector de archivo.
          */
-        private final JFileChooser fc = new JFileChooser();
+        private final JFileChooser fc = new JFileChooser("./datasets");
         
         /**
-         * 
+         * Referencia a la clase Problem. 
          */
         private Problem r = null;
         
         /**
-         * 
+         *  Referencia a la clase Heuristica.
          */
         private Heuristica h = null;
         
@@ -80,50 +79,54 @@ public class MainFrame extends JFrame implements ActionListener {
          * Constructor por defecto, en el que se aniaden los objetos de la GUI y se le ajustan los parametros.
          */      
         public MainFrame() {
-                this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-                this.setTitle("RPP Solver");
+            this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+            this.setTitle("RPP Solver");
                 
-                Toolkit kit = Toolkit.getDefaultToolkit();
-                Dimension screenDim = kit.getScreenSize();
+            Toolkit kit = Toolkit.getDefaultToolkit();
+            Dimension screenDim = kit.getScreenSize();
 
                 // Se establece la posicion del marco
-                int width = (screenDim.width / 2);
-                int height = (screenDim.height / 2);
-                this.setSize(width, height);
-                this.setLocation(width / 2, height / 2);
+            int width = (screenDim.width / 2);
+            int height = (screenDim.height / 2);
+            this.setSize(width, height);
+            this.setLocation(width / 2, height / 2);
                 
-                om = new OptionsMenu();
-                this.add(om, BorderLayout.NORTH);
-                om.mProperties.setActionCommand("properties");
-                om.mProperties.addActionListener(this);
-                om.mExit.setActionCommand("close");
-                om.mExit.addActionListener(this);
-                om.mFile.setActionCommand("file");
-                om.mFile.addActionListener(this);
+            om = new OptionsMenu();
+            this.add(om, BorderLayout.NORTH);
+            om.mProperties.setActionCommand("properties");
+            om.mProperties.addActionListener(this);
+            om.mExit.setActionCommand("close");
+            om.mExit.addActionListener(this);
+            om.mFile.setActionCommand("file");
+            om.mFile.addActionListener(this);
                 
-                dp = new DrawPanel();
-                this.add(dp, BorderLayout.CENTER);
+            dp = new DrawPanel();
+            this.add(dp, BorderLayout.CENTER);
                 
-                JPanel southpan = new JPanel(new FlowLayout());
-                this.add(southpan, BorderLayout.SOUTH);
-                southpan.add(shbut);
-                shbut.setActionCommand("show");
-                shbut.addActionListener(this);
+            JPanel southpan = new JPanel(new FlowLayout());
+            this.add(southpan, BorderLayout.SOUTH);
+            southpan.add(shbut);
+            shbut.setActionCommand("show");
+            shbut.addActionListener(this);
                 
-                southpan.add(calcbut);
-                calcbut.setActionCommand("calc");
-                calcbut.addActionListener(this);
+            southpan.add(calcbut);
+            calcbut.setActionCommand("calc");
+            calcbut.addActionListener(this);
                 
-                ScalePanel sp = new ScalePanel();
-                southpan.add(sp);
+            ScalePanel sp = new ScalePanel(this);
+            southpan.add(sp);
                 
-                hop = new HeuristicOptions("");
-                dp.setProblem(r);
+            hop = new HeuristicOptions("");
+            pd = new PropertiesDialog(this);
+            dp.setProblem(r);
         }
 
+        
 		public void actionPerformed(ActionEvent e) {
 			if (e.getActionCommand() == "properties") {
-				pd = new PropertiesDialog(this);
+				dp.repaint();
+				pd.setVisible(true);
+				//dp.repaint();
 			}
 			else if (e.getActionCommand() == "close") {
 				System.exit(0);
@@ -158,7 +161,16 @@ public class MainFrame extends JFrame implements ActionListener {
 		public HeuristicOptions getOptions() {
 			return hop;
 		}
+		
 		public void setOptions(HeuristicOptions h) {
+			System.out.println("hop procedure: " + hop.getProcedure());
+			System.out.println("h procedure: " + h.getProcedure());
 			hop = h;
+			System.out.println("hop2 procedure: " + hop.getProcedure());
+		}
+		
+		void setScaleDraw(double x, double y) {
+			dp.setScale(x, y);
+			dp.repaint();
 		}
 }
