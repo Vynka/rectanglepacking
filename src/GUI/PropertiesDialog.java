@@ -7,9 +7,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
 import rpp.HeuristicOptions;
-
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -37,7 +35,7 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 	final String[] stopstrings = {"Out unless better", "Number of times"};
 	final String[] samplingstrings = {"Greedy sampling", "Anxious sampling", "Random sampling", "No sampling"};
 	final String[] searchstrings = {"Pure random seach", "Random search", "Local search", "Multistart with local search",
-																	"Simulated annealing search"};
+									"Simulated annealing search"};
 	final String[] initstrings = {"Random", "Deterministic 01", "Deterministic 02", "Mixed 01", "Mixed 02"};
 	
 	/**
@@ -60,7 +58,6 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 	 */
 	public PropertiesDialog(MainFrame owner) {
 		super(owner, "Properties", true);
-//		this.setSize(320, 360);
 		this.setLayout(new GridLayout(0, 2));
 		dialoghop = owner.getOptions();
 		dialogowner = owner;
@@ -115,18 +112,16 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 		int x = (int)(owner.getLocation().getX() + (int)((owner.getWidth() - this.getWidth()) / 2)); 
 		int y = (int)(owner.getLocation().getY() + (int)((owner.getHeight() - this.getHeight()) / 2));
 		this.setLocation(x, y);
-		
-		this.setVisible(true);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand() == "accept") {
 			dialoghop.setTimes(new Integer(timesField.getText()).intValue());
-			dialogowner.setOptions(dialoghop);
-			this.dispose();
+			this.setVisible(false);
 		}
 		else if(e.getActionCommand() == "cancel") {
-			this.dispose();
+			timesField.setText((new Integer(dialoghop.getTimes())).toString());
+			this.setVisible(false);
 		}
 		else if(e.getActionCommand() == "neighbor") {
 			System.out.println("Entorno: " + neighborlist.getSelectedIndex());
@@ -148,5 +143,6 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 			System.out.println("Initialization: " + initlist.getSelectedIndex());
 			dialoghop.setInitialization(initlist.getSelectedIndex());
 		}
+		dialogowner.setOptions(dialoghop);
 	}
 }

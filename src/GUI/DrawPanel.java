@@ -26,7 +26,9 @@ public class DrawPanel extends JPanel {
     /**
      * Atributo af: Objeto de tipo AffineTransform para situar el centro de coordenadas y la escala.
      */
-    private AffineTransform af;
+    private  AffineTransform af;
+    private double scalex = 1.0;
+    private double scaley = 1.0;
     
     /**
      * 
@@ -67,12 +69,11 @@ public class DrawPanel extends JPanel {
 	        Solution sol = p.getSolution();
 	        //double x = this.getSize().getWidth();
 	        double y = this.getSize().getHeight() + Y_OFFSET;
-	        //double scalex = getWidth() / 500;
-	        //double scaley = getHeight() / 500;
+
 	        
 	        af = new AffineTransform();
 	        af.translate(0, y);
-	        //af.scale(scalex, scaley); //Se situa el origen en la esquina inf izq y se escala al tamanio
+	        af.scale(scalex, scaley); //Se situa el origen en la esquina inf izq y se escala al tamanio
 	                                  //del rectangulo solucion
 	        
 	        //Mirar de cambiar la escala con botones + y -
@@ -96,5 +97,10 @@ public class DrawPanel extends JPanel {
 	        Rectangle2D.Float rsol = new Rectangle2D.Float(0, -sol.getHeight(), sol.getBase(), sol.getHeight());
 	        g2.draw(rsol);
         }
+	}
+	
+	public void setScale(double x, double y) {
+		scalex = x;
+		scaley = y;
 	}
 }
