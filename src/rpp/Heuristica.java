@@ -1,6 +1,7 @@
 package rpp;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -71,7 +72,7 @@ public class Heuristica {
 	public Heuristica(Problem p) {
 		initPoints();
 		this.problem = p;
-		evalue(p.getSolution());
+		areaEvalue(p.getSolution());
 	}
 
 	/**
@@ -127,13 +128,13 @@ public class Heuristica {
 	 */
 	public Solution localSearch(int neighbourType, int sampleType) {
 		Solution actual = problem.getSolution().clone();
-		Point[] bestPos = evalue(actual);
+		Point[] bestPos = wasteEvalue(actual);
 		Solution best = actual.clone();
 		boolean betterFound;
 		do {
 			betterFound = false;
 			actual = neighbour(actual, neighbourType, sampleType);
-			Point[] actPos = evalue(actual);
+			Point[] actPos = wasteEvalue(actual);
 			if (best.getObjF() > actual.getObjF()) {
 				best = actual.clone();
 				bestPos = actPos.clone();
@@ -170,7 +171,7 @@ public class Heuristica {
 		do {
 			actual = new Solution(problem.getAreaRec(), Solution.RANDOM,
 								  problem.getRectangleSize());
-			Point[] actPos = evalue(actual);
+			Point[] actPos = areaEvalue(actual);
 
 			switch (stop) {
 			case OUT_UNLESS_BETTER:
@@ -222,7 +223,7 @@ public class Heuristica {
 		Solution actual = best.clone();
 		do {
 			actual = neighbour(actual, RANDOM_SWAP, NO_SAMPLING);
-			Point[] actPos = evalue(actual);
+			Point[] actPos = areaEvalue(actual);
 
 			switch (stop) {
 			case OUT_UNLESS_BETTER:
@@ -285,12 +286,12 @@ public class Heuristica {
 	public Solution multistartSearch(int times, int neighbourType, int sampleType, int initType, int stop) {
 		int n = times;
 		problem.setSolution(new Solution(problem.getAreaRec(), initType, problem.getRectangleSize()));
-		Point[] bestPos = evalue(problem.getSolution());
+		Point[] bestPos = areaEvalue(problem.getSolution());
 		Solution actual, nueva;
 		Solution best = problem.getSolution().clone();
 		do {
 			actual = localSearch(neighbourType, sampleType);
-			Point[] actPos = evalue(actual);
+			Point[] actPos = areaEvalue(actual);
 			switch (stop) {
 			case OUT_UNLESS_BETTER:
 				if (best.getObjF() > actual.getObjF()) {
@@ -309,7 +310,7 @@ public class Heuristica {
 			int sameId = 0;
 			do {
 				nueva = new Solution(problem.getAreaRec(), initType, problem.getRectangleSize());
-				Point[] nuevaPos = evalue(nueva);
+				Point[] nuevaPos = areaEvalue(nueva);
 				for (int i = 0; i < problem.getRectangleSize(); i++)
 					if (nuevaPos[i] == actPos[i])
 						sameId++;
@@ -367,12 +368,12 @@ public class Heuristica {
 		int c = (int) Math.sqrt(problem.getRectangleSize());
 		int L = (int) Math.pow(problem.getRectangleSize(), 2);
 		int k = 0;                // Numero de iteraciones hechas
-		Point[] bestPos = evalue(actual);
+		Point[] bestPos = areaEvalue(actual);
 		Solution best = actual.clone();
 		do {
 			for (int i = 0; i < L; i++) {
 				actual = neighbour(actual, neighbourType, sampleType);
-				Point[] actPos = evalue(actual);
+				Point[] actPos = areaEvalue(actual);
 				if (best.getObjF() > actual.getObjF()) {
 					best = actual.clone();
 					bestPos = actPos.clone();
@@ -456,6 +457,58 @@ public class Heuristica {
 	}
 
 	/**
+	 * Reestructura la lista de puntos, eliminando el usado, asi como los
+	 * ocultados, y anadiendo los nuevos puntos creados con la eleccion tomada.
+	 */
+	private void managePoints(Rectangle r) {
+		// Posible nuevo punto
+		Point py;
+		Point px;
+		boolean newy = true;
+		boolean newx = true;
+		int i;
+		// Se manipulan con respecto al eje Y
+		py = obtainNewPointY(r);
+		i = 0;
+		while (i < points.size()) {
+			// Se eliminan los puntos con coordenada Y menor que la actual
+			// si estos estan a la izquierda de la base del rectangulo nuevo
+			if ((points.get(i).getY() < py.getY())
+					&& (points.get(i).getX() < r.getPosition().getX())) {
+				points.remove(i);
+			} else if (points.get(i).getY() == py.getY()) {
+				newy = false;
+				i++;
+			} else {
+				i++;
+			}
+		}
+		// Se repite pero con respecto al eje X
+		px = obtainNewPointX(r);
+		i = 0;
+		while (i < points.size()) {
+			// Se eliminan los puntos con coordenada X menor que la actual
+			// si estos estan por debajo de la altura del rectangulo nuevo
+			if ((points.get(i).getX() < px.getX())
+					&& (points.get(i).getY() < r.getPosition().getY())) {
+				points.remove(i);
+			} else if (points.get(i).getX() == px.getX()) {
+				newx = false;
+				i++;
+			} else {
+				i++;
+			}
+		}
+		// Se aniaden si son puntos utiles
+		if (newy)
+			addPoint(py);
+		if (newx)
+			addPoint(px);
+		// Por ultimo se elimina el punto utilizado de la lista
+		points.remove(r.getPosition());
+	}
+
+	/**
 	 * Busca un punto de la lista de puntos que minimize el criterio de
 	 * colocacion de rectangulos, es decir, que al colocar el rectangulo
 	 * seleccionado sea menor area desperdiciada. El critero para comparar es la
@@ -471,7 +524,7 @@ public class Heuristica {
 	 *            solucion en la que va a ser asignado
 	 * @return el punto donde ira colocado el rectangulo.
 	 */
-	private Point allocateRectangle(Rectangle r, Solution s) {
+	private Point areaAllocateRectangle(Rectangle r, Solution s) {
 		// El mejor caso es que las menores dimensiones sean las ya obtenidas
 		// anteriormente
 		int minorH = 0;
@@ -552,58 +605,6 @@ public class Heuristica {
 		return p;
 	}
 
-	/**
-	 * Reestructura la lista de puntos, eliminando el usado, asi como los
-	 * ocultados, y anadiendo los nuevos puntos creados con la eleccion tomada.
-	 */
-	private void managePoints(Rectangle r) {
-		// Posible nuevo punto
-		Point py;
-		Point px;
-		boolean newy = true;
-		boolean newx = true;
-		int i;
-		// Se manipulan con respecto al eje Y
-		py = obtainNewPointY(r);
-		i = 0;
-		while (i < points.size()) {
-			// Se eliminan los puntos con coordenada Y menor que la actual
-			// si estos estan a la izquierda de la base del rectangulo nuevo
-			if ((points.get(i).getY() < py.getY())
-					&& (points.get(i).getX() < r.getPosition().getX())) {
-				points.remove(i);
-			} else if (points.get(i).getY() == py.getY()) {
-				newy = false;
-				i++;
-			} else {
-				i++;
-			}
-		}
-		// Se repite pero con respecto al eje X
-		px = obtainNewPointX(r);
-		i = 0;
-		while (i < points.size()) {
-			// Se eliminan los puntos con coordenada X menor que la actual
-			// si estos estan por debajo de la altura del rectangulo nuevo
-			if ((points.get(i).getX() < px.getX())
-					&& (points.get(i).getY() < r.getPosition().getY())) {
-				points.remove(i);
-			} else if (points.get(i).getX() == px.getX()) {
-				newx = false;
-				i++;
-			} else {
-				i++;
-			}
-		}
-		// Se aniaden si son puntos utiles
-		if (newy)
-			addPoint(py);
-		if (newx)
-			addPoint(px);
-		// Por ultimo se elimina el punto utilizado de la lista
-		points.remove(r.getPosition());
-	}
-
 	private void initPoints() {
 		Point origen = new Point(0, 0);
 		this.points.clear();
@@ -618,7 +619,7 @@ public class Heuristica {
 	 * @param s
 	 *            Solucion a evaluar.
 	 */
-	private Point[] evalue(Solution s) {
+	private Point[] areaEvalue(Solution s) {
 		initPoints(); // Inicializa los puntos (establece como unico punto el
 		// origen)
 		s.reset();
@@ -626,7 +627,7 @@ public class Heuristica {
 		for (int i = 0; i < problem.getRectangleSize(); i++) {
 			Rectangle r = getNewRectangle(i, s);
 			// Guardamos la posicion del rectangulo i
-			rectanglePosition[s.getOrder(i)] = allocateRectangle(r, s);
+			rectanglePosition[s.getOrder(i)] = areaAllocateRectangle(r, s);
 			if (i != (problem.getRectangleSize() - 1))
 				managePoints(r);
 		}
@@ -743,7 +744,7 @@ public class Heuristica {
 						Solution aux = s.clone();
 						swap(newOrder, i, j);
 						aux.setOrder(newOrder);
-						evalue(aux);
+						areaEvalue(aux);
 						if (s.getObjF() > aux.getObjF())
 							s = aux.clone();
 					}
@@ -758,7 +759,7 @@ public class Heuristica {
 						k = (int) (r.nextFloat() * newOrder.length);
 					swap(newOrder, l, k);
 					aux.setOrder(newOrder);
-					evalue(aux);
+					areaEvalue(aux);
 					if (s.getObjF() > aux.getObjF())
 						s = aux.clone();
 				}
@@ -768,7 +769,7 @@ public class Heuristica {
 					Solution aux = s.clone();
 					swap(newOrder, i, newOrder.length - 1);
 					aux.setOrder(newOrder);
-					evalue(aux);
+					areaEvalue(aux);
 					if (s.getObjF() > aux.getObjF())
 						s = aux.clone();
 				}
@@ -804,7 +805,7 @@ public class Heuristica {
 						Solution aux = s.clone();
 						swap(newOrder, i, j);
 						aux.setOrder(newOrder);
-						evalue(aux);
+						areaEvalue(aux);
 						if (s.getObjF() > aux.getObjF())
 							s = aux.clone();
 					}
@@ -819,7 +820,7 @@ public class Heuristica {
 						k = (int) (r.nextFloat() * newOrder.length);
 					swap(newOrder, l, k);
 					aux.setOrder(newOrder);
-					evalue(aux);
+					areaEvalue(aux);
 					if (s.getObjF() > aux.getObjF())
 						s = aux.clone();
 				}
@@ -829,7 +830,7 @@ public class Heuristica {
 					Solution aux = s.clone();
 					swap(newOrder, i, newOrder.length - 1);
 					aux.setOrder(newOrder);
-					evalue(aux);
+					areaEvalue(aux);
 					if (s.getObjF() > aux.getObjF())
 						s = aux.clone();
 				}
@@ -866,7 +867,7 @@ public class Heuristica {
 					k = (int) (r.nextFloat() * newOrder.length);
 				swap(newOrder, l, k);
 				aux.setOrder(newOrder);
-				evalue(aux);
+				areaEvalue(aux);
 				if (s.getObjF() > aux.getObjF()) {
 					s = aux.clone();
 					betterFound = true;
@@ -875,6 +876,71 @@ public class Heuristica {
 		}
 	}
 
+	/**
+	 * Estima el espacio desperdiciado en un punto por un rectangulo r
+	 * @param r Rectangulo
+	 * @param p Punto donde se estima
+	 */
+	private int wasteCalculation(Rectangle r) {
+		// Posible nuevo punto
+		int waste = 0;
+		Point p;
+		ArrayList<Point> aux = new ArrayList<Point>(0);
+		boolean newP = true;
+		int i;
+		// Se manipulan con respecto al eje Y
+		p = obtainNewPointY(r);
+		i = 0;
+		while (i < points.size()) {
+			// Se cogen todos los puntos de igual o menor altura que el del rectangulo
+			if ((points.get(i).getY() < p.getY())
+					&& (points.get(i).getX() < r.getPosition().getX())) {
+				aux.add(points.get(i));
+			} else if (points.get(i).getY() == p.getY()) {
+				newP = false;
+				aux.add(points.get(i));
+			}
+			i++;
+		}
+		if (!newP) {
+			aux.remove(p);
+		}
+		PointYComparator c = new PointYComparator();
+		Collections.sort(aux, c);
+		i = 0;
+		for (int j = i; j < aux.size(); j++) {
+			waste = waste + r.getPosition().getX() - aux.get(j).getX() *
+							(aux.get(i).getY() - aux.get(j).getY());
+		}
+
+		// Se repite pero con respecto al eje X
+		p = obtainNewPointX(r);
+		newP = true;
+		i = 0;
+		while (i < points.size()) {
+			// Se eliminan los puntos con coordenada X menor que la actual
+			// si estos estan por debajo de la altura del rectangulo nuevo
+			if ((points.get(i).getX() < p.getX())
+					&& (points.get(i).getY() < r.getPosition().getY())) {
+				aux.add(points.get(i));
+			} else if (points.get(i).getX() == p.getX()) {
+				aux.add(points.get(i));
+				newP = false;
+			}
+			i++;
+		}
+		if (!newP) {
+			aux.remove(p);
+		}
+		Collections.sort(aux);
+		i = 0;
+		for (int j = i; j < aux.size(); j++) {
+			waste = waste + r.getPosition().getY() - aux.get(j).getY() * 
+							(aux.get(i).getX() - aux.get(j).getX());
+		}
+			
+		return 0;
+	}
 	 
 	/**
 	 * Busca un punto de la lista de puntos que minimize el criterio de colocacion de
@@ -891,41 +957,37 @@ public class Heuristica {
 	 * 			solucion en la que va a ser asignado
 	 * @return el punto donde ira colocado el rectangulo.
 	 */
-	private Point wasteAllocateRectangle(Rectangle r, Solution s, Integer waste) {
+	private Point wasteAllocateRectangle(Rectangle r, Solution s) {
 		// El mejor caso es que las menores dimensiones sean las ya obtenidas anteriormente
 		int minorWaste = 0;
-		int newB = 0;
-		int newH = 0;
 		boolean modified = false;
 		int selected = 0;
 		// Se toman los nuevos datos resultantes de colocar el rectangulo
 		// Como minimo van a ser iguales que los actuales
 		for (int i = 0; i < points.size(); i++) {
-			// Eje y
-			int auxH = s.getHeight();
-			if ((points.get(i).getY() + r.getHeight()) > (s.getHeight()))
-				auxH = points.get(i).getY() + r.getHeight();
-			// Eje X
-			int auxB = s.getBase();
-			if ((points.get(i).getX() + r.getBase()) > (s.getBase()))
-				auxB = points.get(i).getX() + r.getBase();
-			int actualWaste = (auxH * auxB) - s.getArea() - r.getArea();
+			r.setPosition(this.points.get(i));
+			int actualWaste = wasteCalculation(r);
 			// Si son mejores que los actuales se guardan
 			if ((!modified) || (actualWaste < minorWaste)) {
 				selected = i;
 				minorWaste = actualWaste;
-				newH = auxH;
-				newB = auxB;
 				modified = true;
 			}
 		}
 		// Se actualiza la solucion
+		// Eje y
+		int newH = s.getHeight();
+		if ((points.get(selected).getY() + r.getHeight()) > (s.getHeight()))
+			newH = points.get(selected).getY() + r.getHeight();
+		// Eje X
+		int newB = s.getBase();
+		if ((points.get(selected).getX() + r.getBase()) > (s.getBase()))
+			newB = points.get(selected).getX() + r.getBase();
 		s.setBase(newB);
 		s.setHeight(newH);
 		r.setPosition(this.points.get(selected));
 		return r.getPosition();
 	}
-  
 	
 	/**
 	 * Funcion que tiene como objetivo la colocacion de los rectangulos para hallar el valor
@@ -938,11 +1000,10 @@ public class Heuristica {
 		initPoints(); // Inicializa los puntos (establece como unico punto el origen)
 		s.reset();
 		Point [] rectanglePosition = new Point[problem.getRectangleSize()];
-		Integer waste = new Integer (0);
 		for (int i = 0; i < problem.getRectangleSize(); i++) {
 			Rectangle r = getNewRectangle(i, s);
 			// Guardamos la posicion del rectangulo i
-			rectanglePosition[s.getOrder(i)] = wasteAllocateRectangle(r, s, waste);
+			rectanglePosition[s.getOrder(i)] = wasteAllocateRectangle(r, s);
 			if (i != (problem.getRectangleSize() - 1))
 				managePoints(r);
 		}

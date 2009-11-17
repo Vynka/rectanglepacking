@@ -1,5 +1,7 @@
 package rpp;
 
+import java.util.Comparator;
+
 /**
  * . <- Eso es un punto (y tiene coordenadas ^^U)
  * 
@@ -11,7 +13,7 @@ package rpp;
  * @version 1.0a
  * @since 1.0
  */
-public class Point {
+public class Point implements Comparable<Point> {
 	
 	/**
 	 * Atributo x: coordenada x del punto.
@@ -100,4 +102,32 @@ public class Point {
 	boolean equals(Point p) {
 		return (this.x == p.getX()) && (this.y == getY());
 	}
+
+	/** Ordena segun el Eje X() */
+	@Override
+	public int compareTo(Point p) {
+		if (this.x > p.getX()) {
+			return 1;
+		} else if (this.x < p.getX()) {
+			return -1;
+		} else {
+			return 0;
+		}
+	}
 }
+
+class PointYComparator implements Comparator<Point> {
+
+	@Override
+	public int compare(Point p1, Point p2) {
+		if (p1.getX() > p2.getX()) {
+			return 1;
+		} else if (p1.getX() < p2.getX()) {
+			return -1;
+		} else {
+			return 0;
+		}
+	}
+	
+}
+
