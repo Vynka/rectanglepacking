@@ -96,7 +96,7 @@ public class Heuristica {
 							 hop.getInitialization(), hop.getStopCriteria());
 			break;
 		case SIMULATED_ANNEALING_SEARCH:
-			simulatedAnnealingSearch(hop.getInitialization(), hop.getNeighbors(), hop.getSampling());
+			simulatedAnnealingSearch(hop.getInitialization(), hop.getNeighbors(), hop.getSampling(), 0.95, 1.05);
 			break;
 		default:
 			return false;
@@ -282,18 +282,15 @@ public class Heuristica {
 	 *            quiere terminar la ejecucion en el numero exacto de
 	 *            iteraciones especificadas.
 	 */
-	public Solution multistartSearch(int times, int neighbourType,
-			int sampleType, int initType, int stop) {
+	public Solution multistartSearch(int times, int neighbourType, int sampleType, int initType, int stop) {
 		int n = times;
-		problem.setSolution(new Solution(problem.getAreaRec(), initType,
-							problem.getRectangleSize()));
+		problem.setSolution(new Solution(problem.getAreaRec(), initType, problem.getRectangleSize()));
 		Point[] bestPos = evalue(problem.getSolution());
-		Solution actual;
+		Solution actual, nueva;
 		Solution best = problem.getSolution().clone();
 		do {
 			actual = localSearch(neighbourType, sampleType);
 			Point[] actPos = evalue(actual);
-
 			switch (stop) {
 			case OUT_UNLESS_BETTER:
 				if (best.getObjF() > actual.getObjF()) {
@@ -309,9 +306,15 @@ public class Heuristica {
 				}
 				break;
 			}
-
-			problem.setSolution(new Solution(problem.getAreaRec(), initType,
-								problem.getRectangleSize()));
+			int sameId = 0;
+			do {
+				nueva = new Solution(problem.getAreaRec(), initType, problem.getRectangleSize());
+				Point[] nuevaPos = evalue(nueva);
+				for (int i = 0; i < problem.getRectangleSize(); i++)
+					if (nuevaPos[i] == actPos[i])
+						sameId++;
+			} while (sameId > (problem.getRectangleSize()/2));
+			problem.setSolution(nueva);
 			n--;
 		} while (n > 0);
 		problem.setSolution(best);
@@ -332,7 +335,7 @@ public class Heuristica {
 	 * vecina si es mejor o si tiene probabilidad de mejorar la solucion actual.
 	 * 
 	 * La temperatura "c" es un parametro de control que influye directamente en la
-	 * probabilidad de aceptación. A mayor numero de iteraciones, menor probabilidad,
+	 * probabilidad de aceptaciï¿½n. A mayor numero de iteraciones, menor probabilidad,
 	 * por lo que la temperatura es menor.
 	 * 
 	 * El tamanio "L" es el numero de soluciones que se generaran en la iteracion
@@ -357,7 +360,7 @@ public class Heuristica {
 	 *        vecino al azar que mejore
 	 */
 	public Solution simulatedAnnealingSearch(int initType, int neighbourType,
-											 int sampleType) {
+											 int sampleType, double coolingFactor, double iterationIncrement) {
 		Solution actual;
 		Random r = new Random(System.nanoTime());
 		actual = new Solution(problem.getAreaRec(), initType, problem.getRectangleSize());
@@ -379,8 +382,8 @@ public class Heuristica {
 				}
 			}
 			k++;
-			CalculateTemperature(c);
-			CalculateSize(L, k);
+			CalculateTemperature(c, coolingFactor);
+			CalculateSize(L, k, iterationIncrement);
 		} while (c > 0);
 		problem.setSolution(best);
 		problem.changeRectanglePositions(bestPos);
@@ -416,8 +419,8 @@ public class Heuristica {
 	 * @param k
 	 *            Numero de iteraciones hechas
 	 */
-	private int CalculateTemperature(int c) {
-		return (int)(c * 0.95);
+	private int CalculateTemperature(int c, double coolingFactor) {
+		return (int)(c * coolingFactor);
 	}
 
 	/**
@@ -429,8 +432,8 @@ public class Heuristica {
 	 * @param k
 	 *            Numero de iteraciones hechas
 	 */
-	private int CalculateSize(int L, int k) {
-		return (int)(k * 1.05);
+	private int CalculateSize(int L, int k, double iterationIncrement) {
+		return (int)(k * iterationIncrement);
 	}
 
 	/**
