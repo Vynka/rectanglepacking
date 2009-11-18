@@ -1,0 +1,10 @@
+*****************************************************************
+*      Comentarios Paper 3 - Bi-dimensional Domains for the     *
+*            Non-overlapping Rectangles Constraint              *
+*****************************************************************
+* Estilo:                                                       *
+* - Comentario [Autor]                                          *
+* ? Sugerencia respecto al artículo [Autor]                     *
+* ! Consulta respecto al artículo (dudas) [Autor]               *
+* + Peticiones de más artículos relacionados [Autor]            *
+*****************************************************************

@@ -1,0 +1,10 @@
+*****************************************************************
+*         Comentarios Paper 7 - Use of Genetic Algorithms       *
+*          for solution of the Rectangle Packing Problem        *
+*****************************************************************
+* Estilo:                                                       *
+* - Comentario [Autor]                                          *
+* ? Sugerencia respecto al artículo [Autor]                     *
+* ! Consulta respecto al artículo (dudas) [Autor]               *
+* + Peticiones de más artículos relacionados [Autor]            *
+*****************************************************************

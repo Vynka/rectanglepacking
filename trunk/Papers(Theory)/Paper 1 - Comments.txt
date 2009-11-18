@@ -1,0 +1,10 @@
+*****************************************************************
+*     Comentarios Paper 1 - "A Review of the Application of     *
+*    Meta-Heuristhics Algorithms to 2D Strip Packing Problems   *
+*****************************************************************
+* Estilo:                                                       *
+* - Comentario [Autor]                                          *
+* ? Sugerencia respecto al artículo [Autor]                     *
+* ! Consulta respecto al artículo (dudas) [Autor]               *
+* + Peticiones de más artículos relacionados [Autor]            *
+*****************************************************************
