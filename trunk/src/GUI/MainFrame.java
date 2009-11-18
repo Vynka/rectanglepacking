@@ -1,15 +1,15 @@
 package GUI;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import rpp.HeuristicOptions;
-import rpp.Heuristica;
-import rpp.Problem;
+import rpp.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,7 +42,6 @@ public class MainFrame extends JFrame implements ActionListener {
         /**
          * Dialogo que salta al clicar en Opciones -> Properties.
          */
-        @SuppressWarnings("unused")
 		private PropertiesDialog pd = null;
             
         /**
@@ -59,6 +58,9 @@ public class MainFrame extends JFrame implements ActionListener {
          * Boton que manda a calcular el resultado del problema.
          */
         private JButton calcbut = new JButton("Calculate");
+        
+        private JLabel fobjlbl = new JLabel("F Obj = ");
+        private JLabel areareclbl = new JLabel("Area rec = ");
         
         /**
          * Selector de archivo.
@@ -85,7 +87,7 @@ public class MainFrame extends JFrame implements ActionListener {
             Toolkit kit = Toolkit.getDefaultToolkit();
             Dimension screenDim = kit.getScreenSize();
 
-                // Se establece la posicion del marco
+            // Se establece la posicion del marco
             int width = (screenDim.width / 2);
             int height = (screenDim.height / 2);
             this.setSize(width, height);
@@ -103,19 +105,31 @@ public class MainFrame extends JFrame implements ActionListener {
             dp = new DrawPanel();
             this.add(dp, BorderLayout.CENTER);
                 
-            JPanel southpan = new JPanel(new FlowLayout());
+            JPanel southpan = new JPanel();
+            southpan.setLayout(new BoxLayout(southpan, BoxLayout.X_AXIS));
             this.add(southpan, BorderLayout.SOUTH);
-            southpan.add(shbut);
-            shbut.setActionCommand("show");
-            shbut.addActionListener(this);
-                
+            
+            JPanel lblpan = new JPanel();
+            lblpan.setLayout(new BoxLayout(lblpan, BoxLayout.Y_AXIS));
+            lblpan.add(fobjlbl);
+            lblpan.add(areareclbl);
+            southpan.add(lblpan);
+            
+            southpan.add(Box.createHorizontalGlue());
+            
             southpan.add(calcbut);
             calcbut.setActionCommand("calc");
             calcbut.addActionListener(this);
-                
+            
+            southpan.add(shbut);
+            shbut.setActionCommand("show");
+            shbut.addActionListener(this);
+            
+            southpan.add(Box.createHorizontalGlue());
+            
             ScalePanel sp = new ScalePanel(this);
             southpan.add(sp);
-                
+            
             hop = new HeuristicOptions("");
             pd = new PropertiesDialog(this);
             dp.setProblem(r);
@@ -124,9 +138,8 @@ public class MainFrame extends JFrame implements ActionListener {
         
 		public void actionPerformed(ActionEvent e) {
 			if (e.getActionCommand() == "properties") {
-				dp.repaint();
 				pd.setVisible(true);
-				//dp.repaint();
+				dp.repaint();
 			}
 			else if (e.getActionCommand() == "close") {
 				System.exit(0);
@@ -139,9 +152,6 @@ public class MainFrame extends JFrame implements ActionListener {
 		            r = new Problem(file.getAbsolutePath());
 		            h = new Heuristica(r);
 		            dp.setProblem(r);
-		        } 
-		        else {
-		            System.out.println("Open command cancelled by user."/* + newline*/);
 		        }
 			}
 			else if (e.getActionCommand() == "show") {
@@ -154,7 +164,15 @@ public class MainFrame extends JFrame implements ActionListener {
 				}
 			}
 			else if (e.getActionCommand() == "calc") {
-				h.callProcedure(hop);
+				if (hop.getFileName() != "") {
+					h.callProcedure(hop);
+					Solution sol = r.getSolution();
+					fobjlbl.setText("F Obj = " + sol.getObjF());
+					areareclbl.setText("Area rec = " + sol.getArea());
+				}
+				else {
+					System.out.println("File not selected.");
+				}
 			}
 		}
 		
