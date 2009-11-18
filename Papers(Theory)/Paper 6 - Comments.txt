@@ -1,0 +1,10 @@
+*****************************************************************
+*      Comentarios Paper 6 - Solving the Rectangle Packing      *
+*            Problem by an Iterative Hybrid Heuristic           *
+*****************************************************************
+* Estilo:                                                       *
+* - Comentario [Autor]                                          *
+* ? Sugerencia respecto al artículo [Autor]                     *
+* ! Consulta respecto al artículo (dudas) [Autor]               *
+* + Peticiones de más artículos relacionados [Autor]            *
+*****************************************************************

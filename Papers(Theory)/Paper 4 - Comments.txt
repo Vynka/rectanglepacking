@@ -1,0 +1,10 @@
+*****************************************************************
+*      Comentarios Paper 4 - Local search Algorithms for the    *
+*      rectangle packing problem with general spatial costs     *
+*****************************************************************
+* Estilo:                                                       *
+* - Comentario [Autor]                                          *
+* ? Sugerencia respecto al artículo [Autor]                     *
+* ! Consulta respecto al artículo (dudas) [Autor]               *
+* + Peticiones de más artículos relacionados [Autor]            *
+*****************************************************************

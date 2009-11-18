@@ -1,0 +1,9 @@
+*****************************************************************
+*         Comentarios Paper 5 - Optimal Rectangle Packing       *
+*****************************************************************
+* Estilo:                                                       *
+* - Comentario [Autor]                                          *
+* ? Sugerencia respecto al artículo [Autor]                     *
+* ! Consulta respecto al artículo (dudas) [Autor]               *
+* + Peticiones de más artículos relacionados [Autor]            *
+*****************************************************************
