@@ -336,7 +336,7 @@ public class Heuristica {
 	 * vecina si es mejor o si tiene probabilidad de mejorar la solucion actual.
 	 * 
 	 * La temperatura "c" es un parametro de control que influye directamente en la
-	 * probabilidad de aceptaci�n. A mayor numero de iteraciones, menor probabilidad,
+	 * probabilidad de aceptacion. A mayor numero de iteraciones, menor probabilidad,
 	 * por lo que la temperatura es menor.
 	 * 
 	 * El tamanio "L" es el numero de soluciones que se generaran en la iteracion
@@ -383,7 +383,7 @@ public class Heuristica {
 				}
 			}
 			k++;
-			CalculateTemperature(c, coolingFactor);
+			c = CalculateTemperature(c, coolingFactor);
 			CalculateSize(L, k, iterationIncrement);
 		} while (c > 0);
 		problem.setSolution(best);
