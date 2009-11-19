@@ -37,6 +37,7 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 	final String[] searchstrings = {"Pure random seach", "Random search", "Local search", "Multistart with local search",
 									"Simulated annealing search"};
 	final String[] initstrings = {"Random", "Deterministic 01", "Deterministic 02", "Mixed 01", "Mixed 02"};
+	final String[] evaluationstrings = {"Waste", "Area"};
 	
 	/**
 	 * ComboBoxes para la seleccion de parametros de la heuristica.
@@ -46,6 +47,7 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 	JComboBox samplinglist = new JComboBox(samplingstrings);
 	JComboBox searchlist = new JComboBox(searchstrings);
 	JComboBox initlist = new JComboBox(initstrings);
+	JComboBox evallist = new JComboBox(evaluationstrings);
 	
 	/**
 	 * Campo de obtencion de las repeticiones
@@ -91,6 +93,12 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 		initlist.setActionCommand("init");
 		initlist.setSelectedIndex(dialoghop.getInitialization());
 		initlist.addActionListener(this);
+		
+		this.add(new JLabel("Evaluacion:"));
+		this.add(evallist);
+		evallist.setActionCommand("eval");
+		evallist.setSelectedIndex(dialoghop.getEvaluationMode());
+		evallist.addActionListener(this);
 		
 		this.add(new JLabel("Numero de repeticiones: "));
 		timesField.setSize(100, 50);
@@ -142,6 +150,9 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 		else if(e.getActionCommand() == "init") {
 			System.out.println("Initialization: " + initlist.getSelectedIndex());
 			dialoghop.setInitialization(initlist.getSelectedIndex());
+		}
+		else if(e.getActionCommand() == "eval") {
+			dialoghop.setEvaluationMode(evallist.getSelectedIndex());
 		}
 	}
 }

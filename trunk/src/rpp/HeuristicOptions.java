@@ -50,6 +50,12 @@ public class HeuristicOptions {
 	public static final int SIMULATED_ANNEALING_SEARCH = 4;
 	
 	/**
+	 * Evaluacion
+	 */
+	public static final int WASTE = 0;
+	public static final int AREA = 1;
+	
+	/**
 	 * StopCritera: Criterio de parada del problema
 	 */
 	private int stopCriteria;
@@ -85,6 +91,11 @@ public class HeuristicOptions {
 	private int times;
 	
 	/**
+	 * evaluationMode: tipo de heuristica de colocacion
+	 */
+	private int evaluationMode;
+	
+	/**
 	 * Constructor por defecto: PSR con OUT_UNLESS_BETTER
 	 */
 	public HeuristicOptions(String fileName) {
@@ -95,6 +106,7 @@ public class HeuristicOptions {
 		this.times = 0;
 		this.initialization = 0;
 		this.fileName = fileName;
+		this.evaluationMode = 0;
 	}	
 	
 	/**
@@ -198,6 +210,20 @@ public class HeuristicOptions {
 	 */
 	public void setProcedure(int procedure) {
 		this.procedure = procedure;
+	}
+
+	/**
+	 * @param evaluationMode the evaluationMode to set
+	 */
+	public void setEvaluationMode(int evaluationMode) {
+		this.evaluationMode = evaluationMode;
+	}
+
+	/**
+	 * @return the evaluationMode
+	 */
+	public int getEvaluationMode() {
+		return evaluationMode;
 	}
 	
 	
