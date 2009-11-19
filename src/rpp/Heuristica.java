@@ -49,9 +49,11 @@ public class Heuristica {
 	public static final int SIMULATED_ANNEALING_SEARCH = 4;
 
 	/**
-	 * Tipos de busqueda de solucion
+	 * Eleccion de heuristica de colocacion
 	 */
-	// static final int LOCAL_SEARCH = 30;
+	static final int WASTE = 0;
+	static final int AREA = 1;
+	
 	/**
 	 * Lista de puntos factibles en los que colocar un rectangulo Como punto
 	 * inicial esta el (0, 0)
@@ -72,7 +74,7 @@ public class Heuristica {
 	public Heuristica(Problem p) {
 		initPoints();
 		this.problem = p;
-		areaEvalue(p.getSolution());
+		wasteEvalue(p.getSolution());
 	}
 
 	/**
@@ -84,20 +86,20 @@ public class Heuristica {
 	public boolean callProcedure(HeuristicOptions hop) {
 		switch (hop.getProcedure()) {
 		case PURE_RANDOM_SEARCH:
-			pureRandomSearch(hop.getTimes(), hop.getStopCriteria());
+			pureRandomSearch(hop.getTimes(), hop.getStopCriteria(), hop.getEvaluationMode());
 			break;
 		case RANDOM_SEARCH:
-			randomSearch(hop.getTimes(), hop.getStopCriteria());
+			randomSearch(hop.getTimes(), hop.getStopCriteria(), hop.getEvaluationMode());
 			break;
 		case LOCAL_SEARCH:
-			localSearch(hop.getNeighbors(), hop.getSampling());
+			localSearch(hop.getNeighbors(), hop.getSampling(), hop.getEvaluationMode());
 			break;
 		case MULTISTART_WITH_LOCAL_SEARCH:
 			multistartSearch(hop.getTimes(), hop.getNeighbors(), hop.getSampling(),
-							 hop.getInitialization(), hop.getStopCriteria());
+							 hop.getInitialization(), hop.getStopCriteria(), hop.getEvaluationMode());
 			break;
 		case SIMULATED_ANNEALING_SEARCH:
-			simulatedAnnealingSearch(hop.getInitialization(), hop.getNeighbors(), hop.getSampling(), 0.95, 1.05);
+			simulatedAnnealingSearch(hop.getInitialization(), hop.getNeighbors(), hop.getSampling(), 0.95, 1.05, hop.getEvaluationMode());
 			break;
 		default:
 			return false;
@@ -126,22 +128,28 @@ public class Heuristica {
 	 *            primer mejor vecino, o RANDOM_SAMPLING si se coje el primer
 	 *            vecino al azar que mejore
 	 */
-	public Solution localSearch(int neighbourType, int sampleType) {
-		Solution actual = problem.getSolution().clone();
-		Point[] bestPos = wasteEvalue(actual);
+	public Solution localSearch(int neighbourType, int sampleType, int evaluationMode) {
+		Solution actual = problem.getSolution().clone();		
 		Solution best = actual.clone();
+		Point[] bestPos = problem.getActualPositions();
 		boolean betterFound;
 		do {
 			betterFound = false;
-			actual = neighbour(actual, neighbourType, sampleType);
-			Point[] actPos = wasteEvalue(actual);
+			actual = neighbour(actual, neighbourType, sampleType, evaluationMode);
+			Point[] actPos;
+			
+			if (evaluationMode == WASTE)
+				actPos = wasteEvalue(actual);
+			else actPos = areaEvalue(actual);
+			
 			if (best.getObjF() > actual.getObjF()) {
 				best = actual.clone();
 				bestPos = actPos.clone();
 				betterFound = true;
 			}
 		} while (betterFound);
-		problem.setSolution(best);
+		
+		problem.setSolution(best);		
 		problem.changeRectanglePositions(bestPos);
 		return best.clone();
 	}
@@ -163,7 +171,7 @@ public class Heuristica {
 	 *            quiere terminar la ejecucion en el numero exacto de
 	 *            iteraciones especificadas.
 	 */
-	public Solution pureRandomSearch(int times, int stop) {
+	public Solution pureRandomSearch(int times, int stop, int evaluationMode) {
 		int n = times;
 		Solution best = problem.getSolution().clone();
 		Point[] bestPos = problem.getActualPositions();
@@ -171,7 +179,11 @@ public class Heuristica {
 		do {
 			actual = new Solution(problem.getAreaRec(), Solution.RANDOM,
 								  problem.getRectangleSize());
-			Point[] actPos = areaEvalue(actual);
+			
+			Point[] actPos;
+			if (evaluationMode == WASTE)
+				actPos = wasteEvalue(actual);
+			else actPos = areaEvalue(actual);
 
 			switch (stop) {
 			case OUT_UNLESS_BETTER:
@@ -216,14 +228,18 @@ public class Heuristica {
 	 *            quiere terminar la ejecucion en el numero exacto de
 	 *            iteraciones especificadas.
 	 */
-	public Solution randomSearch(int times, int stop) {
+	public Solution randomSearch(int times, int stop, int evaluationMode) {
 		int n = times;
 		Solution best = problem.getSolution().clone();
 		Point[] bestPos = problem.getActualPositions();
 		Solution actual = best.clone();
 		do {
-			actual = neighbour(actual, RANDOM_SWAP, NO_SAMPLING);
-			Point[] actPos = areaEvalue(actual);
+			actual = neighbour(actual, RANDOM_SWAP, NO_SAMPLING, 0);
+			Point[] actPos;
+			
+			if (evaluationMode == WASTE)
+				actPos = wasteEvalue(actual);
+			else actPos = areaEvalue(actual);
 
 			switch (stop) {
 			case OUT_UNLESS_BETTER:
@@ -283,15 +299,17 @@ public class Heuristica {
 	 *            quiere terminar la ejecucion en el numero exacto de
 	 *            iteraciones especificadas.
 	 */
-	public Solution multistartSearch(int times, int neighbourType, int sampleType, int initType, int stop) {
+	public Solution multistartSearch(int times, int neighbourType, int sampleType, int initType, int stop, int evaluationMode) {
 		int n = times;
-		problem.setSolution(new Solution(problem.getAreaRec(), initType, problem.getRectangleSize()));
-		Point[] bestPos = areaEvalue(problem.getSolution());
+		Point[] bestPos = problem.getActualPositions();
 		Solution actual, nueva;
 		Solution best = problem.getSolution().clone();
 		do {
-			actual = localSearch(neighbourType, sampleType);
-			Point[] actPos = areaEvalue(actual);
+			actual = localSearch(neighbourType, sampleType, evaluationMode);
+			Point[] actPos;
+			if (evaluationMode == WASTE)
+				actPos = wasteEvalue(actual);
+			else actPos = areaEvalue(actual);
 			switch (stop) {
 			case OUT_UNLESS_BETTER:
 				if (best.getObjF() > actual.getObjF()) {
@@ -361,19 +379,32 @@ public class Heuristica {
 	 *        vecino al azar que mejore
 	 */
 	public Solution simulatedAnnealingSearch(int initType, int neighbourType,
-											 int sampleType, double coolingFactor, double iterationIncrement) {
+											 int sampleType, double coolingFactor, double iterationIncrement,
+											 int evaluationMode) {
+		
 		Solution actual;
 		Random r = new Random(System.nanoTime());
 		actual = new Solution(problem.getAreaRec(), initType, problem.getRectangleSize());
+		
 		int c = (int) Math.sqrt(problem.getRectangleSize());
 		int L = (int) Math.pow(problem.getRectangleSize(), 2);
 		int k = 0;                // Numero de iteraciones hechas
-		Point[] bestPos = areaEvalue(actual);
+		
+		Point[] bestPos = problem.getActualPositions();
+		if (evaluationMode == WASTE)
+			bestPos = wasteEvalue(actual);
+		else bestPos = areaEvalue(actual);
+		
 		Solution best = actual.clone();
 		do {
 			for (int i = 0; i < L; i++) {
-				actual = neighbour(actual, neighbourType, sampleType);
-				Point[] actPos = areaEvalue(actual);
+				actual = neighbour(actual, neighbourType, sampleType, evaluationMode);
+				Point[] actPos;
+				
+				if (evaluationMode == WASTE)
+					actPos = wasteEvalue(actual);
+				else actPos = areaEvalue(actual);
+				
 				if (best.getObjF() > actual.getObjF()) {
 					best = actual.clone();
 					bestPos = actPos.clone();
@@ -666,23 +697,23 @@ public class Heuristica {
 	 *            entorno, puede ser: RANDOM_SWAP, ONE_SWAP o SWAP_WITH_LAST
 	 * @return Solucion vecina de s siguiendo algun criterio
 	 */
-	private Solution neighbour(Solution s, int neighbourType, int sampleType) {
+	private Solution neighbour(Solution s, int neighbourType, int sampleType, int evaluationMode) {
 		Solution best = s.clone();
 		switch (sampleType) {
 		case NO_SAMPLING: // Sin muestreo del entorno
-			noNeighbourSampling(best, neighbourType);
+			best = noNeighbourSampling(best, neighbourType);
 			break;
 		case GREEDY_SAMPLING: // Muestreo GREEDY, se escoje el mejor de los
 			// vecinos
-			greedyNeighbourSampling(best, neighbourType);
+			best = greedyNeighbourSampling(best, neighbourType, evaluationMode);
 			break;
 		case ANXIOUS_SAMPLING: // Muestreo ANXIOUS, se escoje el primer mejor
 			// vecino
-			anxiousNeighbourSampling(best, neighbourType);
+			best = anxiousNeighbourSampling(best, neighbourType, evaluationMode);
 			break;
 		case RANDOM_SAMPLING: // Muestreo RANDOM, se escoje el primer mejor
 			// vecino aleatorio
-			randomNeighbourSampling(best, neighbourType);
+			best = randomNeighbourSampling(best, neighbourType, evaluationMode);
 			break;
 		}
 		return best;
@@ -700,10 +731,11 @@ public class Heuristica {
 	 *            RANDOM_SAMPLING
 	 * @return solucion vecina de s sin muestreo del entorno
 	 */
-	private void noNeighbourSampling(Solution s, int neighbourType) {
-		if (neighbourType != RANDOM_SWAP)
+	private Solution noNeighbourSampling(Solution s, int neighbourType) {
+		if (neighbourType != RANDOM_SWAP) {
 			System.out.println("No se puede usar otro tipo de vecino sin muestreo de entorno que no sea RANDOM_SWAP");
-		else {
+			return null;
+		} else {
 			Random r = new Random(System.nanoTime());
 			int[] newOrder = s.getOrder().clone();
 
@@ -715,6 +747,7 @@ public class Heuristica {
 
 			swap(newOrder, i, j);
 			s.setOrder(newOrder);
+			return s;
 		}
 	}
 
@@ -730,11 +763,11 @@ public class Heuristica {
 	 *            RANDOM_SAMPLING
 	 * @return solucion vecina de s con muestreo Voraz
 	 */
-	private void greedyNeighbourSampling(Solution s, int neighbourType) {
-		if (neighbourType == RANDOM_SWAP)
+	private Solution greedyNeighbourSampling(Solution s, int neighbourType, int evaluationMode) {
+		if (neighbourType == RANDOM_SWAP) {
 			System.out.println("Solo se usa vecino aleatorio si el muestreo es aleatorio.");
-		else {
-			Random r = new Random(System.nanoTime());
+			return null;
+		} else {
 			int[] newOrder = s.getOrder().clone();
 			int size = problem.getRectangleSize();
 			switch (neighbourType) {
@@ -744,37 +777,32 @@ public class Heuristica {
 						Solution aux = s.clone();
 						swap(newOrder, i, j);
 						aux.setOrder(newOrder);
-						areaEvalue(aux);
+						
+						if (evaluationMode == WASTE)
+							wasteEvalue(aux);
+						else areaEvalue(aux);
+						
 						if (s.getObjF() > aux.getObjF())
 							s = aux.clone();
 					}
 				}
 				break;
-			case RANDOM_SWAP:
-				for (int i = 0; i < (2 * size); i++) {
-					Solution aux = s.clone();
-					int l = (int) (r.nextFloat() * newOrder.length);
-					int k = (int) (r.nextFloat() * newOrder.length);
-					while (l == k)
-						k = (int) (r.nextFloat() * newOrder.length);
-					swap(newOrder, l, k);
-					aux.setOrder(newOrder);
-					areaEvalue(aux);
-					if (s.getObjF() > aux.getObjF())
-						s = aux.clone();
-				}
-				break;
 			case SWAP_WITH_LAST:
-				for (int i = 0; i < size; i++) {
+				for (int i = 0; i < size - 1; i++) {
 					Solution aux = s.clone();
 					swap(newOrder, i, newOrder.length - 1);
 					aux.setOrder(newOrder);
-					areaEvalue(aux);
+					
+					if (evaluationMode == WASTE)
+						wasteEvalue(aux);
+					else areaEvalue(aux);
+					
 					if (s.getObjF() > aux.getObjF())
 						s = aux.clone();
 				}
 				break;
 			}
+			return s;
 		}
 	}
 
@@ -790,11 +818,11 @@ public class Heuristica {
 	 *            RANDOM_SAMPLING
 	 * @return solucion vecina de s con muestreo Ansioso
 	 */
-	private void anxiousNeighbourSampling(Solution s, int neighbourType) {
-		if (neighbourType == RANDOM_SWAP)
+	private Solution anxiousNeighbourSampling(Solution s, int neighbourType, int evaluationMode) {
+		if (neighbourType == RANDOM_SWAP) {
 			System.out.println("Solo se usa vecino aleatorio si el muestreo es aleatorio.");
-		else {
-			Random r = new Random(System.nanoTime());
+			return null;
+		} else {
 			int[] newOrder = s.getOrder().clone();
 			int size = problem.getRectangleSize();
 			boolean betterFound = false;
@@ -805,37 +833,32 @@ public class Heuristica {
 						Solution aux = s.clone();
 						swap(newOrder, i, j);
 						aux.setOrder(newOrder);
-						areaEvalue(aux);
+						
+						if (evaluationMode == WASTE)
+							wasteEvalue(aux);
+						else areaEvalue(aux);
+						
 						if (s.getObjF() > aux.getObjF())
 							s = aux.clone();
 					}
 				}
 				break;
-			case RANDOM_SWAP:
-				for (int i = 0; i < (2 * size) && (!betterFound); i++) {
-					Solution aux = s.clone();
-					int l = (int) (r.nextFloat() * newOrder.length);
-					int k = (int) (r.nextFloat() * newOrder.length);
-					while (l == k)
-						k = (int) (r.nextFloat() * newOrder.length);
-					swap(newOrder, l, k);
-					aux.setOrder(newOrder);
-					areaEvalue(aux);
-					if (s.getObjF() > aux.getObjF())
-						s = aux.clone();
-				}
-				break;
 			case SWAP_WITH_LAST:
-				for (int i = 0; (i < size) && (!betterFound); i++) {
+				for (int i = 0; (i < size - 1) && (!betterFound); i++) {
 					Solution aux = s.clone();
 					swap(newOrder, i, newOrder.length - 1);
 					aux.setOrder(newOrder);
-					areaEvalue(aux);
+					
+					if (evaluationMode == WASTE)
+						wasteEvalue(aux);
+					else areaEvalue(aux);
+					
 					if (s.getObjF() > aux.getObjF())
 						s = aux.clone();
 				}
 				break;
 			}
+			return s;
 		}
 	}
 
@@ -851,10 +874,11 @@ public class Heuristica {
 	 *            RANDOM_SAMPLING
 	 * @return solucion vecina de s con muestreo Aleatorio
 	 */
-	private void randomNeighbourSampling(Solution s, int neighbourType) {
-		if (neighbourType != RANDOM_SWAP)
+	private Solution randomNeighbourSampling(Solution s, int neighbourType, int evaluationMode) {
+		if (neighbourType != RANDOM_SWAP) {
 			System.out.println("Si se usa muestreo aleatorio el vecino debe ser aleatorio.");
-		else {
+			return null;
+		} else {
 			Random r = new Random(System.nanoTime());
 			int[] newOrder = s.getOrder().clone();
 			int size = problem.getRectangleSize();
@@ -867,12 +891,17 @@ public class Heuristica {
 					k = (int) (r.nextFloat() * newOrder.length);
 				swap(newOrder, l, k);
 				aux.setOrder(newOrder);
-				areaEvalue(aux);
+				
+				if (evaluationMode == WASTE)
+					wasteEvalue(aux);
+				else areaEvalue(aux);
+				
 				if (s.getObjF() > aux.getObjF()) {
 					s = aux.clone();
 					betterFound = true;
 				}
 			}
+			return s;
 		}
 	}
 
@@ -890,56 +919,66 @@ public class Heuristica {
 		int i;
 		// Se manipulan con respecto al eje Y
 		p = obtainNewPointY(r);
-		i = 0;
-		while (i < points.size()) {
-			// Se cogen todos los puntos de igual o menor altura que el del rectangulo
-			if ((points.get(i).getY() < p.getY())
-					&& (points.get(i).getX() < r.getPosition().getX())) {
-				aux.add(points.get(i));
-			} else if (points.get(i).getY() == p.getY()) {
-				newP = false;
-				aux.add(points.get(i));
+		if (r.getPosition().getX() != 0) {
+			i = 0;
+			while (i < points.size()) {
+				// Se eliminan los puntos con coordenada Y menor que la actual
+				// si estos estan situados a la izquierda del rectangulo nuevo
+				if ((points.get(i).getY() < p.getY())
+						&& (points.get(i).getX() < r.getPosition().getX())) {
+					aux.add(points.get(i));
+				} else if (points.get(i).getY() == p.getY()) {
+					newP = false;
+					aux.add(points.get(i));
+				}
+				i++;
 			}
-			i++;
-		}
-		if (!newP) {
-			aux.remove(p);
-		}
-		PointYComparator c = new PointYComparator();
-		Collections.sort(aux, c);
-		i = 0;
-		for (int j = i; j < aux.size(); j++) {
-			waste = waste + r.getPosition().getX() - aux.get(j).getX() *
-							(aux.get(i).getY() - aux.get(j).getY());
-		}
-
-		// Se repite pero con respecto al eje X
-		p = obtainNewPointX(r);
-		newP = true;
-		i = 0;
-		while (i < points.size()) {
-			// Se eliminan los puntos con coordenada X menor que la actual
-			// si estos estan por debajo de la altura del rectangulo nuevo
-			if ((points.get(i).getX() < p.getX())
-					&& (points.get(i).getY() < r.getPosition().getY())) {
-				aux.add(points.get(i));
-			} else if (points.get(i).getX() == p.getX()) {
-				aux.add(points.get(i));
-				newP = false;
+			// Si no existe un punto en la misma longitud el nuevo punto sera la longitud maxima
+			if (newP) {
+				aux.add(p);
 			}
-			i++;
+			PointYComparator c = new PointYComparator();
+			Collections.sort(aux, c);
+			// Se suma la division de las areas resultantes en rectangulos.
+			i = 0;
+			for (int j = i + 1; j < aux.size(); j++) {
+				waste = waste + (r.getPosition().getX() - aux.get(i).getX()) *
+								(aux.get(j).getY() - aux.get(i).getY());
+				i++;
+			}
+			aux.clear();
 		}
-		if (!newP) {
-			aux.remove(p);
+		
+		if (r.getPosition().getY() != 0) {
+			// Se repite pero con respecto al eje X
+			p = obtainNewPointX(r);
+			newP = true;
+			i = 0;
+			while (i < points.size()) {
+				// Se eliminan los puntos con coordenada X menor que la actual
+				// si estos estan por debajo de la altura del rectangulo nuevo
+				if ((points.get(i).getX() < p.getX())
+						&& (points.get(i).getY() < r.getPosition().getY())) {
+					aux.add(points.get(i));
+				} else if (points.get(i).getX() == p.getX()) {
+					aux.add(points.get(i));
+					newP = false;
+				}
+				i++;
+			}
+			if (newP) {
+				aux.add(p);
+			}
+			Collections.sort(aux);
+			// Se suma la division de las areas resultantes en rectangulos.
+			i = 0;
+			for (int j = i + 1; j < aux.size(); j++) {
+				waste = waste + (r.getPosition().getY() - aux.get(i).getY()) * 
+								(aux.get(j).getX() - aux.get(i).getX());
+				i++;
+			}
 		}
-		Collections.sort(aux);
-		i = 0;
-		for (int j = i; j < aux.size(); j++) {
-			waste = waste + r.getPosition().getY() - aux.get(j).getY() * 
-							(aux.get(i).getX() - aux.get(j).getX());
-		}
-			
-		return 0;
+		return waste;
 	}
 	 
 	/**
