@@ -37,7 +37,7 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 	final String[] searchstrings = {"Pure random seach", "Random search", "Local search", "Multistart with local search",
 									"Simulated annealing search"};
 	final String[] initstrings = {"Random", "Deterministic 01", "Deterministic 02", "Mixed 01", "Mixed 02"};
-	final String[] evaluationstrings = {"Waste", "Area", "Both1/3", "BothRandom"};
+	final String[] evaluationstrings = {"Waste", "Area", "BothSqrtN", "BothRandom"};
 	
 	/**
 	 * ComboBoxes para la seleccion de parametros de la heuristica.
@@ -152,6 +152,7 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 			dialoghop.setInitialization(initlist.getSelectedIndex());
 		}
 		else if(e.getActionCommand() == "eval") {
+			System.out.println("Evaluacion: " + evallist.getSelectedIndex());
 			dialoghop.setEvaluationMode(evallist.getSelectedIndex());
 		}
 	}

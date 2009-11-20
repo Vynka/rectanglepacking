@@ -1037,14 +1037,15 @@ public class Heuristica {
 	private Point[] mixedEvalue1(Solution s) {
 		initPoints(); // Inicializa los puntos (establece como unico punto el origen)
 		s.reset();
+		int n = (int)Math.sqrt(problem.getRectangleSize());
 		Point [] rectanglePosition = new Point[problem.getRectangleSize()];
-		for (int i = 0; i < problem.getRectangleSize() / 3; i++) {
+		for (int i = 0; i < n; i++) {
 			Rectangle r = getNewRectangle(i, s);
 			// Se coloca el rectangulo primero minimizando el espacio desperdiciado
 			rectanglePosition[s.getOrder(i)] = wasteAllocateRectangle(r, s);
 			managePoints(r);
 		}
-		for (int i = problem.getRectangleSize() / 3; i < problem.getRectangleSize(); i++) {
+		for (int i = n; i < problem.getRectangleSize(); i++) {
 			Rectangle r = getNewRectangle(i, s);
 			// Se aprovecha el area libre resultante de minimizar el desperdicio
 			rectanglePosition[s.getOrder(i)] = areaAllocateRectangle(r, s);
@@ -1063,6 +1064,7 @@ public class Heuristica {
 	 *          Solucion a evaluar.
 	 */
 	private Point[] mixedEvalue2(Solution s) {
+		double RO = 0.20;
 		initPoints(); // Inicializa los puntos (establece como unico punto el origen)
 		s.reset();
 		Random ran = new Random (System.nanoTime());
@@ -1071,9 +1073,11 @@ public class Heuristica {
 		for (int i = 0; i < size; i++) {
 			Rectangle r = getNewRectangle(i, s);
 			// Guardamos la posicion del rectangulo i
-			if (Math.exp((size - i) / (2 * size)) < ran.nextFloat())
+			double e = Math.exp((double)i/size - (1 + RO));
+			if (e < (ran.nextFloat()))
 				rectanglePosition[s.getOrder(i)] = wasteAllocateRectangle(r, s);
-			else rectanglePosition[s.getOrder(i)] = areaAllocateRectangle(r, s);
+			else
+				rectanglePosition[s.getOrder(i)] = areaAllocateRectangle(r, s);
 			if (i != (size - 1))
 				managePoints(r);
 		}
