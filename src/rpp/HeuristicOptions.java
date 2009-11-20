@@ -98,6 +98,11 @@ public class HeuristicOptions {
 	private int evaluationMode;
 	
 	/**
+	 * coolingFactor: Factor de enfriamiento (Recocido Simulado)
+	 */
+	private int coolingFactor;
+	
+	/**
 	 * Constructor por defecto: PSR con OUT_UNLESS_BETTER
 	 */
 	public HeuristicOptions(String fileName) {
@@ -107,6 +112,7 @@ public class HeuristicOptions {
 		this.procedure = 0;
 		this.times = 0;
 		this.initialization = 0;
+		this.coolingFactor = 0;
 		this.fileName = fileName;
 		this.evaluationMode = 0;
 	}	
@@ -228,6 +234,33 @@ public class HeuristicOptions {
 		return evaluationMode;
 	}
 	
+	/**
+	 * @param coolingFactor the coolingFactor to set
+	 */
+	public void setCoolingFactor(int coolingFactor) {
+		this.coolingFactor = coolingFactor;
+	}
 	
+	/**
+	 * @return the coolingFactor
+	 */
+	public int getCoolingFactor(){
+		return this.coolingFactor;
+	}
 	
+	public double getDoubCoolingFactor() {
+		switch(this.coolingFactor){
+		case 0:
+			return 0.01;
+		case 1:
+			return 0.05;
+		case 2:
+			return 0.1;
+		case 3:
+			return 0.8;
+		case 4:
+			return 0.95;
+		}
+		return 0.99;
+	}
 }
