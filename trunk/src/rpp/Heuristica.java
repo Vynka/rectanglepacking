@@ -101,7 +101,7 @@ public class Heuristica {
 							 hop.getInitialization(), hop.getStopCriteria(), hop.getEvaluationMode());
 			break;
 		case SIMULATED_ANNEALING_SEARCH:
-			simulatedAnnealingSearch(hop.getInitialization(), hop.getNeighbors(), hop.getSampling(), 0.95, 1.05, hop.getEvaluationMode());
+			simulatedAnnealingSearch(hop.getInitialization(), hop.getNeighbors(), hop.getSampling(), hop.getDoubCoolingFactor(), 1.05, hop.getEvaluationMode());
 			break;
 		default:
 			return false;
@@ -372,13 +372,17 @@ public class Heuristica {
 	public Solution simulatedAnnealingSearch(int initType, int neighbourType,
 											 int sampleType, double coolingFactor, double iterationIncrement,
 											 int evaluationMode) {
-		
+		double zero = 0.1;
 		Solution actual;
 		Random r = new Random(System.nanoTime());
 		actual = new Solution(problem.getAreaRec(), initType, problem.getRectangleSize());
 		
-		int c = (int) Math.sqrt(problem.getRectangleSize());
-		int L = (int) Math.pow(problem.getRectangleSize(), 2);
+		double c = (int) Math.sqrt(problem.getRectangleSize());
+		int L = 0;
+		if (coolingFactor >= 0.8)
+			L = (int) Math.pow(problem.getRectangleSize(), 2);
+		else
+			L = 1;
 		int k = 0;                // Numero de iteraciones hechas
 		
 		Point[] bestPos = callEvalue(actual, evaluationMode);
@@ -399,9 +403,15 @@ public class Heuristica {
 				}
 			}
 			k++;
-			c = CalculateTemperature(c, coolingFactor);
-			CalculateSize(L, k, iterationIncrement);
-		} while (c > 0);
+			//Deteccion automatica del plan de enfriamiento
+			if (coolingFactor >= 0.8) {
+				c = CalculateTemperature(c, coolingFactor);
+			  	L = CalculateSize(k, iterationIncrement); 
+			}
+			else
+				c  = CalculateTemperature2(c,coolingFactor);
+		} while (c > zero);
+		System.out.println("C = " + c + "     L = " + L + "     k = " + k);
 		problem.setSolution(best);
 		problem.changeRectanglePositions(bestPos);
 		return best.clone();
@@ -429,27 +439,37 @@ public class Heuristica {
 	}
 
 	/**
-	 * Calcula la temperatura del metodo de busqueda SimulatedAnnealing.
+	 * Plan de enfriamiento #1, Lineal.
 	 * 
 	 * @param c
 	 *            temperatura anterior
 	 * @param k
 	 *            Numero de iteraciones hechas
 	 */
-	private int CalculateTemperature(int c, double coolingFactor) {
-		return (int)(c * coolingFactor);
+	private double CalculateTemperature(double c, double coolingFactor) {
+		return (c * coolingFactor);
 	}
 
+	/**
+	 * Plan de enfriamiento #2, Lundy-Mees.
+	 * 
+	 * @param c
+	 *            temperatura anterior
+	 * @param k
+	 *            Numero de iteraciones hechas
+	 */
+	private double CalculateTemperature2(double c, double coolingFactor) {
+		return (c / (1 + (c * coolingFactor)));
+	}
+	
 	/**
 	 * Calcula el numero de iteraciones del metodo de busqueda SimulatedAnneaing
 	 * para la iteracion k.
 	 * 
-	 * @param L
-	 *            Numero de iteraciones anterior
 	 * @param k
 	 *            Numero de iteraciones hechas
 	 */
-	private int CalculateSize(int L, int k, double iterationIncrement) {
+	private int CalculateSize(int k, double iterationIncrement) {
 		return (int)(k * iterationIncrement);
 	}
 

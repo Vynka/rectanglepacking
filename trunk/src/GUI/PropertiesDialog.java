@@ -38,6 +38,7 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 									"Simulated annealing search"};
 	final String[] initstrings = {"Random", "Deterministic 01", "Deterministic 02", "Mixed 01", "Mixed 02"};
 	final String[] evaluationstrings = {"Waste", "Area", "BothSqrtN", "BothRandom"};
+	final String[] coolingFactorStrings = {"0.01","0.05","0.1","0.8","0.95","0.99"};
 	
 	/**
 	 * ComboBoxes para la seleccion de parametros de la heuristica.
@@ -48,6 +49,7 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 	JComboBox searchlist = new JComboBox(searchstrings);
 	JComboBox initlist = new JComboBox(initstrings);
 	JComboBox evallist = new JComboBox(evaluationstrings);
+	JComboBox factorList = new JComboBox(coolingFactorStrings);
 	
 	/**
 	 * Campo de obtencion de las repeticiones
@@ -99,6 +101,12 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 		evallist.setActionCommand("eval");
 		evallist.setSelectedIndex(dialoghop.getEvaluationMode());
 		evallist.addActionListener(this);
+		
+		this.add(new JLabel("Factor de enfriamiento:"));
+		this.add(factorList);
+		factorList.setActionCommand("factor");
+		factorList.setSelectedIndex(dialoghop.getCoolingFactor());
+		factorList.addActionListener(this);
 		
 		this.add(new JLabel("Numero de repeticiones: "));
 		timesField.setSize(100, 50);
@@ -154,6 +162,10 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 		else if(e.getActionCommand() == "eval") {
 			System.out.println("Evaluacion: " + evallist.getSelectedIndex());
 			dialoghop.setEvaluationMode(evallist.getSelectedIndex());
+		}
+		else if(e.getActionCommand() == "factor") {
+			System.out.println("Factor de enfriamiento: " + factorList.getSelectedIndex());
+			dialoghop.setCoolingFactor(factorList.getSelectedIndex());
 		}
 	}
 }

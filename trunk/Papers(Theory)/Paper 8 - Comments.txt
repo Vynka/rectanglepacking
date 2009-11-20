@@ -1,0 +1,14 @@
+*****************************************************************
+*           Comentarios Paper 5 - Enfriamiento Simulado         *
+*****************************************************************
+* Estilo:                                                       *
+* - Comentario [Autor]                                          *
+* ? Sugerencia respecto al artículo [Autor]                     *
+* ! Consulta respecto al artículo (dudas) [Autor]               *
+* + Peticiones de más artículos relacionados [Autor]            *
+*****************************************************************
+
+
+? Revisar los planes de enfriamiento, ver si es posible cambiar los factores
+  de enfriamiento para que se cumpla lo expuesto sobre el plan de enfriamiento
+  de Lundy y Mees [Vynka]
