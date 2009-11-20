@@ -14,6 +14,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.text.NumberFormat;
 
 /**
  * Marco principal de la GUI, que servira como objeto de comunicacion entre la GUI y las clases para
@@ -55,12 +56,17 @@ public class MainFrame extends JFrame implements ActionListener {
         private JButton shbut = new JButton ("Show");
         
         /**
+         * Resetea la solucion actual
+         */
+        private JButton resbut = new JButton ("Reset");
+        
+        /**
          * Boton que manda a calcular el resultado del problema.
          */
         private JButton calcbut = new JButton("Calculate");
         
-        private JLabel fobjlbl = new JLabel("F Obj = ");
-        private JLabel areareclbl = new JLabel("Area rec = ");
+        private JLabel fobjlbl = new JLabel("Desperdicio = ");
+        private JLabel areareclbl = new JLabel("Area = ");
         
         /**
          * Selector de archivo.
@@ -125,6 +131,10 @@ public class MainFrame extends JFrame implements ActionListener {
             shbut.setActionCommand("show");
             shbut.addActionListener(this);
             
+            southpan.add(resbut);
+            resbut.setActionCommand("reset");
+            resbut.addActionListener(this);
+            
             southpan.add(Box.createHorizontalGlue());
             
             ScalePanel sp = new ScalePanel(this);
@@ -149,8 +159,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		        if (returnVal == JFileChooser.APPROVE_OPTION) {
 		            File file = fc.getSelectedFile();
 		            hop.setFileName(file.getAbsolutePath());
-		            r = new Problem(file.getAbsolutePath());
-		            h = new Heuristica(r);
+		            r = new Problem(file.getAbsolutePath(), hop.getInitialization());
+		            h = new Heuristica(r, hop.getEvaluationMode());
 		            dp.setProblem(r);
 		        }
 			}
@@ -167,12 +177,21 @@ public class MainFrame extends JFrame implements ActionListener {
 				if (hop.getFileName() != "") {
 					h.callProcedure(hop);
 					Solution sol = r.getSolution();
-					fobjlbl.setText("F Obj = " + sol.getObjF());
-					areareclbl.setText("Area rec = " + sol.getArea());
+					NumberFormat f = NumberFormat.getNumberInstance();
+					f.setMinimumFractionDigits(2);
+					f.setMaximumFractionDigits(2);
+					fobjlbl.setText("Desperdicio = " + f.format((double)sol.getObjF() / (double)sol.getArea()));
+					areareclbl.setText("Area = " + sol.getArea());
 				}
 				else {
 					System.out.println("File not selected.");
 				}
+			}
+			else if (e.getActionCommand() == "reset") {
+				int recArea = r.getSolution().getArea() - r.getSolution().getObjF();
+				Solution s = new Solution(recArea, hop.getInitialization(), r.getRectangleSize());
+				r.setSolution(s);
+	            h = new Heuristica(r, hop.getEvaluationMode());
 			}
 		}
 		

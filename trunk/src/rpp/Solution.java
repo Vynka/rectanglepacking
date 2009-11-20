@@ -77,7 +77,7 @@ public class Solution {
 		this.h = 0;
 		this.area = 0;
 		this.recArea = 0;
-		this.objF = INF;
+		this.objF = -INF;
 		this.order = null;
 	}
 
@@ -98,7 +98,7 @@ public class Solution {
 		this.h = h;
 		this.area = b * h;
 		this.recArea = recArea;
-		this.objF = this.area;
+		this.objF = this.area - recArea;
 		this.order = order;
 	}
 	
@@ -115,7 +115,7 @@ public class Solution {
 		this.h = 0;
 		this.area = 0;
 		this.recArea = recArea;
-		this.objF = 0;
+		this.objF = -recArea;
 		switch (initType) {
 		case RANDOM:
 			randomInit(size);
@@ -193,7 +193,7 @@ public class Solution {
 	 * Establece el valor de la funciono objetivo
 	 */
 	public void setObjF() {
-		this.objF = this.area; 
+		this.objF = this.area - this.recArea; 
 	}
 
 	/**
@@ -320,15 +320,18 @@ public class Solution {
      */
     private void mixedInit2(int size) {
 		clear();
-    	order = new int [size];
-    	int h = order.length / 8;
-		for (int i = 0; i < order.length; i++) {
-			order[i] = i;
+		order = new int [size];
+		for (int i = 0; i < (order.length / 2); i++) {
+			order[2 * i] = i;
+			order[2 * i + 1] = order.length - 1 - i;
 		}
-		for (int i = 0; (h * i) < order.length ; i++) {
-		  Random generator = new Random(System.nanoTime());
-		  int j = generator.nextInt(h);
-		  Heuristica.swap(order, i, j + i);
+		if (order.length % 2 == 1) {
+			order[order.length - 1] = (int)(order.length / 2);
+		}
+		for (int i = 0; (3 * i) < order.length ; i++) {
+			  Random generator = new Random(System.nanoTime());
+			  int j = generator.nextInt(3);
+			  Heuristica.swap(order, i, j + i);
 		}
     }
     
@@ -339,7 +342,7 @@ public class Solution {
 		this.b = 0;
 		this.h = 0;
 		this.area = 0;
-		this.objF = 0;
+		this.objF = -this.recArea;
 		this.order = null;
     }
     
@@ -350,7 +353,7 @@ public class Solution {
 		this.b = 0;
 		this.h = 0;
 		this.area = 0;
-		this.objF = 0;
+		this.objF = -this.recArea;
     }
 	
 }

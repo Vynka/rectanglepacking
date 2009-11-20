@@ -61,6 +61,31 @@ public class Problem {
 		}
 	    solution = new Solution(areaRec, Solution.DETERMINISTIC2, rectangles.length);
 	}
+	
+	
+	/**
+	 * Constructor de la clase Problem. Recibe un nombre de fichero para construir
+	 * la lista de rectangulos y asi plantear el problema.
+	 * 
+	 * @param fileName
+	 *          Nombre del fichero.
+	 * @param initMode
+	 * 			Inicializacion de la solucion
+	 */
+	public Problem(String fileName, int initMode) {
+		this.rectangles = readFile(fileName);
+	    ArrayList<Rectangle> aux = new ArrayList<Rectangle>(0);
+		for (int i = 0; i < rectangles.length; i++) {
+			aux.add(rectangles[i]);
+			this.areaRec += rectangles[i].getArea();
+		}
+	    Collections.sort(aux, Collections.reverseOrder());
+		for (int i = 0; i < rectangles.length; i++) {
+			rectangles[i] = aux.get(i);
+		}
+	    solution = new Solution(areaRec, initMode, rectangles.length);
+	}
+	
 
 	/**
 	 * Metodo readFile: Se le pasa por parametro una ruta absoluta de fichero con

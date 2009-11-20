@@ -50,10 +50,12 @@ public class HeuristicOptions {
 	public static final int SIMULATED_ANNEALING_SEARCH = 4;
 	
 	/**
-	 * Evaluacion
+	 * Eleccion de heuristica de colocacion
 	 */
-	public static final int WASTE = 0;
-	public static final int AREA = 1;
+	static final int WASTE_EVAL = 0;
+	static final int AREA_EVAL = 1;
+	static final int MIXED1_EVAL = 2;
+	static final int MIXED2_EVAL = 3;
 	
 	/**
 	 * StopCritera: Criterio de parada del problema
