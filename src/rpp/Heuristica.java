@@ -51,8 +51,10 @@ public class Heuristica {
 	/**
 	 * Eleccion de heuristica de colocacion
 	 */
-	static final int WASTE = 0;
-	static final int AREA = 1;
+	static final int WASTE_EVAL = 0;
+	static final int AREA_EVAL = 1;
+	static final int MIXED1_EVAL = 2;
+	static final int MIXED2_EVAL = 3;
 	
 	/**
 	 * Lista de puntos factibles en los que colocar un rectangulo Como punto
@@ -71,12 +73,12 @@ public class Heuristica {
 	 * @param rectangles
 	 *            Rectangulos del problema inicial.
 	 */
-	public Heuristica(Problem p) {
+	public Heuristica(Problem p, int evaluationMode) {
 		initPoints();
 		this.problem = p;
-		wasteEvalue(p.getSolution());
+		callEvalue(p.getSolution(), evaluationMode);
 	}
-
+	
 	/**
 	 * Se usa para la eleccion del metodo a utilizar en la GUI
 	 * @param hop
@@ -136,11 +138,8 @@ public class Heuristica {
 		do {
 			betterFound = false;
 			actual = neighbour(actual, neighbourType, sampleType, evaluationMode);
-			Point[] actPos;
 			
-			if (evaluationMode == WASTE)
-				actPos = wasteEvalue(actual);
-			else actPos = areaEvalue(actual);
+			Point [] actPos = callEvalue(actual, evaluationMode);
 			
 			if (best.getObjF() > actual.getObjF()) {
 				best = actual.clone();
@@ -179,11 +178,8 @@ public class Heuristica {
 		do {
 			actual = new Solution(problem.getAreaRec(), Solution.RANDOM,
 								  problem.getRectangleSize());
-			
-			Point[] actPos;
-			if (evaluationMode == WASTE)
-				actPos = wasteEvalue(actual);
-			else actPos = areaEvalue(actual);
+					
+			Point [] actPos = callEvalue(actual, evaluationMode);
 
 			switch (stop) {
 			case OUT_UNLESS_BETTER:
@@ -235,11 +231,8 @@ public class Heuristica {
 		Solution actual = best.clone();
 		do {
 			actual = neighbour(actual, RANDOM_SWAP, NO_SAMPLING, 0);
-			Point[] actPos;
 			
-			if (evaluationMode == WASTE)
-				actPos = wasteEvalue(actual);
-			else actPos = areaEvalue(actual);
+			Point [] actPos = callEvalue(actual, evaluationMode);
 
 			switch (stop) {
 			case OUT_UNLESS_BETTER:
@@ -306,10 +299,9 @@ public class Heuristica {
 		Solution best = problem.getSolution().clone();
 		do {
 			actual = localSearch(neighbourType, sampleType, evaluationMode);
-			Point[] actPos;
-			if (evaluationMode == WASTE)
-				actPos = wasteEvalue(actual);
-			else actPos = areaEvalue(actual);
+
+			Point [] actPos = callEvalue(actual, evaluationMode);
+			
 			switch (stop) {
 			case OUT_UNLESS_BETTER:
 				if (best.getObjF() > actual.getObjF()) {
@@ -326,13 +318,12 @@ public class Heuristica {
 				break;
 			}
 			int sameId = 0;
-			do {
+			do {		
 				nueva = new Solution(problem.getAreaRec(), initType, problem.getRectangleSize());
-				Point[] nuevaPos = areaEvalue(nueva);
 				for (int i = 0; i < problem.getRectangleSize(); i++)
-					if (nuevaPos[i] == actPos[i])
+					if (nueva.getOrder(i) == actual.getOrder(i))
 						sameId++;
-			} while (sameId > (problem.getRectangleSize()/2));
+			} while (sameId > Math.sqrt(problem.getRectangleSize()));
 			problem.setSolution(nueva);
 			n--;
 		} while (n > 0);
@@ -390,20 +381,14 @@ public class Heuristica {
 		int L = (int) Math.pow(problem.getRectangleSize(), 2);
 		int k = 0;                // Numero de iteraciones hechas
 		
-		Point[] bestPos = problem.getActualPositions();
-		if (evaluationMode == WASTE)
-			bestPos = wasteEvalue(actual);
-		else bestPos = areaEvalue(actual);
+		Point[] bestPos = callEvalue(actual, evaluationMode);
 		
 		Solution best = actual.clone();
 		do {
 			for (int i = 0; i < L; i++) {
 				actual = neighbour(actual, neighbourType, sampleType, evaluationMode);
-				Point[] actPos;
-				
-				if (evaluationMode == WASTE)
-					actPos = wasteEvalue(actual);
-				else actPos = areaEvalue(actual);
+								
+				Point [] actPos = callEvalue(actual, evaluationMode);
 				
 				if (best.getObjF() > actual.getObjF()) {
 					best = actual.clone();
@@ -468,6 +453,236 @@ public class Heuristica {
 		return (int)(k * iterationIncrement);
 	}
 
+
+	/**
+	 * Intercambia el elemento i con el j en el array
+	 * 
+	 * @param array
+	 *            array de elementos
+	 * @param i
+	 *            una posicion del array
+	 * @param j
+	 *            otra posicion del array
+	 */
+	public static void swap(int[] array, int i, int j) {
+		int aux = array[i];
+		array[i] = array[j];
+		array[j] = aux;
+	}
+
+	/**
+	 * Lanza los distintos metodos para buscar soluciones vecinas a una dada
+	 * segun el tipo de muestreo escogido.
+	 * 
+	 * @param s
+	 *            solucion de la que se halla una vecina.
+	 * @param neighbourType
+	 *            Constante que define la estructura de entorno, puede ser:
+	 *            NO_NEIGHBOUR_SAMPLING, GREEDY_SAMPLING, ANXIOUS_SAMPLING, o
+	 *            RANDOM_SAMPLING
+	 * @param sampleType
+	 *            Constante que define el tipo de muestreo de la estructura de
+	 *            entorno, puede ser: RANDOM_SWAP, ONE_SWAP o SWAP_WITH_LAST
+	 * @return Solucion vecina de s siguiendo algun criterio
+	 */
+	private Solution neighbour(Solution s, int neighbourType, int sampleType, int evaluationMode) {
+		Solution best = s.clone();
+		switch (sampleType) {
+		case NO_SAMPLING: // Sin muestreo del entorno
+			best = noNeighbourSampling(best, neighbourType);
+			break;
+		case GREEDY_SAMPLING: // Muestreo GREEDY, se escoje el mejor de los
+			// vecinos
+			best = greedyNeighbourSampling(best, neighbourType, evaluationMode);
+			break;
+		case ANXIOUS_SAMPLING: // Muestreo ANXIOUS, se escoje el primer mejor
+			// vecino
+			best = anxiousNeighbourSampling(best, neighbourType, evaluationMode);
+			break;
+		case RANDOM_SAMPLING: // Muestreo RANDOM, se escoje el primer mejor
+			// vecino aleatorio
+			best = randomNeighbourSampling(best, neighbourType, evaluationMode);
+			break;
+		}
+		return best;
+	}
+
+	/**
+	 * Metodo que devuelve una solución vecina a una dada, sin muestreo del
+	 * entorno.
+	 * 
+	 * @param s
+	 *            Solucion para la que se halla una vecina
+	 * @param neighbourType
+	 *            Constante que define la estructura de entorno, puede ser:
+	 *            NO_NEIGHBOUR_SAMPLING, GREEDY_SAMPLING, ANXIOUS_SAMPLING, o
+	 *            RANDOM_SAMPLING
+	 * @return solucion vecina de s sin muestreo del entorno
+	 */
+	private Solution noNeighbourSampling(Solution s, int neighbourType) {
+		if (neighbourType != RANDOM_SWAP) {
+			System.out.println("No se puede usar otro tipo de vecino sin muestreo de entorno que no sea RANDOM_SWAP");
+			return null;
+		} else {
+			Random r = new Random(System.nanoTime());
+			int[] newOrder = s.getOrder().clone();
+
+			int i = (int) (r.nextFloat() * newOrder.length);
+			int j = (int) (r.nextFloat() * newOrder.length);
+
+			while (i == j)
+				j = (int) (r.nextFloat() * newOrder.length);
+
+			swap(newOrder, i, j);
+			s.setOrder(newOrder);
+			return s;
+		}
+	}
+
+	/**
+	 * Metodo que devuelve una solucion vecina a una dada, con muestreo Voraz.
+	 * Evalua todos los vecinos candidatos y escoge el mejor entre todos ellos.
+	 * 
+	 * @param s
+	 *            Solucion para la que se halla una vecina
+	 * @param neighbourType
+	 *            Constante que define la estructura de entorno, puede ser:
+	 *            NO_NEIGHBOUR_SAMPLING, GREEDY_SAMPLING, ANXIOUS_SAMPLING, o
+	 *            RANDOM_SAMPLING
+	 * @return solucion vecina de s con muestreo Voraz
+	 */
+	private Solution greedyNeighbourSampling(Solution s, int neighbourType, int evaluationMode) {
+		if (neighbourType == RANDOM_SWAP) {
+			System.out.println("Solo se usa vecino aleatorio si el muestreo es aleatorio.");
+			return null;
+		} else {
+			int[] newOrder = s.getOrder().clone();
+			int size = problem.getRectangleSize();
+			switch (neighbourType) {
+			case ONE_SWAP:
+				for (int i = 0; i < size; i++) {
+					for (int j = i + 1; j < size; j++) {
+						Solution aux = s.clone();
+						swap(newOrder, i, j);
+						aux.setOrder(newOrder);
+						
+						callEvalue(aux, evaluationMode);
+						
+						if (s.getObjF() > aux.getObjF())
+							s = aux.clone();
+					}
+				}
+				break;
+			case SWAP_WITH_LAST:
+				for (int i = 0; i < size - 1; i++) {
+					Solution aux = s.clone();
+					swap(newOrder, i, newOrder.length - 1);
+					aux.setOrder(newOrder);
+					
+					callEvalue(aux, evaluationMode);
+					
+					if (s.getObjF() > aux.getObjF())
+						s = aux.clone();
+				}
+				break;
+			}
+			return s;
+		}
+	}
+
+	/**
+	 * Metodo que devuelve una solucion vecina a una dada, con muestreo Ansioso.
+	 * Selecciona la primera solucion vecina que mejore a s.
+	 * 
+	 * @param s
+	 *            Solucion para la que se halla una vecina
+	 * @param neighbourType
+	 *            Constante que define la estructura de entorno, puede ser:
+	 *            NO_NEIGHBOUR_SAMPLING, GREEDY_SAMPLING, ANXIOUS_SAMPLING, o
+	 *            RANDOM_SAMPLING
+	 * @return solucion vecina de s con muestreo Ansioso
+	 */
+	private Solution anxiousNeighbourSampling(Solution s, int neighbourType, int evaluationMode) {
+		if (neighbourType == RANDOM_SWAP) {
+			System.out.println("Solo se usa vecino aleatorio si el muestreo es aleatorio.");
+			return null;
+		} else {
+			int[] newOrder = s.getOrder().clone();
+			int size = problem.getRectangleSize();
+			boolean betterFound = false;
+			switch (neighbourType) {
+			case ONE_SWAP:
+				for (int i = 0; (i < size) && (!betterFound); i++) {
+					for (int j = i + 1; (j < size) && (!betterFound); j++) {
+						Solution aux = s.clone();
+						swap(newOrder, i, j);
+						aux.setOrder(newOrder);
+						
+						callEvalue(aux, evaluationMode);
+						
+						if (s.getObjF() > aux.getObjF())
+							s = aux.clone();
+					}
+				}
+				break;
+			case SWAP_WITH_LAST:
+				for (int i = 0; (i < size - 1) && (!betterFound); i++) {
+					Solution aux = s.clone();
+					swap(newOrder, i, newOrder.length - 1);
+					aux.setOrder(newOrder);
+					
+					callEvalue(aux, evaluationMode);
+					
+					if (s.getObjF() > aux.getObjF())
+						s = aux.clone();
+				}
+				break;
+			}
+			return s;
+		}
+	}
+
+	/**
+	 * Metodo que devuelve una solucion vecina a una dada, con muestreo
+	 * Aleatorio. Selecciona de forma aleatoria un vecino que mejora a s.
+	 * 
+	 * @param s
+	 *            Solucion para la que se halla una vecina
+	 * @param neighbourType
+	 *            Constante que define la estructura de entorno, puede ser:
+	 *            NO_NEIGHBOUR_SAMPLING, GREEDY_SAMPLING, ANXIOUS_SAMPLING, o
+	 *            RANDOM_SAMPLING
+	 * @return solucion vecina de s con muestreo Aleatorio
+	 */
+	private Solution randomNeighbourSampling(Solution s, int neighbourType, int evaluationMode) {
+		if (neighbourType != RANDOM_SWAP) {
+			System.out.println("Si se usa muestreo aleatorio el vecino debe ser aleatorio.");
+			return null;
+		} else {
+			Random r = new Random(System.nanoTime());
+			int[] newOrder = s.getOrder().clone();
+			int size = problem.getRectangleSize();
+			boolean betterFound = false;
+			for (int i = 0; (i < (2 * size)) && (!betterFound); i++) {
+				Solution aux = s.clone();
+				int l = (int) (r.nextFloat() * newOrder.length);
+				int k = (int) (r.nextFloat() * newOrder.length);
+				while (l == k)
+					k = (int) (r.nextFloat() * newOrder.length);
+				swap(newOrder, l, k);
+				aux.setOrder(newOrder);
+				
+				callEvalue(aux, evaluationMode);
+				
+				if (s.getObjF() > aux.getObjF()) {
+					s = aux.clone();
+					betterFound = true;
+				}
+			}
+			return s;
+		}
+	}	
+	
 	/**
 	 * Anade un punto a la lista de puntos factibles.
 	 * 
@@ -641,270 +856,7 @@ public class Heuristica {
 		this.points.clear();
 		this.points.add(origen);
 	}
-
-	/**
-	 * Funcion que tiene como objetivo la colocacion de los rectangulos para
-	 * hallar el valor que tiene la funcion objetivo dada una solucion
-	 * representada con una permutacion de rectangulos.
-	 * 
-	 * @param s
-	 *            Solucion a evaluar.
-	 */
-	private Point[] areaEvalue(Solution s) {
-		initPoints(); // Inicializa los puntos (establece como unico punto el
-		// origen)
-		s.reset();
-		Point[] rectanglePosition = new Point[problem.getRectangleSize()];
-		for (int i = 0; i < problem.getRectangleSize(); i++) {
-			Rectangle r = getNewRectangle(i, s);
-			// Guardamos la posicion del rectangulo i
-			rectanglePosition[s.getOrder(i)] = areaAllocateRectangle(r, s);
-			if (i != (problem.getRectangleSize() - 1))
-				managePoints(r);
-		}
-		s.setObjF();
-		return rectanglePosition;
-	}
-
-	/**
-	 * Intercambia el elemento i con el j en el array
-	 * 
-	 * @param array
-	 *            array de elementos
-	 * @param i
-	 *            una posicion del array
-	 * @param j
-	 *            otra posicion del array
-	 */
-	public static void swap(int[] array, int i, int j) {
-		int aux = array[i];
-		array[i] = array[j];
-		array[j] = aux;
-	}
-
-	/**
-	 * Lanza los distintos metodos para buscar soluciones vecinas a una dada
-	 * segun el tipo de muestreo escogido.
-	 * 
-	 * @param s
-	 *            solucion de la que se halla una vecina.
-	 * @param neighbourType
-	 *            Constante que define la estructura de entorno, puede ser:
-	 *            NO_NEIGHBOUR_SAMPLING, GREEDY_SAMPLING, ANXIOUS_SAMPLING, o
-	 *            RANDOM_SAMPLING
-	 * @param sampleType
-	 *            Constante que define el tipo de muestreo de la estructura de
-	 *            entorno, puede ser: RANDOM_SWAP, ONE_SWAP o SWAP_WITH_LAST
-	 * @return Solucion vecina de s siguiendo algun criterio
-	 */
-	private Solution neighbour(Solution s, int neighbourType, int sampleType, int evaluationMode) {
-		Solution best = s.clone();
-		switch (sampleType) {
-		case NO_SAMPLING: // Sin muestreo del entorno
-			best = noNeighbourSampling(best, neighbourType);
-			break;
-		case GREEDY_SAMPLING: // Muestreo GREEDY, se escoje el mejor de los
-			// vecinos
-			best = greedyNeighbourSampling(best, neighbourType, evaluationMode);
-			break;
-		case ANXIOUS_SAMPLING: // Muestreo ANXIOUS, se escoje el primer mejor
-			// vecino
-			best = anxiousNeighbourSampling(best, neighbourType, evaluationMode);
-			break;
-		case RANDOM_SAMPLING: // Muestreo RANDOM, se escoje el primer mejor
-			// vecino aleatorio
-			best = randomNeighbourSampling(best, neighbourType, evaluationMode);
-			break;
-		}
-		return best;
-	}
-
-	/**
-	 * Metodo que devuelve una solución vecina a una dada, sin muestreo del
-	 * entorno.
-	 * 
-	 * @param s
-	 *            Solucion para la que se halla una vecina
-	 * @param neighbourType
-	 *            Constante que define la estructura de entorno, puede ser:
-	 *            NO_NEIGHBOUR_SAMPLING, GREEDY_SAMPLING, ANXIOUS_SAMPLING, o
-	 *            RANDOM_SAMPLING
-	 * @return solucion vecina de s sin muestreo del entorno
-	 */
-	private Solution noNeighbourSampling(Solution s, int neighbourType) {
-		if (neighbourType != RANDOM_SWAP) {
-			System.out.println("No se puede usar otro tipo de vecino sin muestreo de entorno que no sea RANDOM_SWAP");
-			return null;
-		} else {
-			Random r = new Random(System.nanoTime());
-			int[] newOrder = s.getOrder().clone();
-
-			int i = (int) (r.nextFloat() * newOrder.length);
-			int j = (int) (r.nextFloat() * newOrder.length);
-
-			while (i == j)
-				j = (int) (r.nextFloat() * newOrder.length);
-
-			swap(newOrder, i, j);
-			s.setOrder(newOrder);
-			return s;
-		}
-	}
-
-	/**
-	 * Metodo que devuelve una solucion vecina a una dada, con muestreo Voraz.
-	 * Evalua todos los vecinos candidatos y escoge el mejor entre todos ellos.
-	 * 
-	 * @param s
-	 *            Solucion para la que se halla una vecina
-	 * @param neighbourType
-	 *            Constante que define la estructura de entorno, puede ser:
-	 *            NO_NEIGHBOUR_SAMPLING, GREEDY_SAMPLING, ANXIOUS_SAMPLING, o
-	 *            RANDOM_SAMPLING
-	 * @return solucion vecina de s con muestreo Voraz
-	 */
-	private Solution greedyNeighbourSampling(Solution s, int neighbourType, int evaluationMode) {
-		if (neighbourType == RANDOM_SWAP) {
-			System.out.println("Solo se usa vecino aleatorio si el muestreo es aleatorio.");
-			return null;
-		} else {
-			int[] newOrder = s.getOrder().clone();
-			int size = problem.getRectangleSize();
-			switch (neighbourType) {
-			case ONE_SWAP:
-				for (int i = 0; i < size; i++) {
-					for (int j = i + 1; j < size; j++) {
-						Solution aux = s.clone();
-						swap(newOrder, i, j);
-						aux.setOrder(newOrder);
-						
-						if (evaluationMode == WASTE)
-							wasteEvalue(aux);
-						else areaEvalue(aux);
-						
-						if (s.getObjF() > aux.getObjF())
-							s = aux.clone();
-					}
-				}
-				break;
-			case SWAP_WITH_LAST:
-				for (int i = 0; i < size - 1; i++) {
-					Solution aux = s.clone();
-					swap(newOrder, i, newOrder.length - 1);
-					aux.setOrder(newOrder);
-					
-					if (evaluationMode == WASTE)
-						wasteEvalue(aux);
-					else areaEvalue(aux);
-					
-					if (s.getObjF() > aux.getObjF())
-						s = aux.clone();
-				}
-				break;
-			}
-			return s;
-		}
-	}
-
-	/**
-	 * Metodo que devuelve una solucion vecina a una dada, con muestreo Ansioso.
-	 * Selecciona la primera solucion vecina que mejore a s.
-	 * 
-	 * @param s
-	 *            Solucion para la que se halla una vecina
-	 * @param neighbourType
-	 *            Constante que define la estructura de entorno, puede ser:
-	 *            NO_NEIGHBOUR_SAMPLING, GREEDY_SAMPLING, ANXIOUS_SAMPLING, o
-	 *            RANDOM_SAMPLING
-	 * @return solucion vecina de s con muestreo Ansioso
-	 */
-	private Solution anxiousNeighbourSampling(Solution s, int neighbourType, int evaluationMode) {
-		if (neighbourType == RANDOM_SWAP) {
-			System.out.println("Solo se usa vecino aleatorio si el muestreo es aleatorio.");
-			return null;
-		} else {
-			int[] newOrder = s.getOrder().clone();
-			int size = problem.getRectangleSize();
-			boolean betterFound = false;
-			switch (neighbourType) {
-			case ONE_SWAP:
-				for (int i = 0; (i < size) && (!betterFound); i++) {
-					for (int j = i + 1; (j < size) && (!betterFound); j++) {
-						Solution aux = s.clone();
-						swap(newOrder, i, j);
-						aux.setOrder(newOrder);
-						
-						if (evaluationMode == WASTE)
-							wasteEvalue(aux);
-						else areaEvalue(aux);
-						
-						if (s.getObjF() > aux.getObjF())
-							s = aux.clone();
-					}
-				}
-				break;
-			case SWAP_WITH_LAST:
-				for (int i = 0; (i < size - 1) && (!betterFound); i++) {
-					Solution aux = s.clone();
-					swap(newOrder, i, newOrder.length - 1);
-					aux.setOrder(newOrder);
-					
-					if (evaluationMode == WASTE)
-						wasteEvalue(aux);
-					else areaEvalue(aux);
-					
-					if (s.getObjF() > aux.getObjF())
-						s = aux.clone();
-				}
-				break;
-			}
-			return s;
-		}
-	}
-
-	/**
-	 * Metodo que devuelve una solucion vecina a una dada, con muestreo
-	 * Aleatorio. Selecciona de forma aleatoria un vecino que mejora a s.
-	 * 
-	 * @param s
-	 *            Solucion para la que se halla una vecina
-	 * @param neighbourType
-	 *            Constante que define la estructura de entorno, puede ser:
-	 *            NO_NEIGHBOUR_SAMPLING, GREEDY_SAMPLING, ANXIOUS_SAMPLING, o
-	 *            RANDOM_SAMPLING
-	 * @return solucion vecina de s con muestreo Aleatorio
-	 */
-	private Solution randomNeighbourSampling(Solution s, int neighbourType, int evaluationMode) {
-		if (neighbourType != RANDOM_SWAP) {
-			System.out.println("Si se usa muestreo aleatorio el vecino debe ser aleatorio.");
-			return null;
-		} else {
-			Random r = new Random(System.nanoTime());
-			int[] newOrder = s.getOrder().clone();
-			int size = problem.getRectangleSize();
-			boolean betterFound = false;
-			for (int i = 0; (i < (2 * size)) && (!betterFound); i++) {
-				Solution aux = s.clone();
-				int l = (int) (r.nextFloat() * newOrder.length);
-				int k = (int) (r.nextFloat() * newOrder.length);
-				while (l == k)
-					k = (int) (r.nextFloat() * newOrder.length);
-				swap(newOrder, l, k);
-				aux.setOrder(newOrder);
-				
-				if (evaluationMode == WASTE)
-					wasteEvalue(aux);
-				else areaEvalue(aux);
-				
-				if (s.getObjF() > aux.getObjF()) {
-					s = aux.clone();
-					betterFound = true;
-				}
-			}
-			return s;
-		}
-	}
-
+	
 	/**
 	 * Estima el espacio desperdiciado en un punto por un rectangulo r
 	 * @param r Rectangulo
@@ -1028,6 +980,31 @@ public class Heuristica {
 		return r.getPosition();
 	}
 	
+	
+	/**
+	 * Funcion que tiene como objetivo la colocacion de los rectangulos para
+	 * hallar el valor que tiene la funcion objetivo dada una solucion
+	 * representada con una permutacion de rectangulos.
+	 * 
+	 * @param s
+	 *            Solucion a evaluar.
+	 */
+	private Point[] areaEvalue(Solution s) {
+		initPoints(); // Inicializa los puntos (establece como unico punto el
+		// origen)
+		s.reset();
+		Point[] rectanglePosition = new Point[problem.getRectangleSize()];
+		for (int i = 0; i < problem.getRectangleSize(); i++) {
+			Rectangle r = getNewRectangle(i, s);
+			// Guardamos la posicion del rectangulo i
+			rectanglePosition[s.getOrder(i)] = areaAllocateRectangle(r, s);
+			if (i != (problem.getRectangleSize() - 1))
+				managePoints(r);
+		}
+		s.setObjF();
+		return rectanglePosition;
+	}
+	
 	/**
 	 * Funcion que tiene como objetivo la colocacion de los rectangulos para hallar el valor
 	 * que tiene la funcion objetivo dada una solucion representada con una permutacion de 
@@ -1050,6 +1027,84 @@ public class Heuristica {
 		return rectanglePosition;
 	}
 	
+	/**
+	 * Funcion que tiene como objetivo la colocacion de los rectangulos para hallar el valor
+	 * que tiene la funcion objetivo dada una solucion representada con una permutacion de 
+	 * rectangulos.
+	 * @param s
+	 *          Solucion a evaluar.
+	 */
+	private Point[] mixedEvalue1(Solution s) {
+		initPoints(); // Inicializa los puntos (establece como unico punto el origen)
+		s.reset();
+		Point [] rectanglePosition = new Point[problem.getRectangleSize()];
+		for (int i = 0; i < problem.getRectangleSize() / 3; i++) {
+			Rectangle r = getNewRectangle(i, s);
+			// Se coloca el rectangulo primero minimizando el espacio desperdiciado
+			rectanglePosition[s.getOrder(i)] = wasteAllocateRectangle(r, s);
+			managePoints(r);
+		}
+		for (int i = problem.getRectangleSize() / 3; i < problem.getRectangleSize(); i++) {
+			Rectangle r = getNewRectangle(i, s);
+			// Se aprovecha el area libre resultante de minimizar el desperdicio
+			rectanglePosition[s.getOrder(i)] = areaAllocateRectangle(r, s);
+			if (i != (problem.getRectangleSize() - 1))
+				managePoints(r);
+		}
+		s.setObjF();
+		return rectanglePosition;
+	}
+	
+	/**
+	 * Funcion que tiene como objetivo la colocacion de los rectangulos para hallar el valor
+	 * que tiene la funcion objetivo dada una solucion representada con una permutacion de 
+	 * rectangulos.
+	 * @param s
+	 *          Solucion a evaluar.
+	 */
+	private Point[] mixedEvalue2(Solution s) {
+		initPoints(); // Inicializa los puntos (establece como unico punto el origen)
+		s.reset();
+		Random ran = new Random (System.nanoTime());
+		int size = problem.getRectangleSize();
+		Point [] rectanglePosition = new Point[size];
+		for (int i = 0; i < size; i++) {
+			Rectangle r = getNewRectangle(i, s);
+			// Guardamos la posicion del rectangulo i
+			if (Math.exp((size - i) / (2 * size)) < ran.nextFloat())
+				rectanglePosition[s.getOrder(i)] = wasteAllocateRectangle(r, s);
+			else rectanglePosition[s.getOrder(i)] = areaAllocateRectangle(r, s);
+			if (i != (size - 1))
+				managePoints(r);
+		}
+		s.setObjF();
+		return rectanglePosition;
+	}
+	
+	/**
+	 * Llama al evalue correspondiente
+	 * @param s Solucion a evaluar
+	 * @param evaluationMode metodo de evaluacion
+	 * @return Las posiciones de los rectangulos
+	 */
+	private Point[] callEvalue(Solution s, int evaluationMode) {
+		Point [] rectanglePosition = null;
+		switch (evaluationMode) {
+		case WASTE_EVAL:
+			rectanglePosition = wasteEvalue(s);
+			break;
+		case AREA_EVAL:
+			rectanglePosition = areaEvalue(s);
+			break;
+		case MIXED1_EVAL:
+			rectanglePosition = mixedEvalue1(s);
+			break;
+		case MIXED2_EVAL:
+			rectanglePosition = mixedEvalue2(s);
+			break;
+		}
+		return rectanglePosition;
+	}
 	
 	
 }

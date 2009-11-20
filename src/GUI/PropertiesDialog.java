@@ -37,7 +37,7 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 	final String[] searchstrings = {"Pure random seach", "Random search", "Local search", "Multistart with local search",
 									"Simulated annealing search"};
 	final String[] initstrings = {"Random", "Deterministic 01", "Deterministic 02", "Mixed 01", "Mixed 02"};
-	final String[] evaluationstrings = {"Waste", "Area"};
+	final String[] evaluationstrings = {"Waste", "Area", "Both1/3", "BothRandom"};
 	
 	/**
 	 * ComboBoxes para la seleccion de parametros de la heuristica.
