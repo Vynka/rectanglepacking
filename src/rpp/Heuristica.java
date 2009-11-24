@@ -53,8 +53,8 @@ public class Heuristica {
 	 */
 	static final int WASTE_EVAL = 0;
 	static final int AREA_EVAL = 1;
-	static final int MIXED1_EVAL = 2;
-	static final int MIXED2_EVAL = 3;
+	static final int MIXED_EVAL = 2;
+	static final int POND_EVAL = 3;
 	
 	/**
 	 * Lista de puntos factibles en los que colocar un rectangulo Como punto
@@ -1054,7 +1054,7 @@ public class Heuristica {
 	 * @param s
 	 *          Solucion a evaluar.
 	 */
-	private Point[] mixedEvalue1(Solution s) {
+	private Point[] mixedEvalue(Solution s) {
 		initPoints(); // Inicializa los puntos (establece como unico punto el origen)
 		s.reset();
 		int n = (int)Math.sqrt(problem.getRectangleSize());
@@ -1083,21 +1083,15 @@ public class Heuristica {
 	 * @param s
 	 *          Solucion a evaluar.
 	 */
-	private Point[] mixedEvalue2(Solution s) {
-		double RO = 0.20;
+	private Point[] pondEvalue(Solution s) {
 		initPoints(); // Inicializa los puntos (establece como unico punto el origen)
 		s.reset();
-		Random ran = new Random (System.nanoTime());
 		int size = problem.getRectangleSize();
 		Point [] rectanglePosition = new Point[size];
 		for (int i = 0; i < size; i++) {
 			Rectangle r = getNewRectangle(i, s);
 			// Guardamos la posicion del rectangulo i
-			double e = Math.exp((double)i/size - (1 + RO));
-			if (e < (ran.nextFloat()))
-				rectanglePosition[s.getOrder(i)] = wasteAllocateRectangle(r, s);
-			else
-				rectanglePosition[s.getOrder(i)] = areaAllocateRectangle(r, s);
+			
 			if (i != (size - 1))
 				managePoints(r);
 		}
@@ -1120,11 +1114,11 @@ public class Heuristica {
 		case AREA_EVAL:
 			rectanglePosition = areaEvalue(s);
 			break;
-		case MIXED1_EVAL:
-			rectanglePosition = mixedEvalue1(s);
+		case MIXED_EVAL:
+			rectanglePosition = mixedEvalue(s);
 			break;
-		case MIXED2_EVAL:
-			rectanglePosition = mixedEvalue2(s);
+		case POND_EVAL:
+			rectanglePosition = pondEvalue(s);
 			break;
 		}
 		return rectanglePosition;

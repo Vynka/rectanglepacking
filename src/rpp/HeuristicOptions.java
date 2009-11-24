@@ -54,8 +54,8 @@ public class HeuristicOptions {
 	 */
 	static final int WASTE_EVAL = 0;
 	static final int AREA_EVAL = 1;
-	static final int MIXED1_EVAL = 2;
-	static final int MIXED2_EVAL = 3;
+	static final int MIXED_EVAL = 2;
+	static final int POND_EVAL = 3;
 	
 	/**
 	 * StopCritera: Criterio de parada del problema
