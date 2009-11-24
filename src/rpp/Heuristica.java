@@ -952,6 +952,17 @@ public class Heuristica {
 		}
 		return waste;
 	}
+	
+	/**
+	 * 
+	 */
+	public double pondCalculation(Rectangle r, Solution s, double factor) {
+		double areaFactor = 1 - factor;
+		int h = r.getPosition().getY() + r.getHeight();
+		int b = r.getPosition().getX() + r.getBase();
+		int a = s.getArea() - (h * b);
+		return ((areaFactor * a) + (factor * wasteCalculation(r)));
+	}
 	 
 	/**
 	 * Busca un punto de la lista de puntos que minimize el criterio de colocacion de
@@ -1000,6 +1011,52 @@ public class Heuristica {
 		return r.getPosition();
 	}
 	
+	/**
+	 * Busca un punto de la lista de puntos que minimize el criterio de colocacion de
+	 * rectangulos, es decir, que al colocar el rectangulo seleccionado sea menor area
+	 * desperdiciada.
+	 * El critero para comparar es la relacion de unidades que aumenta el rectangulo de
+	 * la funcion objetivo. Al ser un rectangulo es igual cual sea la direccion de crecimiento,
+	 * por lo que se toma la suma de las dos unidades como medida de comparacion.
+	 * El rectangulo ira colocado en aquel punto que haga que las dimensiones del rectangulo
+	 * de la solucion crezcan lo menos posible.
+	 * @param r
+	 * 			rectangulo a asignar
+	 * @param s
+	 * 			solucion en la que va a ser asignado
+	 * @return el punto donde ira colocado el rectangulo.
+	 */
+	private Point pondAllocateRectangle(Rectangle r, Solution s) {
+		// El mejor caso es que las menores dimensiones sean las ya obtenidas anteriormente
+		double minor = 0;
+		boolean modified = false;
+		int selected = 0;
+		// Se toman los nuevos datos resultantes de colocar el rectangulo
+		// Como minimo van a ser iguales que los actuales
+		for (int i = 0; i < points.size(); i++) {
+			r.setPosition(this.points.get(i));
+			double actual = pondCalculation(r, s, 0.7);
+			// Si son mejores que los actuales se guardan
+			if ((!modified) || (actual < minor)) {
+				selected = i;
+				minor = actual;
+				modified = true;
+			}
+		}
+		// Se actualiza la solucion
+		// Eje y
+		int newH = s.getHeight();
+		if ((points.get(selected).getY() + r.getHeight()) > (s.getHeight()))
+			newH = points.get(selected).getY() + r.getHeight();
+		// Eje X
+		int newB = s.getBase();
+		if ((points.get(selected).getX() + r.getBase()) > (s.getBase()))
+			newB = points.get(selected).getX() + r.getBase();
+		s.setBase(newB);
+		s.setHeight(newH);
+		r.setPosition(this.points.get(selected));
+		return r.getPosition();
+	}	
 	
 	/**
 	 * Funcion que tiene como objetivo la colocacion de los rectangulos para
@@ -1084,15 +1141,15 @@ public class Heuristica {
 	 *          Solucion a evaluar.
 	 */
 	private Point[] pondEvalue(Solution s) {
-		initPoints(); // Inicializa los puntos (establece como unico punto el origen)
+		initPoints(); // Inicializa los puntos (establece como unico punto el
+		// origen)
 		s.reset();
-		int size = problem.getRectangleSize();
-		Point [] rectanglePosition = new Point[size];
-		for (int i = 0; i < size; i++) {
+		Point[] rectanglePosition = new Point[problem.getRectangleSize()];
+		for (int i = 0; i < problem.getRectangleSize(); i++) {
 			Rectangle r = getNewRectangle(i, s);
 			// Guardamos la posicion del rectangulo i
-			
-			if (i != (size - 1))
+			rectanglePosition[s.getOrder(i)] = pondAllocateRectangle(r, s);
+			if (i != (problem.getRectangleSize() - 1))
 				managePoints(r);
 		}
 		s.setObjF();
