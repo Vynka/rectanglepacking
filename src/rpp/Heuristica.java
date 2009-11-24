@@ -425,7 +425,7 @@ public class Heuristica {
 			  	L = CalculateSize(k, iterationIncrement); 
 			}
 			else
-				c  = CalculateTemperature2(c,coolingFactor);
+				c  = CalculateTemperature2(c, coolingFactor);
 		} while (c > zero);
 		System.out.println("C = " + c + "     L = " + L + "     k = " + k);
 		problem.setSolution(best);

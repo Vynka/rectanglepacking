@@ -35,10 +35,11 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 	final String[] stopstrings = {"Out unless better", "Number of times"};
 	final String[] samplingstrings = {"Greedy sampling", "Anxious sampling", "Random sampling", "No sampling"};
 	final String[] searchstrings = {"Pure random seach", "Random search", "Local search", "Multistart with local search",
-									"Simulated annealing search"};
+									"Simulated annealing search", "GRASP"};
 	final String[] initstrings = {"Random", "Deterministic 01", "Deterministic 02", "Mixed 01", "Mixed 02"};
 	final String[] evaluationstrings = {"Waste", "Area", "BothSqrtN", "Ponderated"};
 	final String[] coolingFactorStrings = {"0.01","0.05","0.1","0.8","0.95","0.99"};
+	final String[] graspstrings = {"Area", "Diagonal", "Mixed", "Ponderated"};
 	
 	/**
 	 * ComboBoxes para la seleccion de parametros de la heuristica.
@@ -50,6 +51,19 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 	JComboBox initlist = new JComboBox(initstrings);
 	JComboBox evallist = new JComboBox(evaluationstrings);
 	JComboBox factorList = new JComboBox(coolingFactorStrings);
+	JComboBox grasplist = new JComboBox(graspstrings);
+	
+	/**
+	 * Etiquetas de los ComboBoxes
+	 */
+	JLabel neighlbl = new JLabel("Espacios de entorno:");
+	JLabel stoplbl = new JLabel("Criterio de parada:");
+	JLabel samplinglbl = new JLabel("Muestreo del entorno:");
+	JLabel evallbl = new JLabel("Evaluacion:");
+	JLabel initlbl = new JLabel("Tipo de inicializacion:");
+	JLabel factorlbl = new JLabel("Factor de enfriamiento:");
+	JLabel timeslbl = new JLabel("Numero de repeticiones: ");
+	JLabel grasplbl = new JLabel("Tipo de GRASP: ");
 	
 	/**
 	 * Campo de obtencion de las repeticiones
@@ -66,52 +80,74 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 		dialoghop = owner.getOptions();
 		dialogowner = owner;
 		
-		this.add(new JLabel("Espacios de entorno:"));
-		this.add(neighborlist);
-		neighborlist.setActionCommand("neighbor");
-		neighborlist.setSelectedIndex(dialoghop.getNeighbors());
-		neighborlist.addActionListener(this);
-		
-		this.add(new JLabel("Criterio de parada:"));
-		this.add(stoplist);
-		stoplist.setActionCommand("stop");
-		stoplist.setSelectedIndex(dialoghop.getStopCriteria());
-		stoplist.addActionListener(this);
-		
-		this.add(new JLabel("Muestreo del entorno:"));
-		this.add(samplinglist);
-		samplinglist.setActionCommand("sampling");
-		samplinglist.setSelectedIndex(dialoghop.getSampling());
-		samplinglist.addActionListener(this);
-		
 		this.add(new JLabel("Metodo de resolucion:"));
 		this.add(searchlist);
 		searchlist.setActionCommand("search");
 		searchlist.setSelectedIndex(dialoghop.getProcedure());
 		searchlist.addActionListener(this);
 		
-		this.add(new JLabel("Tipo de inicializacion:"));
+		this.add(neighlbl);
+		neighlbl.setVisible(false);
+		this.add(neighborlist);
+		neighborlist.setActionCommand("neighbor");
+		neighborlist.setSelectedIndex(dialoghop.getNeighbors());
+		neighborlist.addActionListener(this);
+		neighborlist.setVisible(false);
+		
+		this.add(stoplbl);
+		stoplbl.setVisible(false);
+		this.add(stoplist);
+		stoplist.setActionCommand("stop");
+		stoplist.setSelectedIndex(dialoghop.getStopCriteria());
+		stoplist.addActionListener(this);
+		stoplist.setVisible(false);
+		
+		this.add(samplinglbl);
+		samplinglbl.setVisible(false);
+		this.add(samplinglist);
+		samplinglist.setActionCommand("sampling");
+		samplinglist.addActionListener(this);
+		samplinglist.setSelectedIndex(dialoghop.getSampling());
+		samplinglist.setVisible(false);
+		
+		this.add(initlbl);
+		initlbl.setVisible(false);
 		this.add(initlist);
 		initlist.setActionCommand("init");
 		initlist.setSelectedIndex(dialoghop.getInitialization());
 		initlist.addActionListener(this);
+		initlist.setVisible(false);
 		
-		this.add(new JLabel("Evaluacion:"));
+		this.add(evallbl);
+		evallbl.setVisible(false);
 		this.add(evallist);
 		evallist.setActionCommand("eval");
 		evallist.setSelectedIndex(dialoghop.getEvaluationMode());
 		evallist.addActionListener(this);
+		evallist.setVisible(false);
 		
-		this.add(new JLabel("Factor de enfriamiento:"));
+		this.add(factorlbl);
+		factorlbl.setVisible(false);
 		this.add(factorList);
 		factorList.setActionCommand("factor");
 		factorList.setSelectedIndex(dialoghop.getCoolingFactor());
 		factorList.addActionListener(this);
+		factorList.setVisible(false);
 		
-		this.add(new JLabel("Numero de repeticiones: "));
+		this.add(timeslbl);
+		timeslbl.setVisible(false);
 		timesField.setSize(100, 50);
 		timesField.setText((new Integer(dialoghop.getTimes())).toString());
 		this.add(timesField);
+		timesField.setVisible(false);
+		
+		this.add(grasplbl);
+		grasplbl.setVisible(false);
+		this.add(grasplist);
+		grasplist.setActionCommand("grasp");
+		grasplist.setSelectedIndex(dialoghop.getGraspMode());
+		grasplist.addActionListener(this);
+		grasplist.setVisible(false);
 		
 		this.add(Box.createGlue());
 		
@@ -125,14 +161,32 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 		this.add(aux);
 		
 		this.pack();
+		displayOptions(searchlist.getSelectedIndex());
 		int x = (int)(owner.getLocation().getX() + (int)((owner.getWidth() - this.getWidth()) / 2)); 
 		int y = (int)(owner.getLocation().getY() + (int)((owner.getHeight() - this.getHeight()) / 2));
 		this.setLocation(x, y);
 	}
 	
+	
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand() == "accept") {
 			dialoghop.setTimes(new Integer(timesField.getText()).intValue());
+			if ((neighborlist.getSelectedIndex() == HeuristicOptions.RANDOM_SWAP) &&
+				(dialoghop.getSampling() != HeuristicOptions.RANDOM_SAMPLING)) {
+				
+				dialoghop.setSampling(HeuristicOptions.RANDOM_SAMPLING);
+				samplinglist.setSelectedIndex(HeuristicOptions.RANDOM_SAMPLING);
+				@SuppressWarnings("unused")
+				FailDialog fd = new FailDialog(this, "Random swap only works with random sampling");
+			}
+			else if ((samplinglist.getSelectedIndex() == HeuristicOptions.RANDOM_SAMPLING) && 
+					(neighborlist.getSelectedIndex() != HeuristicOptions.RANDOM_SWAP)) {
+				
+				dialoghop.setNeighbors(HeuristicOptions.RANDOM_SWAP);
+				neighborlist.setSelectedIndex(HeuristicOptions.RANDOM_SWAP);
+				@SuppressWarnings("unused")
+				FailDialog fd = new FailDialog(this, "Random sampling only works with random swap");
+			}
 			this.setVisible(false);
 		}
 		else if(e.getActionCommand() == "cancel") {
@@ -140,32 +194,94 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 			this.setVisible(false);
 		}
 		else if(e.getActionCommand() == "neighbor") {
-			System.out.println("Entorno: " + neighborlist.getSelectedIndex());
 			dialoghop.setNeighbors(neighborlist.getSelectedIndex());
 		}
 		else if(e.getActionCommand() == "stop") {
-			System.out.println("Parada: " + stoplist.getSelectedIndex());
 			dialoghop.setStop(stoplist.getSelectedIndex());
 		}
 		else if(e.getActionCommand() == "sampling") {
-			System.out.println("Sampling: " + samplinglist.getSelectedIndex());
 			dialoghop.setSampling(samplinglist.getSelectedIndex());
 		}
 		else if(e.getActionCommand() == "search") {
-			System.out.println("Search: " + searchlist.getSelectedIndex());
 			dialoghop.setProcedure(searchlist.getSelectedIndex());
+			displayOptions(-1);
+			displayOptions(searchlist.getSelectedIndex());
 		}
 		else if(e.getActionCommand() == "init") {
 			System.out.println("Initialization: " + initlist.getSelectedIndex());
 			dialoghop.setInitialization(initlist.getSelectedIndex());
 		}
 		else if(e.getActionCommand() == "eval") {
-			System.out.println("Evaluacion: " + evallist.getSelectedIndex());
 			dialoghop.setEvaluationMode(evallist.getSelectedIndex());
 		}
 		else if(e.getActionCommand() == "factor") {
-			System.out.println("Factor de enfriamiento: " + factorList.getSelectedIndex());
 			dialoghop.setCoolingFactor(factorList.getSelectedIndex());
+		}
+		else if(e.getActionCommand() == "grasp") {
+			dialoghop.setGraspMode(grasplist.getSelectedIndex());
+		}
+	}
+	
+	private void displayOptions(int index) {
+		switch (index) {
+			case -1:
+				neighlbl.setVisible(false);
+				neighborlist.setVisible(false);
+				samplinglbl.setVisible(false);
+				samplinglist.setVisible(false);
+				timeslbl.setVisible(false);
+				timesField.setVisible(false);
+				stoplbl.setVisible(false);
+				stoplist.setVisible(false);
+				initlbl.setVisible(false);
+				initlist.setVisible(false);
+				factorlbl.setVisible(false);
+				factorList.setVisible(false);
+				evallbl.setVisible(false);
+				evallist.setVisible(false);
+				grasplbl.setVisible(true);
+				grasplist.setVisible(true);
+				break;
+			case HeuristicOptions.PURE_RANDOM_SEARCH:
+			case HeuristicOptions.RANDOM_SEARCH:
+				timeslbl.setVisible(true);
+				timesField.setVisible(true);
+				stoplbl.setVisible(true);
+				stoplist.setVisible(true);
+				evallbl.setVisible(true);
+				evallist.setVisible(true);
+				break;
+			case HeuristicOptions.MULTISTART_WITH_LOCAL_SEARCH:
+				timeslbl.setVisible(true);
+				timesField.setVisible(true);
+				stoplbl.setVisible(true);
+				stoplist.setVisible(true);
+				initlbl.setVisible(true);
+				initlist.setVisible(true);
+			case HeuristicOptions.LOCAL_SEARCH:
+				neighlbl.setVisible(true);
+				neighborlist.setVisible(true);
+				samplinglbl.setVisible(true);
+				samplinglist.setVisible(true);
+				evallbl.setVisible(true);
+				evallist.setVisible(true);
+				break;
+			case HeuristicOptions.SIMULATED_ANNEALING_SEARCH:
+				initlbl.setVisible(true);
+				initlist.setVisible(true);
+				neighlbl.setVisible(true);
+				neighborlist.setVisible(true);
+				samplinglbl.setVisible(true);
+				samplinglist.setVisible(true);
+				factorlbl.setVisible(true);
+				factorList.setVisible(true);
+				evallbl.setVisible(true);
+				evallist.setVisible(true);
+				break;
+			case HeuristicOptions.GRASP:
+				grasplbl.setVisible(true);
+				grasplist.setVisible(true);
+				break;
 		}
 	}
 }

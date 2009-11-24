@@ -22,6 +22,7 @@ public class OptionsMenu extends JMenuBar {
 		optionBut = new JMenu("Opciones");
 		optionBut.add(mFile);
 		optionBut.add(mProperties);
+		optionBut.addSeparator();
 		optionBut.add(mExit);
 
 		this.setLayout(new FlowLayout(FlowLayout.LEFT));

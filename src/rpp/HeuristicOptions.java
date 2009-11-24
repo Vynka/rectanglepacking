@@ -48,6 +48,7 @@ public class HeuristicOptions {
 	public static final int LOCAL_SEARCH = Heuristica.LOCAL_SEARCH;
 	public static final int MULTISTART_WITH_LOCAL_SEARCH = Heuristica.MULTISTART_WITH_LOCAL_SEARCH;
 	public static final int SIMULATED_ANNEALING_SEARCH = Heuristica.SIMULATED_ANNEALING_SEARCH;
+	public static final int GRASP = Heuristica.GRASP;
 	
 	/**
 	 * Eleccion de heuristica de colocacion
