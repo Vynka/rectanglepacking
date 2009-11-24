@@ -21,25 +21,34 @@
 *****************************************************************
 	
 - Visualizacion del problema (GUI): [Haside]
+    -Hacer el panel con las etiquetas de los parametros a la derecha del dibujo.
+    -Documentar decentemente el paquete de GUI, que lo tengo todo hecho un asco. [Eferroja]
+  	-Mantener actualizado el dialogo de propiedades con los elementos para elegir los parametros del problema.
+    	
+- Actualizar UML [Vynka]
+  > umbrello heuristicas.xmi
+
+- Implementar busqueda tabu. [Eferroja]
+
+- Implementar la busqueda constructiva GRASP con sus posibles variaciones [Haside]
+
+- Cambiar la seleccion de inicializacion por un Dialog que salte cuando se abre un archivo
+  y cuando se pulsa el boton reset, de modo que las soluciones ya esten inicializadas. [Haside]
+
+****************************************
+* TODO YA RESUELTOS (MOVER AQUI ABAJO) *
+****************************************
+
+- Visualizacion del problema (GUI): [Haside]
     -Arreglar el escalado en el DrawPanel. Mejor hacer lo de los botones para escalar manualmente. [Haside]
+    	*DONE. [Eferroja]
     -Terminar el dialogo de propiedades con los elementos para elegir los parametros del problema.
     	*DONE. [Eferroja]
     	-Mantenerlo actualizado.[Eferroja]
     -Hacer el dialogo de seleccion de fichero de rectangulos.
     	*DONE JFileChooser+copypaste FTW. [Eferroja]
-    -Hacer el panel con las etiquetas de los parametros a la derecha del dibujo.
     -Etiquetas mostrando la fObj, Ideal, y los botones Solve, etc. debajo del dibujo.
-    	-Almost done. [Eferroja]
-    -Documentar decentemente, que lo tengo todo hecho un asco. [Eferroja]
-
-- Actualizar UML [Vynka]
-  > umbrello heuristicas.xmi
-
-- Implementar la busqueda constructiva GRASP con sus posibles variaciones [Haside]
-
-****************************************
-* TODO YA RESUELTOS (MOVER AQUI ABAJO) *
-****************************************
+    	*DONE. [Eferroja]
 
 - Implementar la busqueda por entornos numero 5, Recocido Simulado [Ale]
   - En proceso (Ya he empezado a trabajar en ello, aunque no lo subire hasta tenerlo

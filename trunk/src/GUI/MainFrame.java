@@ -89,7 +89,7 @@ public class MainFrame extends JFrame implements ActionListener {
         public MainFrame() {
             this.setDefaultCloseOperation(EXIT_ON_CLOSE);
             this.setTitle("RPP Solver");
-                
+            
             Toolkit kit = Toolkit.getDefaultToolkit();
             Dimension screenDim = kit.getScreenSize();
 
@@ -141,6 +141,7 @@ public class MainFrame extends JFrame implements ActionListener {
             southpan.add(sp);
             
             hop = new HeuristicOptions("");
+            hop.setSampling(HeuristicOptions.RANDOM_SAMPLING);
             pd = new PropertiesDialog(this);
             dp.setProblem(r);
         }
