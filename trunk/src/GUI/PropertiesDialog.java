@@ -37,7 +37,7 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 	final String[] searchstrings = {"Pure random seach", "Random search", "Local search", "Multistart with local search",
 									"Simulated annealing search"};
 	final String[] initstrings = {"Random", "Deterministic 01", "Deterministic 02", "Mixed 01", "Mixed 02"};
-	final String[] evaluationstrings = {"Waste", "Area", "BothSqrtN", "BothRandom"};
+	final String[] evaluationstrings = {"Waste", "Area", "BothSqrtN", "Ponderated"};
 	final String[] coolingFactorStrings = {"0.01","0.05","0.1","0.8","0.95","0.99"};
 	
 	/**
