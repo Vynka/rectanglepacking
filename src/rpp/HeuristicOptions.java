@@ -13,49 +13,57 @@ public class HeuristicOptions {
 	/**
 	 * Constantes de tipos de generacion inicial
 	 */
-	public static final int RANDOM = 0;
-	public static final int DETERMINISTIC1 = 1;
-	public static final int DETERMINISTIC2 = 2;
-	public static final int MIXED1 = 3;
-	public static final int MIXED2 = 4;
+	public static final int RANDOM = Solution.RANDOM;
+	public static final int DETERMINISTIC1 = Solution.DETERMINISTIC1;
+	public static final int DETERMINISTIC2 = Solution.DETERMINISTIC2;
+	public static final int MIXED1 = Solution.MIXED1;
+	public static final int MIXED2 = Solution.MIXED2;
 	
 	/**
 	 * Posibles espacios de entorno para soluciones vecinas.
 	 */
-	public static final int RANDOM_SWAP = 0;
-	public static final int ONE_SWAP = 1;
-	public static final int SWAP_WITH_LAST = 2;
+	public static final int RANDOM_SWAP = Heuristica.RANDOM_SWAP;
+	public static final int ONE_SWAP = Heuristica.ONE_SWAP;
+	public static final int SWAP_WITH_LAST =  Heuristica.SWAP_WITH_LAST;
 	
 	/**
 	 * Criterios de parada
 	 */
-	public static final int OUT_UNLESS_BETTER = 0;
-	public static final int NUMBER_OF_TIMES = 1;
+	public static final int OUT_UNLESS_BETTER = Heuristica.OUT_UNLESS_BETTER;
+	public static final int NUMBER_OF_TIMES = Heuristica.NUMBER_OF_TIMES;
 	
 	/**
 	 * Tipos de muestreo del entorno
 	 */
-	public static final int GREEDY_SAMPLING = 0;
-	public static final int ANXIOUS_SAMPLING = 1;
-	public static final int RANDOM_SAMPLING = 2;
-	public static final int NO_SAMPLING = 3;
+	public static final int GREEDY_SAMPLING = Heuristica.GREEDY_SAMPLING;
+	public static final int ANXIOUS_SAMPLING = Heuristica.ANXIOUS_SAMPLING;
+	public static final int RANDOM_SAMPLING = Heuristica.RANDOM_SAMPLING;
+	public static final int NO_SAMPLING = Heuristica.NO_SAMPLING;
 	
 	/**
 	 * Metodos de resolucion del problema
 	 */
-	public static final int PURE_RANDOM_SEARCH = 0;
-	public static final int RANDOM_SEARCH = 1;
-	public static final int LOCAL_SEARCH = 2;
-	public static final int MULTISTART_WITH_LOCAL_SEARCH = 3;
-	public static final int SIMULATED_ANNEALING_SEARCH = 4;
+	public static final int PURE_RANDOM_SEARCH = Heuristica.PURE_RANDOM_SEARCH;
+	public static final int RANDOM_SEARCH = Heuristica.RANDOM_SEARCH;
+	public static final int LOCAL_SEARCH = Heuristica.LOCAL_SEARCH;
+	public static final int MULTISTART_WITH_LOCAL_SEARCH = Heuristica.MULTISTART_WITH_LOCAL_SEARCH;
+	public static final int SIMULATED_ANNEALING_SEARCH = Heuristica.SIMULATED_ANNEALING_SEARCH;
 	
 	/**
 	 * Eleccion de heuristica de colocacion
 	 */
-	static final int WASTE_EVAL = 0;
-	static final int AREA_EVAL = 1;
-	static final int MIXED_EVAL = 2;
-	static final int POND_EVAL = 3;
+	public static final int WASTE_EVAL = Heuristica.WASTE_EVAL;
+	public static final int AREA_EVAL = Heuristica.AREA_EVAL;
+	public static final int MIXED_EVAL = Heuristica.MIXED_EVAL;
+	public static final int POND_EVAL = Heuristica.POND_EVAL;
+	
+	/**
+	 * Eleccion de la eleccion del rectangulo en el GRASP
+	 */
+	public static final int AREA_GRASP = Heuristica.AREA_GRASP;
+	public static final int DIAGONAL_GRASP = Heuristica.DIAGONAL_GRASP;
+	public static final int MIXED_GRASP = Heuristica.MIXED_GRASP;
+	public static final int POND_GRASP = Heuristica.POND_GRASP;	
 	
 	/**
 	 * StopCritera: Criterio de parada del problema
@@ -103,6 +111,11 @@ public class HeuristicOptions {
 	private int coolingFactor;
 	
 	/**
+	 * graspMode: Tipo de GRASP
+	 */
+	private int graspMode;
+	
+	/**
 	 * Constructor por defecto: PSR con OUT_UNLESS_BETTER
 	 */
 	public HeuristicOptions(String fileName) {
@@ -115,6 +128,7 @@ public class HeuristicOptions {
 		this.coolingFactor = 0;
 		this.fileName = fileName;
 		this.evaluationMode = 0;
+		this.setGraspMode(0);
 	}	
 	
 	/**
@@ -262,5 +276,19 @@ public class HeuristicOptions {
 			return 0.95;
 		}
 		return 0.99;
+	}
+
+	/**
+	 * @param graspMode the graspMode to set
+	 */
+	public void setGraspMode(int graspMode) {
+		this.graspMode = graspMode;
+	}
+
+	/**
+	 * @return the graspMode
+	 */
+	public int getGraspMode() {
+		return graspMode;
 	}
 }

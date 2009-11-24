@@ -168,6 +168,13 @@ public class Problem {
 	}
 	
 	/**
+	 * @return rectangulos del problema
+	 */
+	public Rectangle [] getRectangles() {
+		return this.rectangles;
+	}
+	
+	/**
 	 * @return numero de rectangulos del problema
 	 */
 	public int getRectangleSize() {

@@ -21,23 +21,23 @@ public class Heuristica {
 	/**
 	 * Posibles espacios de entorno para soluciones vecinas.
 	 */
-	static final int RANDOM_SWAP = 0;
-	static final int ONE_SWAP = 1;
-	static final int SWAP_WITH_LAST = 2;
+	public 	static final int RANDOM_SWAP = 0;
+	public static final int ONE_SWAP = 1;
+	public static final int SWAP_WITH_LAST = 2;
 
 	/**
 	 * Criterios de parada
 	 */
-	static final int OUT_UNLESS_BETTER = 0;
-	static final int NUMBER_OF_TIMES = 1;
+	public static final int OUT_UNLESS_BETTER = 0;
+	public static final int NUMBER_OF_TIMES = 1;
 
 	/**
 	 * Tipos de muestreo del entorno
 	 */
-	static final int GREEDY_SAMPLING = 0;
-	static final int ANXIOUS_SAMPLING = 1;
-	static final int RANDOM_SAMPLING = 2;
-	static final int NO_SAMPLING = 3;
+	public static final int GREEDY_SAMPLING = 0;
+	public static final int ANXIOUS_SAMPLING = 1;
+	public static final int RANDOM_SAMPLING = 2;
+	public static final int NO_SAMPLING = 3;
 
 	/**
 	 * Metodos de resolucion del problema
@@ -47,14 +47,24 @@ public class Heuristica {
 	public static final int LOCAL_SEARCH = 2;
 	public static final int MULTISTART_WITH_LOCAL_SEARCH = 3;
 	public static final int SIMULATED_ANNEALING_SEARCH = 4;
+	public static final int GRASP = 5;
 
 	/**
 	 * Eleccion de heuristica de colocacion
 	 */
-	static final int WASTE_EVAL = 0;
-	static final int AREA_EVAL = 1;
-	static final int MIXED_EVAL = 2;
-	static final int POND_EVAL = 3;
+	public static final int WASTE_EVAL = 0;
+	public static final int AREA_EVAL = 1;
+	public static final int MIXED_EVAL = 2;
+	public static final int POND_EVAL = 3;
+	
+	/**
+	 * Eleccion de la eleccion del rectangulo en el GRASP
+	 */
+	public static final int AREA_GRASP = 0;
+	public static final int DIAGONAL_GRASP = 1;
+	public static final int MIXED_GRASP = 2;
+	public static final int POND_GRASP = 3;
+
 	
 	/**
 	 * Lista de puntos factibles en los que colocar un rectangulo Como punto
@@ -102,6 +112,9 @@ public class Heuristica {
 			break;
 		case SIMULATED_ANNEALING_SEARCH:
 			simulatedAnnealingSearch(hop.getInitialization(), hop.getNeighbors(), hop.getSampling(), hop.getDoubCoolingFactor(), 1.05, hop.getEvaluationMode());
+			break;
+		case GRASP:
+			GRASP(hop.getGraspMode());
 			break;
 		default:
 			return false;
@@ -372,7 +385,10 @@ public class Heuristica {
 	public Solution simulatedAnnealingSearch(int initType, int neighbourType,
 											 int sampleType, double coolingFactor, double iterationIncrement,
 											 int evaluationMode) {
-		double zero = 0.1;
+		//double zero = 0.1;
+		double zero = 0.1/(Math.log(
+						   (Math.pow(problem.getRectangleSize(), problem.getRectangleSize()) - 1)
+						   / 0.99));
 		Solution actual;
 		Random r = new Random(System.nanoTime());
 		actual = new Solution(problem.getAreaRec(), initType, problem.getRectangleSize());
@@ -420,22 +436,37 @@ public class Heuristica {
 	/**
 	 * Genera una solucion de manera constructiva.
 	 */
-	public Solution GRASP1() {
-		return null;
-	}
-
-	/**
-	 * Genera una solucion de manera constructiva.
-	 */
-	public Solution GRASP2() {
-		return null;
-	}
-
-	/**
-	 * Genera una solucion de manera constructiva.
-	 */
-	public Solution GRASP3() {
-		return null;
+	public Solution GRASP(int evaluationMode) {
+		initPoints(); // Inicializa los puntos
+		int [] order = new int[problem.getRectangleSize()];
+		Rectangle [] rectangles = problem.getRectangles().clone();
+		Point[] rectanglePosition = new Point[problem.getRectangleSize()];
+		Solution s = new Solution(0, 0, problem.getAreaRec(), null);
+		Rectangle r = null;
+		for (int i = 0; i < problem.getRectangleSize(); i++) {
+			switch (evaluationMode) {
+			case AREA_GRASP:
+				r = nextAreaGRASPRectangle(rectangles);
+				break;
+			case MIXED_GRASP:
+				r = nextMixedGRASPRectangle(rectangles);
+				break;
+			case POND_GRASP:
+				r = nextPondGRASPRectangle(rectangles);
+				break;
+			case DIAGONAL_GRASP:
+				r = nextDiagonalGRASPRectangle(rectangles);
+				break;
+			}
+			// Guardamos la posicion del rectangulo i
+			rectanglePosition[order[i]] = areaAllocateRectangle(r, s);
+			if (i != (problem.getRectangleSize() - 1))
+				managePoints(r);
+		}
+		s.setObjF();
+		s.setOrder(order);
+		problem.setSolution(s);
+		return s;
 	}
 
 	/**
@@ -472,6 +503,45 @@ public class Heuristica {
 	private int CalculateSize(int k, double iterationIncrement) {
 		return (int)(k * iterationIncrement);
 	}
+
+	/**
+	 * Calcula el mejor rectangulo que se adapta a la solucion
+	 * empleando como criterio Minimizacion de area
+	 * @return rectangulo que minimiza el area
+	 */
+	private Rectangle nextAreaGRASPRectangle(Rectangle [] rectangles) {
+		return null;
+	}
+	
+	/**
+	 * Calcula el mejor rectangulo que se adapta a la solucion
+	 * empleando como criterio una minimizacion de la diagonal.
+	 * @return rectangulo que minimiza una ponderacion entre area y desperdicio
+	 */
+	private Rectangle nextDiagonalGRASPRectangle(Rectangle [] rectangles) {
+		return null;
+	}
+	
+	/**
+	 * Calcula el mejor rectangulo que se adapta a la solucion
+	 * empleando como criterio Minimizacion desperdicio con m rectangulos
+	 * y minimizacion de area con N - m rectangulos, con m = 1..N
+	 * @param m Valor del desperdicio inicial.
+	 * @return rectangulo que minimiza una ponderacion entre area y desperdicio
+	 */
+	private Rectangle nextMixedGRASPRectangle(Rectangle [] rectangles) {
+		return null;
+	}
+	
+	/**
+	 * Calcula el mejor rectangulo que se adapta a la solucion
+	 * empleando como criterio Minimizacion de ponderacion entre area y desperdicio
+	 * @return rectangulo que minimiza una ponderacion entre area y desperdicio
+	 */
+	private Rectangle nextPondGRASPRectangle(Rectangle [] rectangles) {
+		return null;
+	}
+	
 
 
 	/**
