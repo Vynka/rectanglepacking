@@ -21,7 +21,7 @@ public class Heuristica {
 	/**
 	 * Posibles espacios de entorno para soluciones vecinas.
 	 */
-	public 	static final int RANDOM_SWAP = 0;
+	public static final int RANDOM_SWAP = 0;
 	public static final int ONE_SWAP = 1;
 	public static final int SWAP_WITH_LAST = 2;
 

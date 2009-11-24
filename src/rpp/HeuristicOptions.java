@@ -24,7 +24,7 @@ public class HeuristicOptions {
 	 */
 	public static final int RANDOM_SWAP = Heuristica.RANDOM_SWAP;
 	public static final int ONE_SWAP = Heuristica.ONE_SWAP;
-	public static final int SWAP_WITH_LAST =  Heuristica.SWAP_WITH_LAST;
+	public static final int SWAP_WITH_LAST = Heuristica.SWAP_WITH_LAST;
 	
 	/**
 	 * Criterios de parada
