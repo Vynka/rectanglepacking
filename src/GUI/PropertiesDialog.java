@@ -39,7 +39,7 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 	final String[] initstrings = {"Random", "Deterministic 01", "Deterministic 02", "Mixed 01", "Mixed 02"};
 	final String[] evaluationstrings = {"Waste", "Area", "BothSqrtN", "Ponderated"};
 	final String[] coolingFactorStrings = {"0.01","0.05","0.1","0.8","0.95","0.99"};
-	final String[] graspstrings = {"Area", "Diagonal", "Mixed", "Ponderated"};
+	final String[] graspstrings = {"Area", "Diagonal", "Mixed", "Ponderated", "Waste"};
 	
 	/**
 	 * ComboBoxes para la seleccion de parametros de la heuristica.
@@ -239,8 +239,8 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 				factorList.setVisible(false);
 				evallbl.setVisible(false);
 				evallist.setVisible(false);
-				grasplbl.setVisible(true);
-				grasplist.setVisible(true);
+				grasplbl.setVisible(false);
+				grasplist.setVisible(false);
 				break;
 			case HeuristicOptions.PURE_RANDOM_SEARCH:
 			case HeuristicOptions.RANDOM_SEARCH:

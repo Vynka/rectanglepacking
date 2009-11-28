@@ -4,7 +4,7 @@ package rpp;
 /**
  * Concepto abstracto para la eleccion del metodo a realizar en la heuristica.
  * @author Haside
- * @version 1.01.05
+ * @version 1.02.10
  * @since 1.01.04
  * @see Heuristica
  */
@@ -64,7 +64,8 @@ public class HeuristicOptions {
 	public static final int AREA_GRASP = Heuristica.AREA_GRASP;
 	public static final int DIAGONAL_GRASP = Heuristica.DIAGONAL_GRASP;
 	public static final int MIXED_GRASP = Heuristica.MIXED_GRASP;
-	public static final int POND_GRASP = Heuristica.POND_GRASP;	
+	public static final int POND_GRASP = Heuristica.POND_GRASP;
+	public static final int WASTE_GRASP = Heuristica.WASTE_GRASP;
 	
 	/**
 	 * StopCritera: Criterio de parada del problema
