@@ -13,7 +13,7 @@ import java.util.Random;
  * @author Javier Luis Moreno Villena
  * @author Alejandro Tejera Perez
  * @author Isaac Galan Estarico
- * @version 1.01.05
+ * @version 1.02.08
  * @since 1.0
  */
 
@@ -21,49 +21,55 @@ public class Heuristica {
 	/**
 	 * Posibles espacios de entorno para soluciones vecinas.
 	 */
-	public static final int RANDOM_SWAP = 0;
-	public static final int ONE_SWAP = 1;
-	public static final int SWAP_WITH_LAST = 2;
+	static final int RANDOM_SWAP = 0;
+	static final int ONE_SWAP = 1;
+	static final int SWAP_WITH_LAST = 2;
 
 	/**
 	 * Criterios de parada
 	 */
-	public static final int OUT_UNLESS_BETTER = 0;
-	public static final int NUMBER_OF_TIMES = 1;
+	static final int OUT_UNLESS_BETTER = 0;
+	static final int NUMBER_OF_TIMES = 1;
 
 	/**
 	 * Tipos de muestreo del entorno
 	 */
-	public static final int GREEDY_SAMPLING = 0;
-	public static final int ANXIOUS_SAMPLING = 1;
-	public static final int RANDOM_SAMPLING = 2;
-	public static final int NO_SAMPLING = 3;
+	static final int GREEDY_SAMPLING = 0;
+	static final int ANXIOUS_SAMPLING = 1;
+	static final int RANDOM_SAMPLING = 2;
+	static final int NO_SAMPLING = 3;
 
 	/**
 	 * Metodos de resolucion del problema
 	 */
-	public static final int PURE_RANDOM_SEARCH = 0;
-	public static final int RANDOM_SEARCH = 1;
-	public static final int LOCAL_SEARCH = 2;
-	public static final int MULTISTART_WITH_LOCAL_SEARCH = 3;
-	public static final int SIMULATED_ANNEALING_SEARCH = 4;
-	public static final int GRASP = 5;
+	static final int PURE_RANDOM_SEARCH = 0;
+	static final int RANDOM_SEARCH = 1;
+	static final int LOCAL_SEARCH = 2;
+	static final int MULTISTART_WITH_LOCAL_SEARCH = 3;
+	static final int SIMULATED_ANNEALING_SEARCH = 4;
+	static final int GRASP = 5;
 
 	/**
 	 * Eleccion de heuristica de colocacion
 	 */
-	public static final int WASTE_EVAL = 0;
-	public static final int AREA_EVAL = 1;
-	public static final int MIXED_EVAL = 2;
-	public static final int POND_EVAL = 3;
+	static final int WASTE_EVAL = 0;
+	static final int AREA_EVAL = 1;
+	static final int MIXED_EVAL = 2;
+	static final int POND_EVAL = 3;
 	
 	/**
 	 * Eleccion de la eleccion del rectangulo en el GRASP
 	 */
-	public static final int AREA_GRASP = 0;
-	public static final int DIAGONAL_GRASP = 1;
-	public static final int MIXED_GRASP = 2;
-	public static final int POND_GRASP = 3;
+	// BASURA
+	static final int AREA_GRASP = 0;
+	// POR HACER
+	static final int DIAGONAL_GRASP = 1;
+	// WTF
+	static final int MIXED_GRASP = 2;
+	// POR HACER
+	static final int POND_GRASP = 3;
+	// ES HASTA MEJOR QUE EL AREA GRASP
+	static final int WASTE_GRASP = 4;
 
 	
 	/**
@@ -435,38 +441,50 @@ public class Heuristica {
 
 	/**
 	 * Genera una solucion de manera constructiva.
+	 * @return posiciones de los rectangulos en pantalla
 	 */
-	public Solution GRASP(int evaluationMode) {
+	public Point[] GRASP(int evaluationMode) {
 		initPoints(); // Inicializa los puntos
-		int [] order = new int[problem.getRectangleSize()];
+		int [] order = new int [problem.getRectangleSize()];
 		Rectangle [] rectangles = problem.getRectangles().clone();
 		Point[] rectanglePosition = new Point[problem.getRectangleSize()];
 		Solution s = new Solution(0, 0, problem.getAreaRec(), null);
-		Rectangle r = null;
+		int rectPos = 0;
+		// Va colocando los rectangulos y guardando sus posiciones
 		for (int i = 0; i < problem.getRectangleSize(); i++) {
 			switch (evaluationMode) {
 			case AREA_GRASP:
-				r = nextAreaGRASPRectangle(rectangles);
+				rectPos = nextAreaGRASPRectangle(rectangles, s);
+				break;
+			case WASTE_GRASP:
+				rectPos = nextWasteGRASPRectangle(rectangles, s);
 				break;
 			case MIXED_GRASP:
-				r = nextMixedGRASPRectangle(rectangles);
+				if (i < Math.sqrt(problem.getRectangleSize()))
+					rectPos = nextWasteGRASPRectangle(rectangles, s);
+				else rectPos = nextAreaGRASPRectangle(rectangles, s);
 				break;
 			case POND_GRASP:
-				r = nextPondGRASPRectangle(rectangles);
+				rectPos = nextPondGRASPRectangle(rectangles, s);
 				break;
 			case DIAGONAL_GRASP:
-				r = nextDiagonalGRASPRectangle(rectangles);
+				rectPos = nextDiagonalGRASPRectangle(rectangles, s);
 				break;
 			}
-			// Guardamos la posicion del rectangulo i
-			rectanglePosition[order[i]] = areaAllocateRectangle(r, s);
-			if (i != (problem.getRectangleSize() - 1))
-				managePoints(r);
+			// Guardamos la posicion del rectangulo i, su posicion y evitamos que se vuelva a elegir
+			order[i] = rectPos;
+			rectanglePosition[rectPos] = rectangles[rectPos].getPosition();
+			if (i != (problem.getRectangleSize() - 1)) {
+				managePoints(rectangles[rectPos]);
+				rectangles[rectPos] = null;
+			}
 		}
-		s.setObjF();
+		// Se ponen los datos de la solucion
 		s.setOrder(order);
+		s.setObjF();
 		problem.setSolution(s);
-		return s;
+		problem.changeRectanglePositions(rectanglePosition);
+		return rectanglePosition;
 	}
 
 	/**
@@ -507,19 +525,76 @@ public class Heuristica {
 	/**
 	 * Calcula el mejor rectangulo que se adapta a la solucion
 	 * empleando como criterio Minimizacion de area
-	 * @return rectangulo que minimiza el area
+	 * @return posicion en el array del rectangulo que minimiza el area
 	 */
-	private Rectangle nextAreaGRASPRectangle(Rectangle [] rectangles) {
-		return null;
+	private int nextAreaGRASPRectangle(Rectangle [] rectangles, Solution s) {
+		Random rand = new Random(System.nanoTime());
+		final int SETSIZE = 3;
+		ArrayList<Integer> selected = new ArrayList<Integer>(SETSIZE);
+		ArrayList<Integer> b = new ArrayList<Integer>(SETSIZE);
+		ArrayList<Integer> h = new ArrayList<Integer>(SETSIZE);
+		ArrayList<Integer> pointInd = new ArrayList<Integer>(SETSIZE);
+		// El mejor caso es que las menores dimensiones sean las ya obtenidas
+		// anteriormente
+		for (int i = 0; i < rectangles.length; i++) {
+			if (rectangles[i] != null) {
+				// Se toman los nuevos datos resultantes de colocar el rectangulo
+				// Como minimo van a ser iguales que los actuales
+				for (int j = 0; j < points.size(); j++) {
+					// Eje y
+					int newH = s.getHeight();
+					if ((points.get(j).getY() + rectangles[i].getHeight()) > (s.getHeight()))
+						newH = points.get(j).getY() + rectangles[i].getHeight();
+					// Eje X
+					int newB = s.getBase();
+					if ((points.get(j).getX() + rectangles[i].getBase()) > (s.getBase()))
+						newB = points.get(j).getX() + rectangles[i].getBase();
+					// Si son mejores que los actuales se guardan
+					int newArea = newH * newB;
+					if (selected.size() < 3) {
+						selected.add(i);
+						pointInd.add(j);
+						b.add(newB);
+						h.add(newH);
+					} else {
+						int worst = 0;
+						for (int k = 1; k < b.size(); k++) {
+							if (b.get(worst) * h.get(worst) < b.get(k) * h.get(k)) {
+								worst = k;
+							}
+						}
+						if (newArea < b.get(worst) * h.get(worst)) {
+							selected.set(worst, i);
+							pointInd.set(worst, j);
+							b.set(worst, newB);
+							h.set(worst, newH);
+						}
+					}
+				}
+			}
+		}
+		// Se actualiza la solucion
+		int ranSelect = rand.nextInt(selected.size());
+		s.setBase(b.get(ranSelect));
+		s.setHeight(h.get(ranSelect));
+		rectangles[selected.get(ranSelect)].setPosition(this.points.get(pointInd.get(ranSelect)));
+		return selected.get(ranSelect);
 	}
 	
 	/**
 	 * Calcula el mejor rectangulo que se adapta a la solucion
 	 * empleando como criterio una minimizacion de la diagonal.
-	 * @return rectangulo que minimiza una ponderacion entre area y desperdicio
+	 * @return posicion en el array del rectangulo que minimiza 
+	 *         una ponderacion entre area y desperdicio
 	 */
-	private Rectangle nextDiagonalGRASPRectangle(Rectangle [] rectangles) {
-		return null;
+	private int nextDiagonalGRASPRectangle(Rectangle [] rectangles, Solution s) {
+		int selected = 0;
+		for (int i = 0; i < rectangles.length; i++) {
+			if (rectangles[i] != null) {
+				
+			}
+		}
+		return selected;
 	}
 	
 	/**
@@ -527,19 +602,85 @@ public class Heuristica {
 	 * empleando como criterio Minimizacion desperdicio con m rectangulos
 	 * y minimizacion de area con N - m rectangulos, con m = 1..N
 	 * @param m Valor del desperdicio inicial.
-	 * @return rectangulo que minimiza una ponderacion entre area y desperdicio
+	 * @return posicion en el array del rectangulo que minimiza una 
+	 *         ponderacion entre area y desperdicio
 	 */
-	private Rectangle nextMixedGRASPRectangle(Rectangle [] rectangles) {
-		return null;
+	private int nextWasteGRASPRectangle(Rectangle [] rectangles, Solution s) {
+		Random rand = new Random(System.nanoTime());
+		final int SETSIZE = 2;
+		ArrayList<Integer> selected = new ArrayList<Integer>(SETSIZE);
+		ArrayList<Integer> waste = new ArrayList<Integer>(SETSIZE);
+		ArrayList<Integer> pointInd = new ArrayList<Integer>(SETSIZE);
+		// Se considerara mejor caso el que deje menor area desperdiciada
+		for (int i = 0; i < rectangles.length; i++) {
+			if (rectangles[i] != null) {
+				// Se toman los nuevos datos resultantes de colocar el rectangulo
+				// Como minimo van a ser iguales que los actuales
+				for (int j = 0; j < points.size(); j++) {
+					rectangles[i].setPosition(this.points.get(j));
+					int actualWaste = wasteCalculation(rectangles[i]);
+					// Si son mejores que los actuales se guardan
+					if (selected.size() < 3) {
+						selected.add(i);
+						pointInd.add(j);
+						waste.add(actualWaste);
+					} else {
+						int worst = 0;
+						for (int k = 1; k < waste.size(); k++) {
+							if (waste.get(worst) < waste.get(k)) {
+								worst = k;
+							}
+						}
+						if (actualWaste < waste.get(worst)) {
+							selected.set(worst, i);
+							pointInd.set(worst, j);
+							waste.set(worst, actualWaste);
+						}
+					}
+				}
+			}
+		}
+		
+		int selectedIndex = rand.nextInt(selected.size());
+		// Rectangulo correspondiente
+		int selecRect = selected.get(selectedIndex);
+		// Punto correspondiente
+		int selecPoint = pointInd.get(selectedIndex);
+		// Se obtienen los nuevos datos de la solucion
+		// Eje y
+		int newH = s.getHeight();
+		// Explicacion de los if: lo mismo que en las funciones evalue pero escogiendo entre uno de los
+		// rectangulos aleatoriamente en el conjunto de los elegidos
+		if ((points.get(selecPoint).getY() + 
+				rectangles[selecRect].getHeight()) > (s.getHeight()))
+			newH = points.get(selecPoint).getY() + rectangles[selecRect].getHeight();
+		// Eje X
+		int newB = s.getBase();
+		if ((points.get(selecPoint).getX() + 
+				rectangles[selecRect].getBase()) > (s.getBase()))
+			newB = points.get(selecPoint).getX() + rectangles[selecRect].getBase();
+		
+		// Se actualiza
+		s.setBase(newB);
+		s.setHeight(newH);
+		rectangles[selecRect].setPosition(this.points.get(selecPoint));
+		return selecRect;
 	}
 	
 	/**
 	 * Calcula el mejor rectangulo que se adapta a la solucion
 	 * empleando como criterio Minimizacion de ponderacion entre area y desperdicio
-	 * @return rectangulo que minimiza una ponderacion entre area y desperdicio
+	 * @return posicion en el array delrectangulo que minimiza 
+	 *         una ponderacion entre area y desperdicio
 	 */
-	private Rectangle nextPondGRASPRectangle(Rectangle [] rectangles) {
-		return null;
+	private int nextPondGRASPRectangle(Rectangle [] rectangles, Solution s) {
+		int selected = 0;
+		for (int i = 0; i < rectangles.length; i++) {
+			if (rectangles[i] != null) {
+				
+			}
+		}
+		return selected;
 	}
 	
 
