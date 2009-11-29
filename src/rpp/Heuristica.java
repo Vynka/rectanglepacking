@@ -60,15 +60,10 @@ public class Heuristica {
 	/**
 	 * Eleccion de la eleccion del rectangulo en el GRASP
 	 */
-	// BASURA
 	static final int AREA_GRASP = 0;
-	// POR HACER
 	static final int DIAGONAL_GRASP = 1;
-	// WTF
 	static final int MIXED_GRASP = 2;
-	// POR HACER
 	static final int POND_GRASP = 3;
-	// ES HASTA MEJOR QUE EL AREA GRASP
 	static final int WASTE_GRASP = 4;
 	
 	private static final int SETSIZE = 2;
@@ -456,18 +451,16 @@ public class Heuristica {
 		for (int i = 0; i < problem.getRectangleSize(); i++) {
 			switch (evaluationMode) {
 			case AREA_GRASP:
-				rectPos = nextAreaGRASPRectangle(rectangles, s);
+				rectPos = nextGRASPRectangle(rectangles, s, AREA_EVAL);
 				break;
 			case WASTE_GRASP:
-				rectPos = nextWasteGRASPRectangle(rectangles, s);
+				rectPos = nextGRASPRectangle(rectangles, s, WASTE_EVAL);
 				break;
 			case MIXED_GRASP:
-				if (i < Math.sqrt(problem.getRectangleSize()))
-					rectPos = nextWasteGRASPRectangle(rectangles, s);
-				else rectPos = nextAreaGRASPRectangle(rectangles, s);
+				rectPos = nextGRASPRectangle(rectangles, s, MIXED_EVAL);
 				break;
 			case POND_GRASP:
-				rectPos = nextPondGRASPRectangle(rectangles, s);
+				rectPos = nextGRASPRectangle(rectangles, s, POND_EVAL);
 				break;
 			case DIAGONAL_GRASP:
 				rectPos = nextDiagonalGRASPRectangle(rectangles, s);
@@ -529,56 +522,71 @@ public class Heuristica {
 	 * empleando como criterio Minimizacion de area
 	 * @return posicion en el array del rectangulo que minimiza el area
 	 */
-	private int nextAreaGRASPRectangle(Rectangle [] rectangles, Solution s) {
+	private int nextGRASPRectangle(Rectangle [] rectangles, Solution s, int evaluationMode) {
 		Random rand = new Random(System.nanoTime());
 		ArrayList<Integer> selected = new ArrayList<Integer>(SETSIZE);
-		ArrayList<Integer> b = new ArrayList<Integer>(SETSIZE);
-		ArrayList<Integer> h = new ArrayList<Integer>(SETSIZE);
-		ArrayList<Integer> pointInd = new ArrayList<Integer>(SETSIZE);
-		// El mejor caso es que las menores dimensiones sean las ya obtenidas
-		// anteriormente
+		ArrayList<Point> bestPoint = new ArrayList<Point>(0);
+		// Se hallan los puntos donde cada rectangulo desvia lo menos posible de pi/4 la diagonal
+		ArrayList<Double> deviation = diagonalDeviation(rectangles, s);
+		// De las colocaciones que desvian menos la diagonal, se coge la que devuelve menor area
+		Solution aux = new Solution(s.getBase(), s.getHeight(), problem.getAreaRec(), new int[0]);
 		for (int i = 0; i < rectangles.length; i++) {
 			if (rectangles[i] != null) {
-				// Se toman los nuevos datos resultantes de colocar el rectangulo
-				// Como minimo van a ser iguales que los actuales
-				for (int j = 0; j < points.size(); j++) {
-					// Eje y
-					int newH = s.getHeight();
-					if ((points.get(j).getY() + rectangles[i].getHeight()) > (s.getHeight()))
-						newH = points.get(j).getY() + rectangles[i].getHeight();
-					// Eje X
-					int newB = s.getBase();
-					if ((points.get(j).getX() + rectangles[i].getBase()) > (s.getBase()))
-						newB = points.get(j).getX() + rectangles[i].getBase();
-					// Si son mejores que los actuales se guardan
-					int newArea = newH * newB;
-					if (selected.size() < SETSIZE) {
-						selected.add(i);
-						pointInd.add(j);
-						b.add(newB);
-						h.add(newH);
-					} else {
-						int worst = 0;
-						for (int k = 1; k < b.size(); k++) {
-							if (b.get(worst) * h.get(worst) < b.get(k) * h.get(k)) {
-								worst = k;
-							}
+				switch (evaluationMode) {
+				case AREA_EVAL:
+					bestPoint.add(areaAllocateRectangle(rectangles[i], aux));
+					break;
+				case MIXED_EVAL:
+					if (i < Math.sqrt(problem.getRectangleSize()))
+						bestPoint.add(wasteAllocateRectangle(rectangles[i], aux));
+					else bestPoint.add(areaAllocateRectangle(rectangles[i], aux));
+					break;
+				case POND_EVAL:
+					bestPoint.add(pondAllocateRectangle(rectangles[i], aux));
+					break;
+				case WASTE_EVAL:
+					bestPoint.add(wasteAllocateRectangle(rectangles[i], aux));
+					break;
+				}
+			} else {
+				bestPoint.add(new Point(0,0));
+			}
+		}
+		// Se coge entre las SETSIZE de menor desvio producido
+		for (int i = 0; i < deviation.size(); i++) {
+			if (rectangles[i] != null) {	
+				if (selected.size() < SETSIZE) {
+					selected.add(i);
+				} else {
+					int worst = 0;
+					for (int j = 1; j < selected.size(); j++) {
+						if (deviation.get(selected.get(worst)) < deviation.get(selected.get(j))) {
+							worst = j;
 						}
-						if (newArea < b.get(worst) * h.get(worst)) {
-							selected.set(worst, i);
-							pointInd.set(worst, j);
-							b.set(worst, newB);
-							h.set(worst, newH);
-						}
+					}
+					if (deviation.get(i) < deviation.get(selected.get(worst))) {
+						selected.set(worst, i);
 					}
 				}
 			}
 		}
 		// Se actualiza la solucion
 		int ranSelect = rand.nextInt(selected.size());
-		s.setBase(b.get(ranSelect));
-		s.setHeight(h.get(ranSelect));
-		rectangles[selected.get(ranSelect)].setPosition(this.points.get(pointInd.get(ranSelect)));
+		int selctInd = selected.get(ranSelect);
+		rectangles[selctInd].setPosition(bestPoint.get(selctInd));
+		
+		// Eje y
+		int newH = s.getHeight();
+		if ((rectangles[selctInd].getPosition().getY() + rectangles[selctInd].getHeight()) > (s.getHeight()))
+			newH = rectangles[selctInd].getPosition().getY() + rectangles[selctInd].getHeight();
+		// Eje X
+		int newB = s.getBase();
+		if ((rectangles[selctInd].getPosition().getX() + rectangles[selctInd].getBase()) > (s.getBase()))
+			newB = rectangles[selctInd].getPosition().getX() + rectangles[selctInd].getBase();
+		
+		s.setBase(newB);
+		s.setHeight(newH);
+		
 		return selected.get(ranSelect);
 	}
 	
@@ -603,17 +611,15 @@ public class Heuristica {
 	}
 	
 	/**
-	 * Calcula el mejor rectangulo que se adapta a la solucion
-	 * empleando como criterio una minimizacion de la diagonal.
-	 * @return posicion en el array del rectangulo que minimiza 
-	 *         una ponderacion entre area y desperdicio
+	 * 
+	 * @param rectangles
+	 * @param pointInd
+	 * @param s
+	 * @return
 	 */
-	private int nextDiagonalGRASPRectangle(Rectangle [] rectangles, Solution s) {
-		Random rand = new Random(System.nanoTime());
-		ArrayList<Double> deviation = new ArrayList<Double>(0);
-		ArrayList<Integer> selected = new ArrayList<Integer>(0);
-		ArrayList<Integer> pointInd = new ArrayList<Integer>(SETSIZE);
+	private ArrayList<Double> diagonalDeviation(Rectangle [] rectangles, ArrayList<Integer> pointInd, Solution s) {
 		// Se halla la menor desviacion causada por cada punto
+		ArrayList<Double> deviation = new ArrayList<Double>(0);
 		for (int i = 0; i < rectangles.length; i++) {
 			if (rectangles[i] != null) {
 				// Se toman los nuevos datos resultantes de colocar el rectangulo
@@ -627,6 +633,7 @@ public class Heuristica {
 						pointInd.add(j);
 					} else if (deviation.get(i) > actualDeviation) {
 						deviation.set(i, actualDeviation);
+						pointInd.set(i, j);
 					}
 				}
 			} else {
@@ -634,20 +641,66 @@ public class Heuristica {
 				pointInd.add(-1);
 			}
 		}
-		// Se coge entre las SETSIZE mejores
-		for (int i = 0; i < deviation.size(); i++) {
-			// Si son mejores que los actuales se guardan
-			if (selected.size() < SETSIZE) {
-				selected.add(i);
-			} else {
-				int worst = 0;
-				for (int j = 1; j < selected.size(); j++) {
-					if (deviation.get(selected.get(worst)) < deviation.get(selected.get(j))) {
-						worst = j;
+		return deviation;
+	}
+	
+	/**
+	 * 
+	 * @param rectangles
+	 * @param s
+	 * @return
+	 */
+	private ArrayList<Double> diagonalDeviation(Rectangle [] rectangles, Solution s) {
+		// Se halla la menor desviacion causada por cada punto
+		ArrayList<Double> deviation = new ArrayList<Double>(0);
+		for (int i = 0; i < rectangles.length; i++) {
+			if (rectangles[i] != null) {
+				// Se toman los nuevos datos resultantes de colocar el rectangulo
+				// Como minimo van a ser iguales que los actuales
+				for (int j = 0; j < points.size(); j++) {
+					rectangles[i].setPosition(this.points.get(j));
+					double actualDeviation = diagonalDeviation(rectangles[i], s);
+					// Si son mejores que los actuales se guardan
+					if (deviation.size() < (i + 1)) {
+						deviation.add(actualDeviation);
+					} else if (deviation.get(i) > actualDeviation) {
+						deviation.set(i, actualDeviation);
 					}
 				}
-				if (deviation.get(i) < deviation.get(selected.get(worst))) {
-					selected.set(worst, i);
+			} else {
+				deviation.add(Double.MAX_VALUE);
+			}
+		}
+		return deviation;
+	}
+	
+	/**
+	 * Calcula el mejor rectangulo que se adapta a la solucion
+	 * empleando como criterio una minimizacion de la diagonal.
+	 * @return posicion en el array del rectangulo que minimiza 
+	 *         una ponderacion entre area y desperdicio
+	 */
+	private int nextDiagonalGRASPRectangle(Rectangle [] rectangles, Solution s) {
+		Random rand = new Random(System.nanoTime());
+		ArrayList<Integer> selected = new ArrayList<Integer>(0);
+		ArrayList<Integer> pointInd = new ArrayList<Integer>(SETSIZE);
+		ArrayList<Double> deviation = diagonalDeviation(rectangles, pointInd, s);
+		// Se coge entre las SETSIZE mejores
+		for (int i = 0; i < deviation.size(); i++) {
+			if (rectangles[i] != null) {
+				// Si son mejores que los actuales se guardan
+				if (selected.size() < SETSIZE) {
+					selected.add(i);
+				} else {
+					int worst = 0;
+					for (int j = 1; j < selected.size(); j++) {
+						if (deviation.get(selected.get(worst)) < deviation.get(selected.get(j))) {
+							worst = j;
+						}
+					}
+					if (deviation.get(i) < deviation.get(selected.get(worst))) {
+						selected.set(worst, i);
+					}
 				}
 			}
 		}
@@ -678,6 +731,7 @@ public class Heuristica {
 		return selecRect;
 	}
 	
+	
 	/**
 	 * Calcula el mejor rectangulo que se adapta a la solucion
 	 * empleando como criterio Minimizacion desperdicio con m rectangulos
@@ -686,66 +740,60 @@ public class Heuristica {
 	 * @return posicion en el array del rectangulo que minimiza una 
 	 *         ponderacion entre area y desperdicio
 	 */
+	/*
 	private int nextWasteGRASPRectangle(Rectangle [] rectangles, Solution s) {
 		Random rand = new Random(System.nanoTime());
 		ArrayList<Integer> selected = new ArrayList<Integer>(SETSIZE);
-		ArrayList<Integer> waste = new ArrayList<Integer>(SETSIZE);
-		ArrayList<Integer> pointInd = new ArrayList<Integer>(SETSIZE);
-		// Se considerara mejor caso el que deje menor area desperdiciada
+		ArrayList<Point> bestPoint = new ArrayList<Point>(0);
+		// Se hallan los puntos donde cada rectangulo desvia lo menos posible de pi/4 la diagonal
+		ArrayList<Double> deviation = diagonalDeviation(rectangles, s);
+		// De las colocaciones que desvian menos la diagonal, se coge la que devuelve menor area
+		Solution aux = new Solution(s.getBase(), s.getHeight(), problem.getAreaRec(), new int[0]);
 		for (int i = 0; i < rectangles.length; i++) {
 			if (rectangles[i] != null) {
-				// Se toman los nuevos datos resultantes de colocar el rectangulo
-				// Como minimo van a ser iguales que los actuales
-				for (int j = 0; j < points.size(); j++) {
-					rectangles[i].setPosition(this.points.get(j));
-					int actualWaste = wasteCalculation(rectangles[i]);
-					// Si son mejores que los actuales se guardan
-					if (selected.size() < SETSIZE) {
-						selected.add(i);
-						pointInd.add(j);
-						waste.add(actualWaste);
-					} else {
-						int worst = 0;
-						for (int k = 1; k < waste.size(); k++) {
-							if (waste.get(worst) < waste.get(k)) {
-								worst = k;
-							}
+				bestPoint.add(wasteAllocateRectangle(rectangles[i], aux));
+			} else {
+				bestPoint.add(new Point(0,0));
+			}
+		}
+		// Se coge entre las SETSIZE de menor desvio producido
+		for (int i = 0; i < deviation.size(); i++) {
+			if (rectangles[i] != null) {	
+				if (selected.size() < SETSIZE) {
+					selected.add(i);
+				} else {
+					int worst = 0;
+					for (int j = 1; j < selected.size(); j++) {
+						if (deviation.get(selected.get(worst)) < deviation.get(selected.get(j))) {
+							worst = j;
 						}
-						if (actualWaste < waste.get(worst)) {
-							selected.set(worst, i);
-							pointInd.set(worst, j);
-							waste.set(worst, actualWaste);
-						}
+					}
+					if (deviation.get(i) < deviation.get(selected.get(worst))) {
+						selected.set(worst, i);
 					}
 				}
 			}
 		}
+		// Se actualiza la solucion
+		int ranSelect = rand.nextInt(selected.size());
+		int selctInd = selected.get(ranSelect);
+		rectangles[selctInd].setPosition(bestPoint.get(selctInd));
 		
-		int selectedIndex = rand.nextInt(selected.size());
-		// Rectangulo correspondiente
-		int selecRect = selected.get(selectedIndex);
-		// Punto correspondiente
-		int selecPoint = pointInd.get(selectedIndex);
-		// Se obtienen los nuevos datos de la solucion
 		// Eje y
 		int newH = s.getHeight();
-		// Explicacion de los if: lo mismo que en las funciones evalue pero escogiendo entre uno de los
-		// rectangulos aleatoriamente en el conjunto de los elegidos
-		if ((points.get(selecPoint).getY() + 
-				rectangles[selecRect].getHeight()) > (s.getHeight()))
-			newH = points.get(selecPoint).getY() + rectangles[selecRect].getHeight();
+		if ((rectangles[selctInd].getPosition().getY() + rectangles[selctInd].getHeight()) > (s.getHeight()))
+			newH = rectangles[selctInd].getPosition().getY() + rectangles[selctInd].getHeight();
 		// Eje X
 		int newB = s.getBase();
-		if ((points.get(selecPoint).getX() + 
-				rectangles[selecRect].getBase()) > (s.getBase()))
-			newB = points.get(selecPoint).getX() + rectangles[selecRect].getBase();
+		if ((rectangles[selctInd].getPosition().getX() + rectangles[selctInd].getBase()) > (s.getBase()))
+			newB = rectangles[selctInd].getPosition().getX() + rectangles[selctInd].getBase();
 		
-		// Se actualiza
 		s.setBase(newB);
 		s.setHeight(newH);
-		rectangles[selecRect].setPosition(this.points.get(selecPoint));
-		return selecRect;
+		
+		return selected.get(ranSelect);
 	}
+	*/
 	
 	/**
 	 * Calcula el mejor rectangulo que se adapta a la solucion
@@ -753,6 +801,7 @@ public class Heuristica {
 	 * @return posicion en el array delrectangulo que minimiza 
 	 *         una ponderacion entre area y desperdicio
 	 */
+	/*
 	private int nextPondGRASPRectangle(Rectangle [] rectangles, Solution s) {
 		Random rand = new Random(System.nanoTime());
 		ArrayList<Integer> selected = new ArrayList<Integer>(SETSIZE);
@@ -813,7 +862,7 @@ public class Heuristica {
 		rectangles[selecRect].setPosition(this.points.get(selecPoint));
 		return selecRect;
 	}
-	
+	*/
 
 
 	/**
