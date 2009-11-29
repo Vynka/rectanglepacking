@@ -70,6 +70,8 @@ public class Heuristica {
 	static final int POND_GRASP = 3;
 	// ES HASTA MEJOR QUE EL AREA GRASP
 	static final int WASTE_GRASP = 4;
+	
+	private static final int SETSIZE = 2;
 
 	
 	/**
@@ -529,7 +531,6 @@ public class Heuristica {
 	 */
 	private int nextAreaGRASPRectangle(Rectangle [] rectangles, Solution s) {
 		Random rand = new Random(System.nanoTime());
-		final int SETSIZE = 3;
 		ArrayList<Integer> selected = new ArrayList<Integer>(SETSIZE);
 		ArrayList<Integer> b = new ArrayList<Integer>(SETSIZE);
 		ArrayList<Integer> h = new ArrayList<Integer>(SETSIZE);
@@ -551,7 +552,7 @@ public class Heuristica {
 						newB = points.get(j).getX() + rectangles[i].getBase();
 					// Si son mejores que los actuales se guardan
 					int newArea = newH * newB;
-					if (selected.size() < 3) {
+					if (selected.size() < SETSIZE) {
 						selected.add(i);
 						pointInd.add(j);
 						b.add(newB);
@@ -582,19 +583,99 @@ public class Heuristica {
 	}
 	
 	/**
+	 * 
+	 * @param r
+	 * @param s
+	 * @return
+	 */
+	private double diagonalDeviation(Rectangle r, Solution s) {
+		// Nueva altura
+		int h = s.getHeight();
+		if (r.getPosition().getY() + r.getHeight() > (s.getHeight()))
+			h = r.getPosition().getY() + r.getHeight();
+		// Nueva base
+		int b = s.getBase();
+		if (r.getPosition().getX() + r.getBase() > (s.getBase()))
+			b = r.getPosition().getX() + r.getBase();
+		double angle = Math.atan2(h, b);
+		double deviation = Math.abs((Math.PI / 4) - angle);
+		return deviation;
+	}
+	
+	/**
 	 * Calcula el mejor rectangulo que se adapta a la solucion
 	 * empleando como criterio una minimizacion de la diagonal.
 	 * @return posicion en el array del rectangulo que minimiza 
 	 *         una ponderacion entre area y desperdicio
 	 */
 	private int nextDiagonalGRASPRectangle(Rectangle [] rectangles, Solution s) {
-		int selected = 0;
+		Random rand = new Random(System.nanoTime());
+		ArrayList<Double> deviation = new ArrayList<Double>(0);
+		ArrayList<Integer> selected = new ArrayList<Integer>(0);
+		ArrayList<Integer> pointInd = new ArrayList<Integer>(SETSIZE);
+		// Se halla la menor desviacion causada por cada punto
 		for (int i = 0; i < rectangles.length; i++) {
 			if (rectangles[i] != null) {
-				
+				// Se toman los nuevos datos resultantes de colocar el rectangulo
+				// Como minimo van a ser iguales que los actuales
+				for (int j = 0; j < points.size(); j++) {
+					rectangles[i].setPosition(this.points.get(j));
+					double actualDeviation = diagonalDeviation(rectangles[i], s);
+					// Si son mejores que los actuales se guardan
+					if (deviation.size() < (i + 1)) {
+						deviation.add(actualDeviation);
+						pointInd.add(j);
+					} else if (deviation.get(i) > actualDeviation) {
+						deviation.set(i, actualDeviation);
+					}
+				}
+			} else {
+				deviation.add(Double.MAX_VALUE);
+				pointInd.add(-1);
 			}
 		}
-		return selected;
+		// Se coge entre las SETSIZE mejores
+		for (int i = 0; i < deviation.size(); i++) {
+			// Si son mejores que los actuales se guardan
+			if (selected.size() < SETSIZE) {
+				selected.add(i);
+			} else {
+				int worst = 0;
+				for (int j = 1; j < selected.size(); j++) {
+					if (deviation.get(selected.get(worst)) < deviation.get(selected.get(j))) {
+						worst = j;
+					}
+				}
+				if (deviation.get(i) < deviation.get(selected.get(worst))) {
+					selected.set(worst, i);
+				}
+			}
+		}
+
+		int selectedIndex = rand.nextInt(selected.size());
+		// Rectangulo correspondiente
+		int selecRect = selected.get(selectedIndex);
+		// Punto correspondiente
+		int selecPoint = pointInd.get(selecRect);
+		// Se obtienen los nuevos datos de la solucion
+		// Eje y
+		int newH = s.getHeight();
+		// Explicacion de los if: lo mismo que en las funciones evalue pero escogiendo entre uno de los
+		// rectangulos aleatoriamente en el conjunto de los elegidos
+		if ((points.get(selecPoint).getY() + 
+				rectangles[selecRect].getHeight()) > (s.getHeight()))
+			newH = points.get(selecPoint).getY() + rectangles[selecRect].getHeight();
+		// Eje X
+		int newB = s.getBase();
+		if ((points.get(selecPoint).getX() + 
+				rectangles[selecRect].getBase()) > (s.getBase()))
+			newB = points.get(selecPoint).getX() + rectangles[selecRect].getBase();
+		
+		// Se actualiza
+		s.setBase(newB);
+		s.setHeight(newH);
+		rectangles[selecRect].setPosition(this.points.get(selecPoint));
+		return selecRect;
 	}
 	
 	/**
@@ -607,7 +688,6 @@ public class Heuristica {
 	 */
 	private int nextWasteGRASPRectangle(Rectangle [] rectangles, Solution s) {
 		Random rand = new Random(System.nanoTime());
-		final int SETSIZE = 2;
 		ArrayList<Integer> selected = new ArrayList<Integer>(SETSIZE);
 		ArrayList<Integer> waste = new ArrayList<Integer>(SETSIZE);
 		ArrayList<Integer> pointInd = new ArrayList<Integer>(SETSIZE);
@@ -620,7 +700,7 @@ public class Heuristica {
 					rectangles[i].setPosition(this.points.get(j));
 					int actualWaste = wasteCalculation(rectangles[i]);
 					// Si son mejores que los actuales se guardan
-					if (selected.size() < 3) {
+					if (selected.size() < SETSIZE) {
 						selected.add(i);
 						pointInd.add(j);
 						waste.add(actualWaste);
@@ -674,13 +754,64 @@ public class Heuristica {
 	 *         una ponderacion entre area y desperdicio
 	 */
 	private int nextPondGRASPRectangle(Rectangle [] rectangles, Solution s) {
-		int selected = 0;
+		Random rand = new Random(System.nanoTime());
+		ArrayList<Integer> selected = new ArrayList<Integer>(SETSIZE);
+		ArrayList<Double> values = new ArrayList<Double>(SETSIZE);
+		ArrayList<Integer> pointInd = new ArrayList<Integer>(SETSIZE);
+		// Se considerara mejor caso el que deje menor area desperdiciada
 		for (int i = 0; i < rectangles.length; i++) {
 			if (rectangles[i] != null) {
-				
+				// Se toman los nuevos datos resultantes de colocar el rectangulo
+				// Como minimo van a ser iguales que los actuales
+				for (int j = 0; j < points.size(); j++) {
+					rectangles[i].setPosition(this.points.get(j));
+					double actualValue = pondCalculation(rectangles[i], s, 0.9);
+					// Si son mejores que los actuales se guardan
+					if (selected.size() < SETSIZE) {
+						selected.add(i);
+						pointInd.add(j);
+						values.add(actualValue);
+					} else {
+						int worst = 0;
+						for (int k = 1; k < values.size(); k++) {
+							if (values.get(worst) < values.get(k)) {
+								worst = k;
+							}
+						}
+						if (actualValue < values.get(worst)) {
+							selected.set(worst, i);
+							pointInd.set(worst, j);
+							values.set(worst, actualValue);
+						}
+					}
+				}
 			}
 		}
-		return selected;
+		
+		int selectedIndex = rand.nextInt(selected.size());
+		// Rectangulo correspondiente
+		int selecRect = selected.get(selectedIndex);
+		// Punto correspondiente
+		int selecPoint = pointInd.get(selectedIndex);
+		// Se obtienen los nuevos datos de la solucion
+		// Eje y
+		int newH = s.getHeight();
+		// Explicacion de los if: lo mismo que en las funciones evalue pero escogiendo entre uno de los
+		// rectangulos aleatoriamente en el conjunto de los elegidos
+		if ((points.get(selecPoint).getY() + 
+				rectangles[selecRect].getHeight()) > (s.getHeight()))
+			newH = points.get(selecPoint).getY() + rectangles[selecRect].getHeight();
+		// Eje X
+		int newB = s.getBase();
+		if ((points.get(selecPoint).getX() + 
+				rectangles[selecRect].getBase()) > (s.getBase()))
+			newB = points.get(selecPoint).getX() + rectangles[selecRect].getBase();
+		
+		// Se actualiza
+		s.setBase(newB);
+		s.setHeight(newH);
+		rectangles[selecRect].setPosition(this.points.get(selecPoint));
+		return selecRect;
 	}
 	
 
@@ -1167,7 +1298,7 @@ public class Heuristica {
 	/**
 	 * 
 	 */
-	public double pondCalculation(Rectangle r, Solution s, double factor) {
+	private double pondCalculation(Rectangle r, Solution s, double factor) {
 		double areaFactor = 1 - factor;
 		int h = r.getPosition().getY() + r.getHeight();
 		int b = r.getPosition().getX() + r.getBase();
@@ -1246,7 +1377,7 @@ public class Heuristica {
 		// Como minimo van a ser iguales que los actuales
 		for (int i = 0; i < points.size(); i++) {
 			r.setPosition(this.points.get(i));
-			double actual = pondCalculation(r, s, 0.7);
+			double actual = pondCalculation(r, s, 0.9);
 			// Si son mejores que los actuales se guardan
 			if ((!modified) || (actual < minor)) {
 				selected = i;
