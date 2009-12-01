@@ -114,7 +114,7 @@ public class Heuristica {
 							 hop.getInitialization(), hop.getStopCriteria(), hop.getEvaluationMode());
 			break;
 		case SIMULATED_ANNEALING_SEARCH:
-			simulatedAnnealingSearch(hop.getInitialization(), hop.getNeighbors(), hop.getSampling(), hop.getDoubCoolingFactor(), 1.05, hop.getEvaluationMode());
+			simulatedAnnealingSearch(hop.getNeighbors(), hop.getSampling(), hop.getDoubCoolingFactor(), 1.05, hop.getEvaluationMode());
 			break;
 		case GRASP:
 			GRASP(hop.getGraspMode());
@@ -334,7 +334,8 @@ public class Heuristica {
 				break;
 			}
 			int sameId = 0;
-			do {		
+			do {
+				sameId = 0;
 				nueva = new Solution(problem.getAreaRec(), initType, problem.getRectangleSize());
 				for (int i = 0; i < problem.getRectangleSize(); i++)
 					if (nueva.getOrder(i) == actual.getOrder(i))
@@ -385,17 +386,16 @@ public class Heuristica {
 	 *        primer mejor vecino, o RANDOM_SAMPLING si se coje el primer
 	 *        vecino al azar que mejore
 	 */
-	public Solution simulatedAnnealingSearch(int initType, int neighbourType,
+	public Solution simulatedAnnealingSearch(int neighbourType,
 											 int sampleType, double coolingFactor, double iterationIncrement,
 											 int evaluationMode) {
 		//double zero = 0.1;
 		double zero = 0.1/(Math.log(
 						   (Math.pow(problem.getRectangleSize(), problem.getRectangleSize()) - 1)
-						   / 0.99));
+						   / 0.60));
 		Solution actual;
 		Random r = new Random(System.nanoTime());
-		actual = new Solution(problem.getAreaRec(), initType, problem.getRectangleSize());
-		
+		actual = problem.getSolution().clone();
 		double c = (int) Math.sqrt(problem.getRectangleSize());
 		int L = 0;
 		if (coolingFactor >= 0.8)
