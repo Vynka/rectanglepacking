@@ -67,6 +67,15 @@ public class Heuristica {
 	static final int WASTE_GRASP = 4;
 	
 	private static final int SETSIZE = 2;
+	
+	/**
+	 * Tipo de periodo tabu en el tabuSearch
+	 */
+	static final int CONSTANT_TENURE = 0;
+	static final int SQRT_TENURE = 1;
+	static final int SIMPLE_RAND_DINAMIC_TENURE = 2;
+	static final int SIMPLE_SISTEMATIC_DINAMIC_TENURE = 3;
+	static final int COMPLEX_DINAMIC_TENURE = 4;
 
 	
 	/**
@@ -333,8 +342,9 @@ public class Heuristica {
 				}
 				break;
 			}
-			int sameId = 0;
+			int sameId;
 			do {
+				sameId = 0;
 				sameId = 0;
 				nueva = new Solution(problem.getAreaRec(), initType, problem.getRectangleSize());
 				for (int i = 0; i < problem.getRectangleSize(); i++)
@@ -435,6 +445,81 @@ public class Heuristica {
 		problem.changeRectanglePositions(bestPos);
 		return best.clone();
 	}
+	
+	/**
+	 * 
+	 * @param neighbourType
+	 * @param sampleType
+	 * @param tenure
+	 * @param tenureType
+	 * @param evaluationMode
+	 * @return
+	 */
+	public Point[] tabuSearch(int neighbourType, int sampleType,
+			 int tenure, int tenureType, int evaluationMode) {
+		getTenure(problem, tenure, tenureType);
+		tabuMemory mem = new tabuMemory(problem);
+		Solution actual = problem.getSolution().clone();		
+		Solution best = actual.clone();
+		Point[] bestPos = problem.getActualPositions();
+		boolean betterFound;
+		int besti = 0;
+		int bestj = 0;
+		
+		do {
+			betterFound = false;
+			for (int i = 0; i < problem.getRectangleSize(); i++)
+				for (int j = 0; j < problem.getRectangleSize(); j++) {
+					actual = best.clone();
+					int[] newOrder = best.getOrder().clone();
+					swap(newOrder, i, j);
+					actual.setOrder(newOrder);
+					Point [] actPos = callEvalue(actual, evaluationMode);
+					if (mem.getRecency(i, j) == 0)
+						if (best.getObjF() > actual.getObjF()) {
+							best = actual.clone();
+							besti = i;
+							bestj = j;
+							bestPos = actPos.clone();
+							betterFound = true;
+						}
+				}
+			mem.decRecency();
+			if ((tenureType != CONSTANT_TENURE) && (tenureType != SQRT_TENURE))
+				getTenure(problem, tenure, tenureType);
+			mem.setRecency(besti, bestj, tenure);
+		} while (betterFound);
+		
+		problem.setSolution(best);		
+		problem.changeRectanglePositions(bestPos);
+		return bestPos;
+	}
+	
+	/**
+	 * 
+	 * @param p
+	 * @param tenure
+	 * @param tenureType
+	 */
+	private void getTenure(Problem p, int tenure, int tenureType) {
+		switch (tenureType) {
+			case CONSTANT_TENURE:
+				break;
+			case SQRT_TENURE:
+				tenure = (int) Math.sqrt(p.getRectangleSize());
+				break;
+			case SIMPLE_RAND_DINAMIC_TENURE:
+				//Elegido al azar entre un rango fijo de valores (por ejemplo entre 3 y 7)
+				break;
+			case SIMPLE_SISTEMATIC_DINAMIC_TENURE:
+				//Elegido sistematicamente entre un rango fijo de valores
+				break;
+			case COMPLEX_DINAMIC_TENURE:
+				//Elegido al azar entre un rango variable de valores
+				break;
+		}
+	}
+	
 
 	/**
 	 * Genera una solucion de manera constructiva.
@@ -979,8 +1064,9 @@ public class Heuristica {
 						
 						callEvalue(aux, evaluationMode);
 						
-						if (s.getObjF() > aux.getObjF())
+						if (s.getObjF() > aux.getObjF()) {
 							s = aux.clone();
+						}
 					}
 				}
 				break;
@@ -992,8 +1078,9 @@ public class Heuristica {
 					
 					callEvalue(aux, evaluationMode);
 					
-					if (s.getObjF() > aux.getObjF())
+					if (s.getObjF() > aux.getObjF()) {
 						s = aux.clone();
+					}
 				}
 				break;
 			}
