@@ -29,11 +29,18 @@
   > umbrello heuristicas.xmi
 
 - Implementar busqueda tabu. [Eferroja]
+  * COMENZADO [Ale]
 
 - Implementar la busqueda constructiva GRASP con sus posibles variaciones [Haside]
 
+- Implementar la busqueda por algoritmo genetico [Ale]
+
 - Cambiar la seleccion de inicializacion por un Dialog que salte cuando se abre un archivo
   y cuando se pulsa el boton reset, de modo que las soluciones ya esten inicializadas. [Haside]
+  
+? Separar los muestreos de entorno a una clase nueva para evitar un fichero de 1000000 lineas xD [Ale]
+
+? Podriamos separar cada tipo de busqueda en una clase, asi nos ahorrariamos lineas tb [Ale]
 
 ****************************************
 * TODO YA RESUELTOS (MOVER AQUI ABAJO) *
