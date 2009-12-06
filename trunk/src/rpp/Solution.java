@@ -18,7 +18,7 @@ import java.util.Collections;
  * @since 1.0
  */
 
-public class Solution {
+public class Solution implements Comparable<Solution> {
 
 	/**
 	 * Constantes de tipos de generacion inicial
@@ -355,5 +355,26 @@ public class Solution {
 		this.area = 0;
 		this.objF = -this.recArea;
     }
-	
+
+    public boolean equals(Solution s) {
+    	int sameId = 0;
+    	for (int i = 0; i < order.length; i++) {
+			if (order[i] == s.getOrder(i))
+				sameId++;
+    	}
+    	if (sameId == order.length)
+    		return true;
+    	else return false;
+    }
+    
+	@Override
+	public int compareTo(Solution s) {
+		if(this.area < s.getArea()){
+			return -1;
+		} else if(this.area == s.getArea()) {
+			return 0;
+		} else {
+			return 1;
+		}
+	}
 }
