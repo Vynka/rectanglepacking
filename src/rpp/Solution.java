@@ -222,7 +222,7 @@ public class Solution implements Comparable<Solution> {
 	 * Metodo estandar de impresion por pantalla
 	 */
 	public String toString() {
-		return new String ("Funcion obj " + objF +" con base " + b + " y altura " + h);
+		return new String ("Desperdicio " + ((double)objF / (double)area) +" con base " + b + " y altura " + h);
 	}
 	
 	/**
