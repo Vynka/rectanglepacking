@@ -13,7 +13,7 @@ import java.util.Random;
  * @author Javier Luis Moreno Villena
  * @author Alejandro Tejera Perez
  * @author Isaac Galan Estarico
- * @version 1.02.08
+ * @version 1.06.17
  * @since 1.0
  */
 
@@ -342,15 +342,7 @@ public class Heuristica {
 				}
 				break;
 			}
-			int sameId;
-			do {
-				sameId = 0;
-				sameId = 0;
-				nueva = new Solution(problem.getAreaRec(), initType, problem.getRectangleSize());
-				for (int i = 0; i < problem.getRectangleSize(); i++)
-					if (nueva.getOrder(i) == actual.getOrder(i))
-						sameId++;
-			} while (sameId > Math.sqrt(problem.getRectangleSize()));
+			nueva = scatterSolution(actual);
 			problem.setSolution(nueva);
 			n--;
 		} while (n > 0);
@@ -816,138 +808,276 @@ public class Heuristica {
 		return selecRect;
 	}
 	
+	/**
+	 * Genera una solucion aleatoria dispersa de la actual
+	 * @param actual Solucion con la que comparar
+	 * @return solucion generada
+	 */
+	private Solution scatterSolution(Solution actual) {
+		Solution newS = null;
+		int sameId;
+		do {
+			sameId = 0;
+			newS = new Solution(problem.getAreaRec(), Solution.RANDOM, problem.getRectangleSize());
+			for (int i = 0; i < problem.getRectangleSize(); i++)
+			if (newS.getOrder(i) == actual.getOrder(i))
+				sameId++;
+		} while (sameId > Math.sqrt(problem.getRectangleSize()));
+		return newS;
+	}
 	
 	/**
-	 * Calcula el mejor rectangulo que se adapta a la solucion
-	 * empleando como criterio Minimizacion desperdicio con m rectangulos
-	 * y minimizacion de area con N - m rectangulos, con m = 1..N
-	 * @param m Valor del desperdicio inicial.
-	 * @return posicion en el array del rectangulo que minimiza una 
-	 *         ponderacion entre area y desperdicio
+	 * Genera una poblacion inicial del tamaño designado
+	 * @param populSize tamano de la poblacion
+	 * @return la poblacion generada
 	 */
-	/*
-	private int nextWasteGRASPRectangle(Rectangle [] rectangles, Solution s) {
-		Random rand = new Random(System.nanoTime());
-		ArrayList<Integer> selected = new ArrayList<Integer>(SETSIZE);
-		ArrayList<Point> bestPoint = new ArrayList<Point>(0);
-		// Se hallan los puntos donde cada rectangulo desvia lo menos posible de pi/4 la diagonal
-		ArrayList<Double> deviation = diagonalDeviation(rectangles, s);
-		// De las colocaciones que desvian menos la diagonal, se coge la que devuelve menor area
-		Solution aux = new Solution(s.getBase(), s.getHeight(), problem.getAreaRec(), new int[0]);
-		for (int i = 0; i < rectangles.length; i++) {
-			if (rectangles[i] != null) {
-				bestPoint.add(wasteAllocateRectangle(rectangles[i], aux));
-			} else {
-				bestPoint.add(new Point(0,0));
+	private ArrayList<Solution> EAInitPopulation(int populSize) {
+		ArrayList<Solution> population = new ArrayList<Solution>(0);
+		population.add(new Solution(problem.getAreaRec(), Solution.RANDOM, problem.getRectangleSize()));
+		while (population.size() < populSize) {
+			Solution newS = scatterSolution(population.get(population.size() - 1));
+			boolean valid = true;
+			for (int i = 0; i < population.size(); i++) {
+				valid = !newS.equals(population.get(i));
+				if (!valid)
+					break;
+			}
+			if (valid)
+				population.add(newS);		
+		}
+		return population;
+	}
+	
+	/**
+	 * Selecciona de una poblacion de soluciones populSize elementos
+	 * @param population poblacion donde escoger
+	 * @param populSize numero de elementos a elegir
+	 * @return poblacion seleccionada de populSize elementos
+	 */
+	private ArrayList<Solution> EASelect(ArrayList<Solution> population, int populSize) {
+		// Se sigue el metodo de la rueda de hilar
+		Random r = new Random(System.nanoTime());
+		ArrayList<Solution> newPopulation = new ArrayList<Solution>(0);
+		double [] hilar = new double [population.size()];
+		
+		int totalValue = 0;
+		int maxValue = 0;
+		for (int i = 0; i < population.size(); i++) {
+			totalValue += population.get(i).getObjF();
+			if (population.get(i).getObjF() > maxValue)
+				maxValue = population.get(i).getObjF();
+		}
+		
+		// Se halla el inicio del intervalo correspondiente a cada solucion 
+		double probability = 0;
+		for (int i = 0; i < population.size(); i++) {
+			probability += (double)(population.get(i).getObjF()) / (double)totalValue;
+			hilar[i] = probability;
+		}
+		
+		// Se seleccionan aleatoriamente
+		for (int i = 0; i < populSize; i++) {
+			double chosen = r.nextFloat();
+			int j = 0;
+			while (hilar[j] < chosen)
+				j++;
+			newPopulation.add(population.get(j).clone());
+		}
+		return newPopulation;
+	}
+	
+	/**
+	 * Realiza la recombinacion de dos soluciones
+	 * @param s1 uno de los padres
+	 * @param s2 el otro padre
+	 * @return el hijo fruto de la recombinacion
+	 */
+	private Solution EACrossover(Solution s1, Solution s2) {
+		// Inicializacion
+		Solution child = s1.clone();
+		int [] newOrder = child.getOrder().clone();
+		// que usar del primer padre
+		boolean [] fromS1 = new boolean [newOrder.length];
+		// que usar del segundo
+		ArrayList<Integer> noOrderFromS2 = new ArrayList<Integer>();
+		ArrayList<Integer> orderFromS2 = new ArrayList<Integer>();
+		Random r = new Random (System.nanoTime());
+		// Se designa aleatoriamente lo que se cruza
+		for (int i = 0; i < fromS1.length; i++) {
+			fromS1[i] = r.nextBoolean();
+			if (!fromS1[i])
+				noOrderFromS2.add(newOrder[i]);
+		}
+		
+		// Se tiene en noOrderFromS2 lo que se usara de la solucion2 SIN el orden de esta
+		int [] aux = new int [noOrderFromS2.size()];
+		for (int i = 0; i < noOrderFromS2.size(); i++) {
+			orderFromS2.add(0); // Se inicializa para usarlo en el siguiente bucle
+			for (int j = 0; j < s2.getOrder().length; j++) {
+				if (s2.getOrder(j) == noOrderFromS2.get(i)) {
+					aux[i] = j;
+					break;
+				}
 			}
 		}
-		// Se coge entre las SETSIZE de menor desvio producido
-		for (int i = 0; i < deviation.size(); i++) {
-			if (rectangles[i] != null) {	
-				if (selected.size() < SETSIZE) {
-					selected.add(i);
+		
+		// aux tiene la posicion de los elementos en el orden2, asi que se usa como base para ordenar
+		// el array noOrderFromS2
+		// TODO Optimizar la ordenacion O(n^2) -> O(n)
+		for	(int i = 0; i < noOrderFromS2.size(); i++) {
+			int lessers = 0;
+			for (int j = 0; j < aux.length; j++) {
+				if (aux[i] > aux[j]) {
+					lessers++;
+				}
+			}
+			orderFromS2.set(lessers, noOrderFromS2.get(i));
+		}
+		
+		// Ahora se tiene en OrderFromS2 el orden en el que se usara
+		int j = 0;
+		for (int i = 0; i < newOrder.length; i++) {
+			if (!fromS1[i]) {
+				newOrder[i] = orderFromS2.get(j).intValue();
+				j++;
+				if (j >= orderFromS2.size())
+					break;
+			}
+		}
+
+		return child;
+	}
+	
+	/**
+	 * Realiza la recombinacion de los elementos de la poblacion
+	 * @param population poblacion a tratar
+	 * @return una nueva poblacion seleccionada y cruzada
+	 */
+	private ArrayList<Solution> EACrossover(ArrayList<Solution> population) {
+		// Inicializacion
+		ArrayList<Solution> newPopulation = new ArrayList<Solution>(population.size());
+		for (int i = 0; i < population.size(); i++) {
+			newPopulation.add(population.get(i).clone());
+		}
+		Random r = new Random(System.nanoTime());
+		// Se cruzara el orden inferior de veces (con respecto al tam de la poblacion)
+		int times = population.size() / 5;
+		// Las Soluciones solo se escogeran UNA vez
+		boolean [] alreadyChosen = new boolean [newPopulation.size()];
+		// Se cruzan
+		for (int i = 0; i < times; i++) {
+			// Se escogen padre y madre de entre los no seleccionados
+			int k = r.nextInt(alreadyChosen.length);
+			while (alreadyChosen[k])
+				k = r.nextInt(alreadyChosen.length);
+			alreadyChosen[k] = true;
+			
+			int l = r.nextInt(alreadyChosen.length);
+			while (alreadyChosen[l])
+				l = r.nextInt(alreadyChosen.length);
+			alreadyChosen[l] = true;
+			
+			// El nuevo hijo forma ahora parte de la poblacion pero no es opcion para ser recombinado
+			newPopulation.add(EACrossover(newPopulation.get(l), newPopulation.get(k)));
+		}
+
+		return newPopulation;
+	}
+	
+	/**
+	 * Realiza mutacion
+	 * @param s Solucion a mutar
+	 * @return solucion mutada
+	 */
+	private Solution EAMutation(Solution s) {
+		final int changes = 4; // Numero de elementos a mutar de la poblacion
+		Random r = new Random (System.nanoTime());
+		Solution mutant = s.clone();
+		int [] toChange = new int [changes];
+		// Se establecen los cambios
+		int i = 0;
+		int j;
+		while (i < changes) {
+			int rand = r.nextInt(mutant.getOrder().length);
+			boolean valid = true;
+			// Comprueba que no esten repetidos
+			j = 0;
+			while (j < i) {
+				valid = !(toChange[j] == rand);
+				if (!valid)
+					break;
+				j++;
+			}
+			if (valid) {
+				toChange[i] = rand;
+				i++;
+			}
+		}
+		
+		// Se desplazan hacia la izquierda solo los valores seleccionados
+		j = 0;
+		i = 1;
+		while (i < toChange.length) {
+			swap(mutant.getOrder(), toChange[i], toChange[j]);
+			j++;
+			i++;
+		}
+		return mutant;
+	}
+	
+	/**
+	 * Algoritmo evolutivo compuesto de mutacion, crossover y seleccion de soluciones
+	 * @return la mejor solucion encontrada.
+	 */
+	public Solution EA(int populSize, int evaluationMode, int times, int stop) {
+		// Inicializar
+		Solution best = new Solution (problem.getAreaRec(), Solution.RANDOM, problem.getRectangleSize());
+		ArrayList<Solution> population = EAInitPopulation(populSize);
+		ArrayList<Solution> aux = null;
+		boolean cont = true;
+		Random r = new Random(System.nanoTime());		
+		// Evaluar
+		callEvalue(best, evaluationMode);
+		for (int i = 0; i < population.size(); i++) {
+			callEvalue(population.get(i), evaluationMode);
+		}		
+		
+		// Ejecucion del algoritmo hasta criterio de parada
+		do {
+			aux = EACrossover(population);
+			int i = 0;
+			while (i < (5 / 100 * aux.size())) {
+				int mutant = r.nextInt(aux.size());
+				aux.set(mutant, EAMutation(aux.get(mutant)));
+				i++;
+				System.out.println("Muto!");
+			}
+			population = EASelect(aux, populSize);
+		
+			switch (stop) {
+			case OUT_UNLESS_BETTER:
+				Collections.sort(population);
+				if (best.compareTo(population.get(0)) != 1) {
+					cont = false;
 				} else {
-					int worst = 0;
-					for (int j = 1; j < selected.size(); j++) {
-						if (deviation.get(selected.get(worst)) < deviation.get(selected.get(j))) {
-							worst = j;
-						}
-					}
-					if (deviation.get(i) < deviation.get(selected.get(worst))) {
-						selected.set(worst, i);
-					}
+					best = population.get(0).clone();
 				}
-			}
-		}
-		// Se actualiza la solucion
-		int ranSelect = rand.nextInt(selected.size());
-		int selctInd = selected.get(ranSelect);
-		rectangles[selctInd].setPosition(bestPoint.get(selctInd));
-		
-		// Eje y
-		int newH = s.getHeight();
-		if ((rectangles[selctInd].getPosition().getY() + rectangles[selctInd].getHeight()) > (s.getHeight()))
-			newH = rectangles[selctInd].getPosition().getY() + rectangles[selctInd].getHeight();
-		// Eje X
-		int newB = s.getBase();
-		if ((rectangles[selctInd].getPosition().getX() + rectangles[selctInd].getBase()) > (s.getBase()))
-			newB = rectangles[selctInd].getPosition().getX() + rectangles[selctInd].getBase();
-		
-		s.setBase(newB);
-		s.setHeight(newH);
-		
-		return selected.get(ranSelect);
-	}
-	*/
-	
-	/**
-	 * Calcula el mejor rectangulo que se adapta a la solucion
-	 * empleando como criterio Minimizacion de ponderacion entre area y desperdicio
-	 * @return posicion en el array delrectangulo que minimiza 
-	 *         una ponderacion entre area y desperdicio
-	 */
-	/*
-	private int nextPondGRASPRectangle(Rectangle [] rectangles, Solution s) {
-		Random rand = new Random(System.nanoTime());
-		ArrayList<Integer> selected = new ArrayList<Integer>(SETSIZE);
-		ArrayList<Double> values = new ArrayList<Double>(SETSIZE);
-		ArrayList<Integer> pointInd = new ArrayList<Integer>(SETSIZE);
-		// Se considerara mejor caso el que deje menor area desperdiciada
-		for (int i = 0; i < rectangles.length; i++) {
-			if (rectangles[i] != null) {
-				// Se toman los nuevos datos resultantes de colocar el rectangulo
-				// Como minimo van a ser iguales que los actuales
-				for (int j = 0; j < points.size(); j++) {
-					rectangles[i].setPosition(this.points.get(j));
-					double actualValue = pondCalculation(rectangles[i], s, 0.9);
-					// Si son mejores que los actuales se guardan
-					if (selected.size() < SETSIZE) {
-						selected.add(i);
-						pointInd.add(j);
-						values.add(actualValue);
-					} else {
-						int worst = 0;
-						for (int k = 1; k < values.size(); k++) {
-							if (values.get(worst) < values.get(k)) {
-								worst = k;
-							}
-						}
-						if (actualValue < values.get(worst)) {
-							selected.set(worst, i);
-							pointInd.set(worst, j);
-							values.set(worst, actualValue);
-						}
-					}
+				break;
+			case NUMBER_OF_TIMES:
+				times--;
+				if (times <= 0) {
+					cont = false;
+					Collections.sort(population);
+					best = population.get(0).clone();
 				}
+				break;
 			}
-		}
+		} while (cont);
 		
-		int selectedIndex = rand.nextInt(selected.size());
-		// Rectangulo correspondiente
-		int selecRect = selected.get(selectedIndex);
-		// Punto correspondiente
-		int selecPoint = pointInd.get(selectedIndex);
-		// Se obtienen los nuevos datos de la solucion
-		// Eje y
-		int newH = s.getHeight();
-		// Explicacion de los if: lo mismo que en las funciones evalue pero escogiendo entre uno de los
-		// rectangulos aleatoriamente en el conjunto de los elegidos
-		if ((points.get(selecPoint).getY() + 
-				rectangles[selecRect].getHeight()) > (s.getHeight()))
-			newH = points.get(selecPoint).getY() + rectangles[selecRect].getHeight();
-		// Eje X
-		int newB = s.getBase();
-		if ((points.get(selecPoint).getX() + 
-				rectangles[selecRect].getBase()) > (s.getBase()))
-			newB = points.get(selecPoint).getX() + rectangles[selecRect].getBase();
-		
-		// Se actualiza
-		s.setBase(newB);
-		s.setHeight(newH);
-		rectangles[selecRect].setPosition(this.points.get(selecPoint));
-		return selecRect;
+		problem.setSolution(best);
+		problem.changeRectanglePositions(callEvalue(best, evaluationMode));
+		return best;
 	}
-	*/
 
 
 	/**
