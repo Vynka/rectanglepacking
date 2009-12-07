@@ -25,26 +25,29 @@
     -Documentar decentemente el paquete de GUI, que lo tengo todo hecho un asco. [Eferroja]
   	-Mantener actualizado el dialogo de propiedades con los elementos para elegir los parametros del problema.
     	
-- Actualizar UML [Vynka]
-  > umbrello heuristicas.xmi
 
 - Implementar busqueda tabu. [Eferroja]
   * COMENZADO [Ale]
-
-- Implementar la busqueda constructiva GRASP con sus posibles variaciones [Haside]
-
-- Implementar la busqueda por algoritmo genetico [Ale]
-
-- Cambiar la seleccion de inicializacion por un Dialog que salte cuando se abre un archivo
-  y cuando se pulsa el boton reset, de modo que las soluciones ya esten inicializadas. [Haside]
   
-? Separar los muestreos de entorno a una clase nueva para evitar un fichero de 1000000 lineas xD [Ale]
-
-? Podriamos separar cada tipo de busqueda en una clase, asi nos ahorrariamos lineas tb [Ale]
+- ScatterSearch
 
 ****************************************
 * TODO YA RESUELTOS (MOVER AQUI ABAJO) *
 ****************************************
+
+- Actualizar UML [Vynka]
+  > umbrello heuristicas.xmi
+  Ya no hara falta. [Haside]
+
+? Podriamos separar cada tipo de busqueda en una clase, asi nos ahorrariamos lineas tb [Ale]
+   Lo mismo que lo otro. A parte, ya sugeri yo algo similar en su tiempo y se me dijo que no. [Haside]
+
+- Implementar la busqueda constructiva GRASP con sus posibles variaciones [Haside]
+
+? Separar los muestreos de entorno a una clase nueva para evitar un fichero de 1000000 lineas xD [Ale]
+    Hay mil cosas por hacer. Tiempo para estas cosas ya ha habido y se ha desaprovechado. [Haside]
+
+- Implementar la busqueda por algoritmo genetico [Ale]
 
 - Visualizacion del problema (GUI): [Haside]
     -Arreglar el escalado en el DrawPanel. Mejor hacer lo de los botones para escalar manualmente. [Haside]
