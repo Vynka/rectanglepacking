@@ -1029,7 +1029,7 @@ public class Heuristica {
 	 * Algoritmo evolutivo compuesto de mutacion, crossover y seleccion de soluciones
 	 * @return la mejor solucion encontrada.
 	 */
-	public Solution EA(int populSize, int evaluationMode, int times, int stop) {
+	public Solution EA(int populSize, int evaluationMode, int mutRate, int times, int stop) {
 		// Inicializar
 		Solution best = new Solution (problem.getAreaRec(), Solution.RANDOM, problem.getRectangleSize());
 		ArrayList<Solution> population = EAInitPopulation(populSize);
@@ -1046,7 +1046,7 @@ public class Heuristica {
 		do {
 			aux = EACrossover(population);
 			int i = 0;
-			while (i < (5 / 100 * aux.size())) {
+			while (i < (mutRate / 100 * aux.size())) {
 				int mutant = r.nextInt(aux.size());
 				aux.set(mutant, EAMutation(aux.get(mutant)));
 				i++;
