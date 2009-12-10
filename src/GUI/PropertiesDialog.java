@@ -35,11 +35,12 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 	final String[] stopstrings = {"Out unless better", "Number of times"};
 	final String[] samplingstrings = {"Greedy sampling", "Anxious sampling", "Random sampling", "No sampling"};
 	final String[] searchstrings = {"Pure random seach", "Random search", "Local search", "Multistart with local search",
-									"Simulated annealing search", "GRASP"};
+									"Simulated annealing search", "GRASP", "Tabu Search"};
 	final String[] initstrings = {"Random", "Deterministic 01", "Deterministic 02", "Mixed 01", "Mixed 02"};
 	final String[] evaluationstrings = {"Waste", "Area", "BothSqrtN", "Ponderated"};
 	final String[] coolingFactorStrings = {"0.01","0.05","0.1","0.8","0.95","0.99"};
 	final String[] graspstrings = {"Area", "Diagonal", "Mixed", "Ponderated", "Waste"};
+	final String[] tabustrings = {"Constant", "Square root", "Simple Random Dinamic", "Frecuency based"};
 	
 	/**
 	 * ComboBoxes para la seleccion de parametros de la heuristica.
@@ -52,6 +53,7 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 	JComboBox evallist = new JComboBox(evaluationstrings);
 	JComboBox factorList = new JComboBox(coolingFactorStrings);
 	JComboBox grasplist = new JComboBox(graspstrings);
+	JComboBox tabulist = new JComboBox(tabustrings);
 	
 	/**
 	 * Etiquetas de los ComboBoxes
@@ -64,6 +66,7 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 	JLabel factorlbl = new JLabel("Factor de enfriamiento:");
 	JLabel timeslbl = new JLabel("Numero de repeticiones: ");
 	JLabel grasplbl = new JLabel("Tipo de GRASP: ");
+	JLabel tabulbl = new JLabel("Tipo de tabu tenure: ");
 	
 	/**
 	 * Campo de obtencion de las repeticiones
@@ -149,6 +152,14 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 		grasplist.addActionListener(this);
 		grasplist.setVisible(false);
 		
+		this.add(tabulbl);
+		tabulbl.setVisible(false);
+		this.add(tabulist);
+		tabulist.setActionCommand("tabu");
+		tabulist.setSelectedIndex(dialoghop.getTabuTenure());
+		tabulist.addActionListener(this);
+		tabulist.setVisible(false);
+		
 		this.add(Box.createGlue());
 		
 		JPanel aux = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -208,7 +219,6 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 			displayOptions(searchlist.getSelectedIndex());
 		}
 		else if(e.getActionCommand() == "init") {
-			System.out.println("Initialization: " + initlist.getSelectedIndex());
 			dialoghop.setInitialization(initlist.getSelectedIndex());
 		}
 		else if(e.getActionCommand() == "eval") {
@@ -219,6 +229,9 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 		}
 		else if(e.getActionCommand() == "grasp") {
 			dialoghop.setGraspMode(grasplist.getSelectedIndex());
+		}
+		else if (e.getActionCommand() == "tabu") {
+			dialoghop.setTabuTenure(tabulist.getSelectedIndex());
 		}
 	}
 	
@@ -241,6 +254,8 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 				evallist.setVisible(false);
 				grasplbl.setVisible(false);
 				grasplist.setVisible(false);
+				tabulbl.setVisible(false);
+				tabulist.setVisible(false);
 				break;
 			case HeuristicOptions.PURE_RANDOM_SEARCH:
 			case HeuristicOptions.RANDOM_SEARCH:
@@ -281,6 +296,12 @@ public class PropertiesDialog extends JDialog implements ActionListener {
 			case HeuristicOptions.GRASP:
 				grasplbl.setVisible(true);
 				grasplist.setVisible(true);
+				break;
+			case HeuristicOptions.TABU_SEARCH:
+				tabulbl.setVisible(true);
+				tabulist.setVisible(true);
+				evallbl.setVisible(true);
+				evallist.setVisible(true);
 				break;
 		}
 	}

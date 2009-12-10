@@ -49,6 +49,7 @@ public class HeuristicOptions {
 	public static final int MULTISTART_WITH_LOCAL_SEARCH = Heuristica.MULTISTART_WITH_LOCAL_SEARCH;
 	public static final int SIMULATED_ANNEALING_SEARCH = Heuristica.SIMULATED_ANNEALING_SEARCH;
 	public static final int GRASP = Heuristica.GRASP;
+	public static final int TABU_SEARCH = Heuristica.TABU_SEARCH;
 	
 	/**
 	 * Eleccion de heuristica de colocacion
@@ -66,6 +67,13 @@ public class HeuristicOptions {
 	public static final int MIXED_GRASP = Heuristica.MIXED_GRASP;
 	public static final int POND_GRASP = Heuristica.POND_GRASP;
 	public static final int WASTE_GRASP = Heuristica.WASTE_GRASP;
+	
+	public static final int CONSTANT_TENURE = Heuristica.CONSTANT_TENURE;
+	public static final int SQRT_TENURE = Heuristica.SQRT_TENURE;
+	public static final int SIMPLE_RAND_DINAMIC_TENURE = Heuristica.SIMPLE_RAND_DINAMIC_TENURE;
+	public static final int SIMPLE_SISTEMATIC_DINAMIC_TENURE = Heuristica.SIMPLE_SISTEMATIC_DINAMIC_TENURE;
+	public static final int COMPLEX_DINAMIC_TENURE = Heuristica.COMPLEX_DINAMIC_TENURE;
+
 	
 	/**
 	 * StopCritera: Criterio de parada del problema
@@ -116,6 +124,11 @@ public class HeuristicOptions {
 	 * graspMode: Tipo de GRASP
 	 */
 	private int graspMode;
+	
+	/**
+	 * tabutenure: Tipo de seleccion de tenure en tabu search
+	 */
+	private int tabutenure;
 	
 	/**
 	 * Constructor por defecto: PSR con OUT_UNLESS_BETTER
@@ -292,5 +305,13 @@ public class HeuristicOptions {
 	 */
 	public int getGraspMode() {
 		return graspMode;
+	}
+	
+	public void setTabuTenure(int tenure) {
+		this.tabutenure = tenure;
+	}
+	
+	public int getTabuTenure() {
+		return tabutenure;
 	}
 }
