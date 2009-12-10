@@ -48,6 +48,7 @@ public class Heuristica {
 	static final int MULTISTART_WITH_LOCAL_SEARCH = 3;
 	static final int SIMULATED_ANNEALING_SEARCH = 4;
 	static final int GRASP = 5;
+	static final int TABU_SEARCH = 6;
 
 	/**
 	 * Eleccion de heuristica de colocacion
@@ -128,6 +129,8 @@ public class Heuristica {
 		case GRASP:
 			GRASP(hop.getGraspMode());
 			break;
+		case TABU_SEARCH:
+			tabuSearch(hop.getTabuTenure(), hop.getEvaluationMode());
 		default:
 			return false;
 		}
@@ -447,42 +450,48 @@ public class Heuristica {
 	 * @param evaluationMode
 	 * @return
 	 */
-	public Point[] tabuSearch(int neighbourType, int sampleType,
-			 int tenure, int tenureType, int evaluationMode) {
-		getTenure(problem, tenure, tenureType);
+	public Point[] tabuSearch(int tenureType, int evaluationMode) {
+		int besti = 0;
+		int bestj = 0;
 		tabuMemory mem = new tabuMemory(problem);
+		int tenure = getTenure(problem, tenureType, mem, besti, bestj);
 		Solution actual = problem.getSolution().clone();		
 		Solution best = actual.clone();
 		Point[] bestPos = problem.getActualPositions();
 		boolean betterFound;
-		int besti = 0;
-		int bestj = 0;
 		
 		do {
 			betterFound = false;
 			for (int i = 0; i < problem.getRectangleSize(); i++)
 				for (int j = 0; j < problem.getRectangleSize(); j++) {
-					actual = best.clone();
-					int[] newOrder = best.getOrder().clone();
-					swap(newOrder, i, j);
-					actual.setOrder(newOrder);
-					Point [] actPos = callEvalue(actual, evaluationMode);
-					if (mem.getRecency(i, j) == 0)
-						if (best.getObjF() > actual.getObjF()) {
-							best = actual.clone();
-							besti = i;
-							bestj = j;
-							bestPos = actPos.clone();
-							betterFound = true;
+					if (i != j) {
+						actual = best.clone();
+						int[] newOrder = best.getOrder().clone();
+						if ((mem.getRecency(i, j) == 0) /*|| aspirationCriteria(i, j)*/) {
+							swap(newOrder, i, j);
+							actual.setOrder(newOrder);
+							Point [] actPos = callEvalue(actual, evaluationMode);
+	
+							if (best.getObjF() > actual.getObjF()) {
+								System.out.println("Nueva sol encontrada: " + best.getObjF());
+								best = actual.clone();
+								besti = i;
+								bestj = j;
+								bestPos = actPos.clone();
+								betterFound = true;
+								mem.incFrecuency(besti, bestj);
+								mem.setRecency(besti, bestj, tenure);
+							}
 						}
+						else {System.out.println("Periodo " + mem.getRecency(i, j));}
+					}
 				}
 			mem.decRecency();
 			if ((tenureType != CONSTANT_TENURE) && (tenureType != SQRT_TENURE))
-				getTenure(problem, tenure, tenureType);
-			mem.setRecency(besti, bestj, tenure);
+				tenure = getTenure(problem, tenureType, mem, besti, bestj);
 		} while (betterFound);
 		
-		problem.setSolution(best);		
+		problem.setSolution(best);
 		problem.changeRectanglePositions(bestPos);
 		return bestPos;
 	}
@@ -493,23 +502,30 @@ public class Heuristica {
 	 * @param tenure
 	 * @param tenureType
 	 */
-	private void getTenure(Problem p, int tenure, int tenureType) {
+	private int getTenure(Problem p, int tenureType, tabuMemory mem, int besti, int bestj) {
+		int tenure = 5;
 		switch (tenureType) {
 			case CONSTANT_TENURE:
+				tenure = 5;
 				break;
 			case SQRT_TENURE:
 				tenure = (int) Math.sqrt(p.getRectangleSize());
 				break;
 			case SIMPLE_RAND_DINAMIC_TENURE:
 				//Elegido al azar entre un rango fijo de valores (por ejemplo entre 3 y 7)
+				Random r = new Random(System.nanoTime());
+				tenure = (r.nextInt(16) + 5); //Rango entre 5 y 15
 				break;
 			case SIMPLE_SISTEMATIC_DINAMIC_TENURE:
 				//Elegido sistematicamente entre un rango fijo de valores
+				tenure += mem.getFrecuency(besti, bestj);
+				System.out.println("Frecuencia: " + (tenure-5));
 				break;
 			case COMPLEX_DINAMIC_TENURE:
 				//Elegido al azar entre un rango variable de valores
 				break;
 		}
+		return tenure;
 	}
 	
 
@@ -827,7 +843,7 @@ public class Heuristica {
 	}
 	
 	/**
-	 * Genera una poblacion inicial del tamaño designado
+	 * Genera una poblacion inicial del tamaï¿½o designado
 	 * @param populSize tamano de la poblacion
 	 * @return la poblacion generada
 	 */
