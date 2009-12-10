@@ -1046,11 +1046,10 @@ public class Heuristica {
 		do {
 			aux = EACrossover(population);
 			int i = 0;
-			while (i < (mutRate / 100 * aux.size())) {
+			while (i < ((double)mutRate / (double)100 * aux.size())) {
 				int mutant = r.nextInt(aux.size());
 				aux.set(mutant, EAMutation(aux.get(mutant)));
 				i++;
-				System.out.println("Muto!");
 			}
 			population = EASelect(aux, populSize);
 		
