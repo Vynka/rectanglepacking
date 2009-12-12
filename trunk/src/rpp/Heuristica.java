@@ -618,33 +618,30 @@ public class Heuristica {
 	private int nextGRASPRectangle(Rectangle [] rectangles, Solution s, int evaluationMode) {
 		Random rand = new Random(System.nanoTime());
 		ArrayList<Integer> selected = new ArrayList<Integer>(SETSIZE);
-		ArrayList<Point> bestPoint = new ArrayList<Point>(0);
-		// Se hallan los puntos donde cada rectangulo desvia lo menos posible de pi/4 la diagonal
-		ArrayList<Double> deviation = diagonalDeviation(rectangles, s);
 		// De las colocaciones que desvian menos la diagonal, se coge la que devuelve menor area
 		Solution aux = new Solution(s.getBase(), s.getHeight(), problem.getAreaRec(), new int[0]);
 		for (int i = 0; i < rectangles.length; i++) {
 			if (rectangles[i] != null) {
 				switch (evaluationMode) {
 				case AREA_EVAL:
-					bestPoint.add(areaAllocateRectangle(rectangles[i], aux));
+					areaAllocateRectangle(rectangles[i], aux);
 					break;
 				case MIXED_EVAL:
 					if (i < Math.sqrt(problem.getRectangleSize()))
-						bestPoint.add(wasteAllocateRectangle(rectangles[i], aux));
-					else bestPoint.add(areaAllocateRectangle(rectangles[i], aux));
+						wasteAllocateRectangle(rectangles[i], aux);
+					else areaAllocateRectangle(rectangles[i], aux);
 					break;
 				case POND_EVAL:
-					bestPoint.add(pondAllocateRectangle(rectangles[i], aux));
+					pondAllocateRectangle(rectangles[i], aux);
 					break;
 				case WASTE_EVAL:
-					bestPoint.add(wasteAllocateRectangle(rectangles[i], aux));
+					wasteAllocateRectangle(rectangles[i], aux);
 					break;
 				}
-			} else {
-				bestPoint.add(new Point(0,0));
 			}
 		}
+		// Se hallan la desviacion producida por la colocacion
+		ArrayList<Double> deviation = diagonalDeviation(rectangles, s);
 		// Se coge entre las SETSIZE de menor desvio producido
 		for (int i = 0; i < deviation.size(); i++) {
 			if (rectangles[i] != null) {	
@@ -666,7 +663,6 @@ public class Heuristica {
 		// Se actualiza la solucion
 		int ranSelect = rand.nextInt(selected.size());
 		int selctInd = selected.get(ranSelect);
-		rectangles[selctInd].setPosition(bestPoint.get(selctInd));
 		
 		// Eje y
 		int newH = s.getHeight();
@@ -744,21 +740,16 @@ public class Heuristica {
 	 * @return
 	 */
 	private ArrayList<Double> diagonalDeviation(Rectangle [] rectangles, Solution s) {
-		// Se halla la menor desviacion causada por cada punto
+		// Se halla la desviacion causada por cada rectangulo
 		ArrayList<Double> deviation = new ArrayList<Double>(0);
 		for (int i = 0; i < rectangles.length; i++) {
 			if (rectangles[i] != null) {
-				// Se toman los nuevos datos resultantes de colocar el rectangulo
-				// Como minimo van a ser iguales que los actuales
-				for (int j = 0; j < points.size(); j++) {
-					rectangles[i].setPosition(this.points.get(j));
-					double actualDeviation = diagonalDeviation(rectangles[i], s);
-					// Si son mejores que los actuales se guardan
-					if (deviation.size() < (i + 1)) {
-						deviation.add(actualDeviation);
-					} else if (deviation.get(i) > actualDeviation) {
-						deviation.set(i, actualDeviation);
-					}
+				double actualDeviation = diagonalDeviation(rectangles[i], s);
+				// Si son mejores que los actuales se guardan
+				if (deviation.size() < (i + 1)) {
+					deviation.add(actualDeviation);
+				} else if (deviation.get(i) > actualDeviation) {
+					deviation.set(i, actualDeviation);
 				}
 			} else {
 				deviation.add(Double.MAX_VALUE);
@@ -939,7 +930,6 @@ public class Heuristica {
 		
 		// aux tiene la posicion de los elementos en el orden2, asi que se usa como base para ordenar
 		// el array noOrderFromS2
-		// TODO Optimizar la ordenacion O(n^2) -> O(n)
 		for	(int i = 0; i < noOrderFromS2.size(); i++) {
 			int lessers = 0;
 			for (int j = 0; j < aux.length; j++) {
