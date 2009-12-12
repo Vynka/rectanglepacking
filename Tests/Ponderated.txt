@@ -1,0 +1,133 @@
+
+TIEMPO EN MILISEGUNDOS
++++++++++++++++++++++++++++++++++++++++++++
+./datasets/C1/1.dat   Optimal: 400
++++++++++++++++++++++++++++++++++++++++++++
+500 tests
++++ AREA +++
+
+0 Area 737 Waste 0.4411589046893588
+
+Desperdicio 0.09297052154195011 con base 21 y altura 21
+
+0 Area 762 Waste 0.4460320486724649
+
+Desperdicio 0.09090909090909091 con base 20 y altura 22
+
+0 Area 905 Waste 0.5495814838381091
+
+Desperdicio 0.2844364937388193 con base 13 y altura 43
+
+TIEMPO EN MILISEGUNDOS
++++++++++++++++++++++++++++++++++++++++++++
+./datasets/C2/1.dat   Optimal: 600
++++++++++++++++++++++++++++++++++++++++++++
+500 tests
++++ AREA +++
+
+0 Area 901 Waste 0.3242167798642361
+
+Desperdicio 0.08814589665653495 con base 94 y altura 7
+
+0 Area 997 Waste 0.3937444604696188
+
+Desperdicio 0.09090909090909091 con base 20 y altura 22
+
+0 Area 1464 Waste 0.5873600234371736
+
+Desperdicio 0.2844364937388193 con base 13 y altura 43
+
+TIEMPO EN MILISEGUNDOS
++++++++++++++++++++++++++++++++++++++++++++
+./datasets/C3/1.dat   Optimal: 1800
++++++++++++++++++++++++++++++++++++++++++++
+500 tests
++++ AREA +++
+
+0 Area 2311 Waste 0.21824221613579026
+
+Desperdicio 0.12280701754385964 con base 76 y altura 27
+
+0 Area 3232 Waste 0.427890504373879
+
+Desperdicio 0.09090909090909091 con base 20 y altura 22
+
+0 Area 4397 Waste 0.5715258261743207
+
+Desperdicio 0.2844364937388193 con base 13 y altura 43
+
+TIEMPO EN MILISEGUNDOS
++++++++++++++++++++++++++++++++++++++++++++
+./datasets/C4/1.dat   Optimal: 3600
++++++++++++++++++++++++++++++++++++++++++++
+500 tests
++++ AREA +++
+
+1 Area 5373 Waste 0.32865636643364016
+
+Desperdicio 0.17939366309550947 con base 41 y altura 107
+
+0 Area 9815 Waste 0.6250119264922255
+
+Desperdicio 0.09090909090909091 con base 20 y altura 22
+
+0 Area 14508 Waste 0.7485321046118645
+
+Desperdicio 0.2844364937388193 con base 13 y altura 43
+
+TIEMPO EN MILISEGUNDOS
++++++++++++++++++++++++++++++++++++++++++++
+./datasets/C5/1.dat   Optimal: 5400
++++++++++++++++++++++++++++++++++++++++++++
+500 tests
++++ AREA +++
+
+1 Area 10179 Waste 0.3818867514854736
+
+Desperdicio 0.21052631578947367 con base 38 y altura 180
+
+0 Area 14145 Waste 0.6156563221835847
+
+Desperdicio 0.09090909090909091 con base 20 y altura 22
+
+0 Area 16718 Waste 0.6688313371592318
+
+Desperdicio 0.2844364937388193 con base 13 y altura 43
+
+TIEMPO EN MILISEGUNDOS
++++++++++++++++++++++++++++++++++++++++++++
+./datasets/C6/1.dat   Optimal: 9600
++++++++++++++++++++++++++++++++++++++++++++
+500 tests
++++ AREA +++
+
+3 Area 21173 Waste 0.5341103004681177
+
+Desperdicio 0.30434782608695654 con base 115 y altura 120
+
+2 Area 28643 Waste 0.6596058894770264
+
+Desperdicio 0.09090909090909091 con base 20 y altura 22
+
+1 Area 37914 Waste 0.7448022891549245
+
+Desperdicio 0.2844364937388193 con base 13 y altura 43
+
+TIEMPO EN MILISEGUNDOS
++++++++++++++++++++++++++++++++++++++++++++
+./datasets/C7/1.dat   Optimal: 38400
++++++++++++++++++++++++++++++++++++++++++++
+500 tests
++++ AREA +++
+
+6 Area 111965 Waste 0.6437100225467401
+
+Desperdicio 0.4745484400656814 con base 63 y altura 1160
+
+4 Area 171857 Waste 0.7744531407010731
+
+Desperdicio 0.09090909090909091 con base 20 y altura 22
+
+3 Area 182447 Waste 0.7847782864351946
+
+Desperdicio 0.2844364937388193 con base 13 y altura 43
