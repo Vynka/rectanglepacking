@@ -395,9 +395,9 @@ public class Heuristica {
 											 int sampleType, double coolingFactor, double iterationIncrement,
 											 int evaluationMode) {
 		//double zero = 0.1;
-		double zero = 0.1/(Math.log(
+		double zero = 0.9/*/(Math.log(
 						   (Math.pow(problem.getRectangleSize(), problem.getRectangleSize()) - 1)
-						   / 0.60));
+						   / 0.5))*/;
 		Solution actual;
 		Random r = new Random(System.nanoTime());
 		actual = problem.getSolution().clone();
@@ -435,7 +435,7 @@ public class Heuristica {
 			else
 				c  = CalculateTemperature2(c, coolingFactor);
 		} while (c > zero);
-		System.out.println("C = " + c + "     L = " + L + "     k = " + k);
+		System.out.println("HILO#2---- C = " + c + "     L = " + L + "     k = " + k);
 		problem.setSolution(best);
 		problem.changeRectanglePositions(bestPos);
 		return best.clone();

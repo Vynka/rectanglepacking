@@ -24,7 +24,7 @@ public class HeuTest {
 		BufferedWriter bw = null;
 		try {	
 			
-			f = new File("./Tests/GRASPS_LS_ANXIOUS_ONE_SWAP.txt");
+			f = new File("./Tests/SA_ANXIOUS_ONE_SWAP_02.txt");
 		    obs = new FileWriter(f);
 		    bw = new BufferedWriter(obs);
 		    for (int q = 1; q <= 7; q++) {
@@ -41,15 +41,41 @@ public class HeuTest {
 					bw.write(PRUEBAS + " tests");
 					bw.newLine();
 	
-					bw.write("+++ AREA +++");
+					bw.write("+++ FIRST COOLING PLAN (LINEAL) +++");
 					bw.newLine();
 					meanT = 0;
 					meanFobj = 0;
 					meanWaste = 0;
 					for (int i = 0; i < PRUEBAS; i++) {
 						t = - System.nanoTime();
-						h.GRASP(Heuristica.AREA_GRASP);
-						h.localSearch(Heuristica.ONE_SWAP, Heuristica.ANXIOUS_SAMPLING, Heuristica.AREA_EVAL);
+						h.simulatedAnnealingSearch(Heuristica.ONE_SWAP, Heuristica.ANXIOUS_SAMPLING, 0.95, 1.05,
+											 Heuristica.AREA_EVAL);
+						//h.localSearch(Heuristica.ONE_SWAP, Heuristica.ANXIOUS_SAMPLING, Heuristica.AREA_EVAL);
+						//Metodo guay a evaluar
+						t += System.nanoTime();
+						meanT = (meanT + t) / 2;
+						meanFobj = (p.getSolution().getArea() + meanFobj) / 2;
+						meanWaste = ((double)p.getSolution().getObjF() / (double)p.getSolution().getArea()
+									+ meanWaste) / 2;
+					}
+					bw.newLine();
+					bw.write(meanT / 1000000 + " Obj " + meanFobj + " Waste " + meanWaste);
+					System.out.println(dataset);
+					System.out.println(meanT / 1000000 + " Obj " + meanFobj + " Waste " + meanWaste);
+					bw.newLine();
+					bw.write("------------------------------------------------------------");
+					bw.newLine();
+					
+					bw.write("+++ SECOND COOLING PLAN (LUNDY & MEES) +++");
+					bw.newLine();
+					meanT = 0;
+					meanFobj = 0;
+					meanWaste = 0;
+					for (int i = 0; i < PRUEBAS; i++) {
+						t = - System.nanoTime();
+						h.simulatedAnnealingSearch(Heuristica.ONE_SWAP, Heuristica.ANXIOUS_SAMPLING, 0.05, 1,
+											 Heuristica.AREA_EVAL);
+						//h.localSearch(Heuristica.ONE_SWAP, Heuristica.ANXIOUS_SAMPLING, Heuristica.AREA_EVAL);
 						//Metodo guay a evaluar
 						t += System.nanoTime();
 						meanT = (meanT + t) / 2;
@@ -63,7 +89,7 @@ public class HeuTest {
 					bw.write("------------------------------------------------------------");
 					bw.newLine();
 					
-					bw.write("+++ MIXED +++");
+					/*bw.write("+++ MIXED +++");
 					bw.newLine();
 					meanT = 0;
 					meanFobj = 0;
@@ -106,7 +132,7 @@ public class HeuTest {
 					bw.write("------------------------------------------------------------");
 					bw.newLine();
 					*/
-					bw.write("+++ WASTE +++");
+					/*bw.write("+++ WASTE +++");
 					bw.newLine();
 					meanT = 0;
 					meanFobj = 0;
@@ -146,7 +172,7 @@ public class HeuTest {
 					}
 					bw.newLine();
 					bw.write(meanT / 1000000 + " Obj " + meanFobj + " Waste " + meanWaste);
-					bw.newLine();
+					bw.newLine();*/
 					bw.write("------------------------------------------------------------");
 					bw.newLine();
 					bw.write("------------------------------------------------------------");
