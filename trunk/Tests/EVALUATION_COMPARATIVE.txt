@@ -1,0 +1,127 @@
++++++++++++++++++++++++++++++++++++++++++++
+./datasets/C1/2.dat   Optimal: 400
++++++++++++++++++++++++++++++++++++++++++++
+----------- area --------------
+Tiempo medio0 Area 637 Waste 0.3617981107706102
+Mejor area 486
+Desperdicio 0.17695473251028807 con base 18 y altura 27
+----------- waste --------------
+Tiempo medio0 Area 1459 Waste 0.7152491157752633
+Mejor waste 672
+Desperdicio 0.40476190476190477 con base 24 y altura 28
+----------- mixed --------------
+Tiempo medio0 Area 643 Waste 0.37528062005674157
+Mejor mixed 468
+Desperdicio 0.1452991452991453 con base 18 y altura 26
+----------- pond --------------
+Tiempo medio0 Area 954 Waste 0.4736566330797137
+Mejor pond 456
+Desperdicio 0.12280701754385964 con base 24 y altura 19+++++++++++++++++++++++++++++++++++++++++++
+./datasets/C2/2.dat   Optimal: 600
++++++++++++++++++++++++++++++++++++++++++++
+----------- area --------------
+Tiempo medio0 Area 1204 Waste 0.48669260372612627
+Mejor area 721
+Desperdicio 0.1678224687933426 con base 103 y altura 7
+----------- waste --------------
+Tiempo medio1 Area 1878 Waste 0.6742889950042419
+Mejor waste 1012
+Desperdicio 0.40711462450592883 con base 46 y altura 22
+----------- mixed --------------
+Tiempo medio0 Area 1029 Waste 0.40937761598842193
+Mejor mixed 720
+Desperdicio 0.16666666666666666 con base 45 y altura 16
+----------- pond --------------
+Tiempo medio0 Area 1296 Waste 0.47077253111659423
+Mejor pond 660
+Desperdicio 0.09090909090909091 con base 33 y altura 20+++++++++++++++++++++++++++++++++++++++++++
+./datasets/C3/2.dat   Optimal: 1800
++++++++++++++++++++++++++++++++++++++++++++
+----------- area --------------
+Tiempo medio0 Area 2752 Waste 0.3427513953705453
+Mejor area 2222
+Desperdicio 0.18991899189918993 con base 202 y altura 11
+----------- waste --------------
+Tiempo medio1 Area 5079 Waste 0.6416073305077091
+Mejor waste 2944
+Desperdicio 0.38858695652173914 con base 92 y altura 32
+----------- mixed --------------
+Tiempo medio0 Area 2841 Waste 0.36612493375566424
+Mejor mixed 2197
+Desperdicio 0.18070095584888485 con base 169 y altura 13
+----------- pond --------------
+Tiempo medio0 Area 2692 Waste 0.3173582014113401
+Mejor pond 2040
+Desperdicio 0.11764705882352941 con base 68 y altura 30+++++++++++++++++++++++++++++++++++++++++++
+./datasets/C4/2.dat   Optimal: 3600
++++++++++++++++++++++++++++++++++++++++++++
+----------- area --------------
+Tiempo medio0 Area 5932 Waste 0.3856370835392696
+Mejor area 4972
+Desperdicio 0.2759452936444087 con base 44 y altura 113
+----------- waste --------------
+Tiempo medio3 Area 15248 Waste 0.7627402495021602
+Mejor waste 7200
+Desperdicio 0.5 con base 90 y altura 80
+----------- mixed --------------
+Tiempo medio0 Area 5840 Waste 0.3767793701406764
+Mejor mixed 4896
+Desperdicio 0.2647058823529412 con base 68 y altura 72
+----------- pond --------------
+Tiempo medio1 Area 6716 Waste 0.4272834640112013
+Mejor pond 4335
+Desperdicio 0.1695501730103806 con base 85 y altura 51+++++++++++++++++++++++++++++++++++++++++++
+./datasets/C5/2.dat   Optimal: 5400
++++++++++++++++++++++++++++++++++++++++++++
+----------- area --------------
+Tiempo medio0 Area 9631 Waste 0.4359303553248898
+Mejor area 7866
+Desperdicio 0.3135011441647597 con base 207 y altura 38
+----------- waste --------------
+Tiempo medio9 Area 24227 Waste 0.7711687958654703
+Mejor waste 13482
+Desperdicio 0.5994659546061415 con base 126 y altura 107
+----------- mixed --------------
+Tiempo medio0 Area 10677 Waste 0.4880419401015324
+Mejor mixed 7612
+Desperdicio 0.2905937992643195 con base 173 y altura 44
+----------- pond --------------
+Tiempo medio1 Area 8871 Waste 0.3842012364430857
+Mejor pond 6450
+Desperdicio 0.16279069767441862 con base 86 y altura 75+++++++++++++++++++++++++++++++++++++++++++
+./datasets/C6/2.dat   Optimal: 9600
++++++++++++++++++++++++++++++++++++++++++++
+----------- area --------------
+Tiempo medio0 Area 18748 Waste 0.48443006667983896
+Mejor area 14190
+Desperdicio 0.32346723044397463 con base 129 y altura 110
+----------- waste --------------
+Tiempo medio14 Area 47230 Waste 0.7905313844016773
+Mejor waste 25650
+Desperdicio 0.6257309941520468 con base 150 y altura 171
+----------- mixed --------------
+Tiempo medio0 Area 17762 Waste 0.4573031442592215
+Mejor mixed 13689
+Desperdicio 0.29870699101468334 con base 169 y altura 81
+----------- pond --------------
+Tiempo medio2 Area 16850 Waste 0.4207232466750781
+Mejor pond 12160
+Desperdicio 0.21052631578947367 con base 128 y altura 95+++++++++++++++++++++++++++++++++++++++++++
+./datasets/C7/2.dat   Optimal: 38400
++++++++++++++++++++++++++++++++++++++++++++
+----------- area --------------
+Tiempo medio0 Area 83595 Waste 0.5387371019528584
+Mejor area 62738
+Desperdicio 0.3879307596671874 con base 247 y altura 254
+----------- waste --------------
+Tiempo medio67 Area 265258 Waste 0.8529175621513412
+Mejor waste 119491
+Desperdicio 0.6786368847863019 con base 331 y altura 361
+----------- mixed --------------
+Tiempo medio0 Area 80760 Waste 0.5229462470917539
+Mejor mixed 63710
+Desperdicio 0.3972688745879768 con base 230 y altura 277
+----------- pond --------------
+Tiempo medio9 Area 142822 Waste 0.7147322195095567
+Mejor pond 60784
+Desperdicio 0.36825480389576204 con base 232 y altura 262
