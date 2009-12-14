@@ -24,7 +24,7 @@ public class HeuTest {
 		BufferedWriter bw = null;
 		try {	
 			
-			f = new File("./Tests/LS_GREEDY_ONE_SWAP.txt");
+			f = new File("./Tests/TS_CONSTANT.txt");
 		    obs = new FileWriter(f);
 		    bw = new BufferedWriter(obs);
 		    for (int q = 1; q <= 7; q++) {
@@ -48,7 +48,7 @@ public class HeuTest {
 					meanWaste = 0;
 					for (int i = 0; i < PRUEBAS; i++) {
 						t = - System.nanoTime();
-						h.localSearch(Heuristica.ONE_SWAP, Heuristica.GREEDY_SAMPLING, Heuristica.MIXED_EVAL);
+						h.tabuSearch(Heuristica.CONSTANT_TENURE, Heuristica.MIXED_EVAL);
 						//Metodo guay a evaluar
 						t += System.nanoTime();
 						meanT = (meanT + t) / 2;
@@ -69,7 +69,7 @@ public class HeuTest {
 					meanWaste = 0;
 					for (int i = 0; i < PRUEBAS; i++) {
 						t = - System.nanoTime();
-					  h.localSearch(Heuristica.ONE_SWAP, Heuristica.GREEDY_SAMPLING, Heuristica.POND_EVAL);
+					  h.tabuSearch(Heuristica.CONSTANT_TENURE, Heuristica.POND_EVAL);
 						//Metodo guay a evaluar
 						t += System.nanoTime();
 						meanT = (meanT + t) / 2;
@@ -111,7 +111,7 @@ public class HeuTest {
 					meanWaste = 0;
 					for (int i = 0; i < PRUEBAS; i++) {
 						t = - System.nanoTime();
-						h.localSearch(Heuristica.ONE_SWAP, Heuristica.GREEDY_SAMPLING, Heuristica.WASTE_EVAL);
+						h.tabuSearch(Heuristica.CONSTANT_TENURE, Heuristica.WASTE_EVAL);
 						//Metodo guay a evaluar
 						t += System.nanoTime();
 						meanT = (meanT + t) / 2;
