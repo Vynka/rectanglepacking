@@ -27,7 +27,7 @@ public class HeuTest2 {
 		
 		try {
 			
-			f = new File("./Tests/PSR.txt");
+			f = new File("./Tests/TABU_SEARCH_CONSTANTtxt");
 		    obs = new FileWriter(f);
 		    bw = new BufferedWriter(obs);
 
@@ -57,7 +57,7 @@ public class HeuTest2 {
 					for (int i = 0; i < PRUEBAS; i++) {
 						t = - System.currentTimeMillis();
 					
-						h.pureRandomSearch(1, Heuristica.NUMBER_OF_TIMES, Heuristica.AREA_EVAL);
+						h.tabuSearch(Heuristica.CONSTANT_TENURE, Heuristica.AREA_EVAL);
 
 						//Metodo guay a evaluar
 						t += System.currentTimeMillis();
@@ -87,7 +87,7 @@ public class HeuTest2 {
 					bw.newLine();
 					bw.write("------------------------------------------------------------");
 					bw.newLine();					
-					/*
+					
 					bw.write("+++ WASTE +++");
 					bw.newLine();
 					meanT = 0;
@@ -96,7 +96,7 @@ public class HeuTest2 {
 					for (int i = 0; i < PRUEBAS; i++) {
 						t = - System.currentTimeMillis();
 					
-						h.GRASP(Heuristica.WASTE_GRASP);
+						h.tabuSearch(Heuristica.CONSTANT_TENURE, Heuristica.WASTE_EVAL);
 
 						//Metodo guay a evaluar
 						t += System.currentTimeMillis();
@@ -119,7 +119,7 @@ public class HeuTest2 {
 					for (int i = 0; i < best.getOrder().length; i++) {
 						bw.write(best.getOrder(i) + " ");
 					}
-					*/
+					
 					/*
 					t = - System.currentTimeMillis();
 					p.setSolution(best);
@@ -136,8 +136,8 @@ public class HeuTest2 {
 					}
 					bw.newLine();
 					bw.newLine();
-					 */
 					
+					/*
 					bw.write("------------------------------------------------------------");
 					bw.newLine();					
 					bw.write("+++ MIXED +++");
@@ -171,7 +171,7 @@ public class HeuTest2 {
 					bw.newLine();
 					for (int i = 0; i < best.getOrder().length; i++) {
 						bw.write(best.getOrder(i) + " ");
-					}
+					}*/
 					
 					
 					
@@ -187,7 +187,7 @@ public class HeuTest2 {
 					for (int i = 0; i < PRUEBAS; i++) {
 						t = - System.currentTimeMillis();
 					
-						h.GRASP(Heuristica.POND_GRASP);
+						h.tabuSearch(Heuristica.CONSTANT_TENURE, Heuristica.POND_EVAL);
 						//Metodo guay a evaluar
 						t += System.currentTimeMillis();
 						meanT = (meanT + t) / 2;
@@ -211,7 +211,7 @@ public class HeuTest2 {
 					}
 					
 					p.setSolution(best);
-					h.simulatedAnnealingSearch(Heuristica.ONE_SWAP, Heuristica.ANXIOUS_SAMPLING, 0.05, 1, Heuristica.POND_EVAL);
+					/*h.simulatedAnnealingSearch(Heuristica.ONE_SWAP, Heuristica.ANXIOUS_SAMPLING, 0.05, 1, Heuristica.POND_EVAL);*/
 					
 					bw.newLine();
 					bw.write("------------------------------------------------------------");

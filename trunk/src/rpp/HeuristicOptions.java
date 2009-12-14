@@ -72,7 +72,6 @@ public class HeuristicOptions {
 	public static final int SQRT_TENURE = Heuristica.SQRT_TENURE;
 	public static final int SIMPLE_RAND_DINAMIC_TENURE = Heuristica.SIMPLE_RAND_DINAMIC_TENURE;
 	public static final int SIMPLE_SISTEMATIC_DINAMIC_TENURE = Heuristica.SIMPLE_SISTEMATIC_DINAMIC_TENURE;
-	public static final int COMPLEX_DINAMIC_TENURE = Heuristica.COMPLEX_DINAMIC_TENURE;
 
 	
 	/**

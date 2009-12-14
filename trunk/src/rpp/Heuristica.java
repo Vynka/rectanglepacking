@@ -76,7 +76,6 @@ public class Heuristica {
 	static final int SQRT_TENURE = 1;
 	static final int SIMPLE_RAND_DINAMIC_TENURE = 2;
 	static final int SIMPLE_SISTEMATIC_DINAMIC_TENURE = 3;
-	static final int COMPLEX_DINAMIC_TENURE = 4;
 
 	
 	/**
@@ -520,9 +519,6 @@ public class Heuristica {
 				//Elegido sistematicamente entre un rango fijo de valores
 				tenure += mem.getFrecuency(besti, bestj);
 				System.out.println("Frecuencia: " + (tenure-5));
-				break;
-			case COMPLEX_DINAMIC_TENURE:
-				//Elegido al azar entre un rango variable de valores
 				break;
 		}
 		return tenure;
